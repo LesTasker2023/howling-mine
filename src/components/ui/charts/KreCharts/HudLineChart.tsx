@@ -10,12 +10,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import {
-  HUD_PALETTE,
-  HUD_AXIS,
-  HUD_GRID,
-  HUD_TOOLTIP_STYLE,
-} from "./hud-theme";
+import { useHudTheme } from "./useHudTheme";
 import { Panel } from "@/components/ui/Panel";
 import styles from "./charts.module.css";
 
@@ -46,6 +41,7 @@ export function HudLineChart({
   title,
   height = 280,
 }: HudLineChartProps) {
+  const { PALETTE, AXIS, GRID, TOOLTIP_STYLE } = useHudTheme();
   return (
     <Panel size="flush" noAnimation>
       <div className={styles.chartInner}>
@@ -54,7 +50,7 @@ export function HudLineChart({
           <LineChart data={data}>
             <defs>
               {series.map((s, i) => {
-                const c = s.color ?? HUD_PALETTE[i % HUD_PALETTE.length];
+                const c = s.color ?? PALETTE[i % PALETTE.length];
                 return (
                   <filter
                     key={s.dataKey}
@@ -84,10 +80,10 @@ export function HudLineChart({
                 );
               })}
             </defs>
-            <CartesianGrid {...HUD_GRID} vertical={false} />
-            <XAxis dataKey="name" {...HUD_AXIS} />
-            <YAxis {...HUD_AXIS} width={40} />
-            <Tooltip {...HUD_TOOLTIP_STYLE} />
+            <CartesianGrid {...GRID} vertical={false} />
+            <XAxis dataKey="name" {...AXIS} />
+            <YAxis {...AXIS} width={40} />
+            <Tooltip {...TOOLTIP_STYLE} />
             <Legend
               iconType="plainline"
               iconSize={16}
@@ -98,7 +94,7 @@ export function HudLineChart({
               }}
             />
             {series.map((s, i) => {
-              const c = s.color ?? HUD_PALETTE[i % HUD_PALETTE.length];
+              const c = s.color ?? PALETTE[i % PALETTE.length];
               return (
                 <Line
                   key={s.dataKey}

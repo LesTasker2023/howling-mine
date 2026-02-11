@@ -1,1 +1,0 @@
-export { AttributeBars } from "./AttributeBars";

@@ -15,8 +15,8 @@
   --bg-surface: #12120c;
   --bg-panel: rgba(18, 18, 12, 0.85);
   --bg-elevated: #1a1a10;
-  --bg-hover: rgba(234, 179, 8, 0.08);
-  --bg-active: rgba(234, 179, 8, 0.12);
+  --bg-hover: rgba(var(--color-primary-rgb), 0.08);
+  --bg-active: rgba(var(--color-primary-rgb), 0.12);
 
   /* ── Text ── */
   --text-primary: #e2e8f0;
@@ -27,16 +27,16 @@
   --text-on-accent: #0a0a08;
 
   /* ── Borders ── */
-  --border-subtle: rgba(234, 179, 8, 0.1);
-  --border-default: rgba(234, 179, 8, 0.2);
-  --border-strong: rgba(234, 179, 8, 0.35);
-  --border-accent: rgba(245, 158, 11, 0.4);
+  --border-subtle: rgba(var(--color-primary-rgb), 0.1);
+  --border-default: rgba(var(--color-primary-rgb), 0.2);
+  --border-strong: rgba(var(--color-primary-rgb), 0.35);
+  --border-accent: rgba(var(--color-accent-rgb), 0.4);
 
   /* ── Glow Effects ── */
-  --glow-sm: 0 0 8px rgba(234, 179, 8, 0.2);
-  --glow-md: 0 0 16px rgba(234, 179, 8, 0.25);
-  --glow-lg: 0 0 32px rgba(234, 179, 8, 0.2);
-  --glow-accent: 0 0 16px rgba(245, 158, 11, 0.3);
+  --glow-sm: 0 0 8px rgba(var(--color-primary-rgb), 0.2);
+  --glow-md: 0 0 16px rgba(var(--color-primary-rgb), 0.25);
+  --glow-lg: 0 0 32px rgba(var(--color-primary-rgb), 0.2);
+  --glow-accent: 0 0 16px rgba(var(--color-accent-rgb), 0.3);
   --shadow-dropdown: 0 8px 24px rgba(0, 0, 0, 0.4);
 
   /* ── Status Colors ── */

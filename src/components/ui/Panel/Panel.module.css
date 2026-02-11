@@ -56,7 +56,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: var(--corner-accent, rgba(6, 182, 212, 0.08));
+  background: var(--corner-accent, rgba(var(--color-accent-rgb), 0.08));
 }
 
 /* Diagonal stripe overlay */
@@ -66,8 +66,8 @@
   inset: 0;
   background: repeating-linear-gradient(
     -45deg,
-    var(--corner-accent, rgba(6, 182, 212, 0.18)) 0px,
-    var(--corner-accent, rgba(6, 182, 212, 0.18)) 2px,
+    var(--corner-accent, rgba(var(--color-accent-rgb), 0.18)) 0px,
+    var(--corner-accent, rgba(var(--color-accent-rgb), 0.18)) 2px,
     transparent 2px,
     transparent 5px
   );
@@ -87,7 +87,7 @@
 
 .cornerLine {
   fill: none;
-  stroke: var(--corner-accent, rgba(6, 182, 212, 0.55));
+  stroke: var(--corner-accent, rgba(var(--color-accent-rgb), 0.55));
   stroke-width: 2;
   stroke-linecap: square;
   stroke-linejoin: miter;
@@ -96,25 +96,25 @@
 
 /* Filled wedge at notch bends */
 .cornerFill {
-  fill: var(--corner-accent, rgba(6, 182, 212, 0.25));
+  fill: var(--corner-accent, rgba(var(--color-accent-rgb), 0.25));
   stroke: none;
   transition: fill var(--duration-base) var(--ease-out);
 }
 
 .accentBar {
-  fill: var(--corner-accent, rgba(6, 182, 212, 0.55));
+  fill: var(--corner-accent, rgba(var(--color-accent-rgb), 0.55));
   transition: fill var(--duration-base) var(--ease-out);
 }
 
 /* Solid tab near BL bracket */
 .accentTab {
-  fill: var(--corner-accent, rgba(6, 182, 212, 0.45));
+  fill: var(--corner-accent, rgba(var(--color-accent-rgb), 0.45));
   transition: fill var(--duration-base) var(--ease-out);
 }
 
 /* Hash marks — diagonal score lines near TR */
 .hashMark {
-  stroke: var(--corner-accent, rgba(6, 182, 212, 0.7));
+  stroke: var(--corner-accent, rgba(var(--color-accent-rgb), 0.7));
   stroke-width: 2;
   stroke-linecap: round;
   transition: stroke var(--duration-base) var(--ease-out);
@@ -130,7 +130,7 @@
 
 /* Small cross marks inside TR / BL corners */
 .crossMark {
-  stroke: var(--corner-accent, rgba(6, 182, 212, 0.25));
+  stroke: var(--corner-accent, rgba(var(--color-accent-rgb), 0.25));
   stroke-width: 1;
   stroke-linecap: round;
   transition: stroke var(--duration-base) var(--ease-out);
@@ -138,26 +138,26 @@
 
 /* Hatched accent block — uses SVG pattern fill */
 .hatchBlock {
-  fill: var(--corner-accent, rgba(6, 182, 212, 0.2));
-  stroke: var(--corner-accent, rgba(6, 182, 212, 0.3));
+  fill: var(--corner-accent, rgba(var(--color-accent-rgb), 0.2));
+  stroke: var(--corner-accent, rgba(var(--color-accent-rgb), 0.3));
   stroke-width: 1;
   transition: fill var(--duration-base) var(--ease-out);
 }
 
 /* Small indicator dots near brackets */
 .indicatorDot {
-  fill: var(--corner-accent, rgba(6, 182, 212, 0.3));
+  fill: var(--corner-accent, rgba(var(--color-accent-rgb), 0.3));
   transition: fill var(--duration-base) var(--ease-out);
 }
 
 .indicatorDotBright {
-  fill: var(--corner-accent, rgba(6, 182, 212, 0.7));
+  fill: var(--corner-accent, rgba(var(--color-accent-rgb), 0.7));
   transition: fill var(--duration-base) var(--ease-out);
 }
 
 /* Mid-edge tick marks */
 .tickMark {
-  stroke: var(--corner-accent, rgba(6, 182, 212, 0.3));
+  stroke: var(--corner-accent, rgba(var(--color-accent-rgb), 0.3));
   stroke-width: 2;
   stroke-linecap: round;
   transition: stroke var(--duration-base) var(--ease-out);
@@ -178,43 +178,43 @@
 }
 
 .panel:hover .cornerLine {
-  stroke: rgba(6, 182, 212, 0.9);
+  stroke: rgba(var(--color-accent-rgb), 0.9);
 }
 
 .panel:hover .cornerFill {
-  fill: rgba(6, 182, 212, 0.4);
+  fill: rgba(var(--color-accent-rgb), 0.4);
 }
 
 .panel:hover .accentBar {
-  fill: rgba(6, 182, 212, 0.9);
+  fill: rgba(var(--color-accent-rgb), 0.9);
 }
 
 .panel:hover .accentTab {
-  fill: rgba(6, 182, 212, 0.7);
+  fill: rgba(var(--color-accent-rgb), 0.7);
 }
 
 .panel:hover .hashMark {
-  stroke: rgba(6, 182, 212, 0.6);
+  stroke: rgba(var(--color-accent-rgb), 0.6);
 }
 
 .panel:hover .tickMark {
-  stroke: rgba(6, 182, 212, 0.55);
+  stroke: rgba(var(--color-accent-rgb), 0.55);
 }
 
 .panel:hover .indicatorDot {
-  fill: rgba(6, 182, 212, 0.5);
+  fill: rgba(var(--color-accent-rgb), 0.5);
 }
 
 .panel:hover .indicatorDotBright {
-  fill: rgba(6, 182, 212, 1);
+  fill: rgba(var(--color-accent-rgb), 1);
 }
 
 .panel:hover .hatchBlock {
-  fill: rgba(6, 182, 212, 0.35);
+  fill: rgba(var(--color-accent-rgb), 0.35);
 }
 
 .panel:hover .crossMark {
-  stroke: rgba(6, 182, 212, 0.45);
+  stroke: rgba(var(--color-accent-rgb), 0.45);
 }
 
 /* ── Variants ── */
@@ -236,7 +236,7 @@
 }
 
 .panel--accent {
-  --corner-accent: rgba(6, 182, 212, 0.7);
+  --corner-accent: rgba(var(--color-accent-rgb), 0.7);
 }
 
 .panel--danger .panelBg {
@@ -254,7 +254,7 @@
 }
 
 .panel--ghost {
-  --corner-accent: rgba(59, 130, 246, 0.2);
+  --corner-accent: rgba(var(--color-primary-rgb), 0.2);
 }
 
 /* Size variants */

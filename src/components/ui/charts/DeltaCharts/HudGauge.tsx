@@ -1,6 +1,6 @@
 "use client";
 
-import { HUD_PALETTE } from "../KreCharts/hud-theme";
+import { useThemeColors } from "@/context/ThemeContext";
 import { Panel } from "@/components/ui/Panel";
 import styles from "./DeltaCharts.module.css";
 
@@ -59,11 +59,13 @@ function segPath(
 
 export function HudGauge({
   value,
-  color = HUD_PALETTE[0],
+  color: colorProp,
   label,
   size = 160,
   title,
 }: HudGaugeProps) {
+  const { accent } = useThemeColors();
+  const color = colorProp ?? accent;
   const clamped = Math.max(0, Math.min(100, value));
   const cx = size / 2;
   const cy = size / 2;
@@ -162,7 +164,7 @@ export function HudGauge({
                 <path
                   key={i}
                   d={segPath(cx, cy, rOuter, rInner, startDeg, SEG_DEG)}
-                  fill={lit ? color : "rgba(59, 130, 246, 0.06)"}
+                  fill={lit ? color : "rgba(var(--color-primary-rgb), 0.06)"}
                   fillOpacity={lit ? 0.9 : 1}
                   filter={lit ? `url(#${filterId})` : undefined}
                 />

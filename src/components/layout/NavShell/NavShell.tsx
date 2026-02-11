@@ -21,6 +21,7 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import { Drawer } from "@/components/ui/Drawer";
+import { ThemeSettings } from "@/components/ui/ThemeSettings";
 import { useTopBar } from "@/context/TopBarContext";
 import styles from "./NavShell.module.css";
 
@@ -30,30 +31,21 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
-const NAV_TOP: NavItem[] = [
-  { label: "Weapons", href: "/weapons", icon: <Swords size={20} /> },
-  { label: "Armor", href: "/armor", icon: <Shield size={20} /> },
-  { label: "Blueprints", href: "/blueprints", icon: <Hammer size={20} /> },
-  { label: "Materials", href: "/materials", icon: <Gem size={20} /> },
-];
+const NAV_TOP: NavItem[] = [];
 
-const NAV_BOTTOM: NavItem[] = [
-  { label: "Guides", href: "/guides", icon: <BookOpen size={20} /> },
-  { label: "Planets", href: "/planets", icon: <Globe size={20} /> },
-  { label: "Maps", href: "/maps", icon: <Map size={20} /> },
-];
+const NAV_BOTTOM: NavItem[] = [];
 
 export function NavShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [expanded, setExpanded] = useState(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("nav-expanded");
-      return stored !== null ? stored === "true" : true;
-    }
-    return true;
-  });
+  const [expanded, setExpanded] = useState(true); // SSR-safe default
+
+  // Hydrate from localStorage after mount
+  useEffect(() => {
+    const stored = localStorage.getItem("nav-expanded");
+    if (stored !== null) setExpanded(stored === "true");
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("nav-expanded", String(expanded));
@@ -101,14 +93,8 @@ export function NavShell({ children }: { children: React.ReactNode }) {
       >
         {/* Logo */}
         <Link href="/" className={styles.logo} data-expanded={expanded}>
-          <Image
-            src="/icon.webp"
-            alt="The Howling Mine"
-            width={24}
-            height={24}
-            priority
-          />
-          <span className={styles.logoLabel}>The Howling Mine</span>
+          <span className={styles.logoShort}>HM</span>
+          <span className={styles.logoLabel}>Howling Mine</span>
         </Link>
 
         {/* Icon nav */}
@@ -215,7 +201,7 @@ export function NavShell({ children }: { children: React.ReactNode }) {
             )
           ) : (
             <span className={styles.tab} data-active="true">
-              Overview
+              Welcome
             </span>
           )}
         </div>
@@ -262,11 +248,7 @@ export function NavShell({ children }: { children: React.ReactNode }) {
         side="right"
         width="md"
       >
-        <p
-          style={{ color: "var(--text-secondary)", fontSize: "var(--text-sm)" }}
-        >
-          Settings panel content coming soon.
-        </p>
+        <ThemeSettings />
       </Drawer>
     </div>
   );

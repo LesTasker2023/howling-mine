@@ -26,7 +26,7 @@
 
 /* Tooltip arrow removal */
 .chartInner :global(.recharts-tooltip-wrapper) {
-  filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.2));
+  filter: drop-shadow(0 0 12px rgba(var(--color-primary-rgb), 0.2));
 }
 
 /* Hide default legend bullets */

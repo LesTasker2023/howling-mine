@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { HUD_PALETTE, HUD_TOOLTIP_STYLE } from "./hud-theme";
+import { useHudTheme } from "./useHudTheme";
 import { Panel } from "@/components/ui/Panel";
 import styles from "./charts.module.css";
 
@@ -40,13 +40,14 @@ export function HudRadarChart({
   title,
   height = 300,
 }: HudRadarChartProps) {
+  const { PALETTE, TOOLTIP_STYLE, POLAR_GRID_STROKE } = useHudTheme();
   return (
     <Panel size="flush" noAnimation>
       <div className={styles.chartInner}>
         {title && <div className={styles.chartTitle}>{title}</div>}
         <ResponsiveContainer width="100%" height={height}>
           <RadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
-            <PolarGrid stroke="rgba(59, 130, 246, 0.12)" />
+            <PolarGrid stroke={POLAR_GRID_STROKE} />
             <PolarAngleAxis
               dataKey="subject"
               tick={{
@@ -58,7 +59,7 @@ export function HudRadarChart({
             />
             <PolarRadiusAxis angle={90} tick={false} axisLine={false} />
             {series.map((s, i) => {
-              const c = s.color ?? HUD_PALETTE[i % HUD_PALETTE.length];
+              const c = s.color ?? PALETTE[i % PALETTE.length];
               return (
                 <Radar
                   key={s.dataKey}
@@ -73,7 +74,7 @@ export function HudRadarChart({
                 />
               );
             })}
-            <Tooltip {...HUD_TOOLTIP_STYLE} />
+            <Tooltip {...TOOLTIP_STYLE} />
           </RadarChart>
         </ResponsiveContainer>
       </div>

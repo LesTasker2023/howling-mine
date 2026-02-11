@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useThemeColors } from "@/context/ThemeContext";
 import { Panel } from "@/components/ui/Panel";
 import { polarXY } from "../hud-primitives";
 import styles from "../DeltaCharts.module.css";
@@ -40,24 +41,6 @@ const SEG_DEG = ARC_SWEEP / SEG_COUNT - GAP_DEG;
 // Number of tick marks around the semi-circle
 const TICK_COUNT = 48;
 const TICK_MAJOR_EVERY = 6;
-
-/* ── Colour stops (green → yellow → red) ── */
-
-function dialColor(t: number): string {
-  // t ∈ [0, 1]  →  green → yellow → red
-  if (t < 0.5) {
-    const p = t / 0.5;
-    const r = Math.round(34 + (250 - 34) * p);
-    const g = Math.round(211 + (204 - 211) * p);
-    const b = Math.round(99 + (21 - 99) * p);
-    return `rgb(${r}, ${g}, ${b})`;
-  }
-  const p = (t - 0.5) / 0.5;
-  const r = Math.round(250 + (239 - 250) * p);
-  const g = Math.round(204 + (68 - 204) * p);
-  const b = Math.round(21 + (68 - 21) * p);
-  return `rgb(${r}, ${g}, ${b})`;
-}
 
 /* ── easeOutCubic for smooth deceleration ── */
 function easeOutCubic(t: number): number {
@@ -126,6 +109,7 @@ export function DialGauge({
   animMs = 900,
   bare = false,
 }: DialGaugeProps) {
+  const { accent, accentRgb } = useThemeColors();
   /* ── Animate pct from previous value to new value ── */
   const targetPct = Math.max(0, Math.min(1, value / max));
   // Ensure a visible minimum so the needle always shows for non-zero values
@@ -164,7 +148,7 @@ export function DialGauge({
 
   const litCount = Math.round(pct * SEG_COUNT);
   const needleDeg = ARC_START + pct * ARC_SWEEP;
-  const needleColor = dialColor(pct);
+  const needleColor = accent;
 
   const ticks = useMemo(() => buildDialTicks(cx, cy, tickR), [cx, cy, tickR]);
 
@@ -185,10 +169,7 @@ export function DialGauge({
     <div className={styles.dialCompact}>
       {label && <span className={styles.dialLabelText}>{label}</span>}
 
-      <div
-        className={styles.gaugeWrap}
-        style={{ maxWidth: size, aspectRatio: `${size} / ${vbH}` }}
-      >
+      <div className={styles.gaugeWrap} style={{ width: size, height: vbH }}>
         <svg
           className={styles.tickRing}
           viewBox={`0 0 ${size} ${vbH}`}
@@ -213,18 +194,15 @@ export function DialGauge({
           {/* Segmented arc */}
           {Array.from({ length: SEG_COUNT }, (_, i) => {
             const deg = ARC_START + i * (SEG_DEG + GAP_DEG);
-            const t = i / SEG_COUNT;
             const lit = i < litCount;
             return (
               <path
                 key={i}
                 d={semiArcSeg(cx, cy, rOuter, rInner, deg, SEG_DEG)}
-                fill={lit ? dialColor(t) : "rgba(148, 163, 184, 0.06)"}
+                fill={lit ? accent : `rgba(${accentRgb}, 0.06)`}
                 fillOpacity={lit ? 0.85 : 1}
                 style={
-                  lit
-                    ? { filter: `drop-shadow(0 0 3px ${dialColor(t)})` }
-                    : undefined
+                  lit ? { filter: `drop-shadow(0 0 3px ${accent})` } : undefined
                 }
               />
             );

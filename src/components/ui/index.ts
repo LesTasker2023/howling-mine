@@ -36,9 +36,6 @@ export type { PaginationSize, PaginationProps } from "./Pagination";
 export { Breadcrumb } from "./Breadcrumb";
 export type { BreadcrumbItem, BreadcrumbProps } from "./Breadcrumb";
 
-// Visualization
-export { PlanetGlobe } from "./charts/DeltaCharts/PlanetGlobe";
-
 // Overlays
 export { Drawer } from "./Drawer";
 export type { DrawerWidth, DrawerSide, DrawerProps } from "./Drawer";

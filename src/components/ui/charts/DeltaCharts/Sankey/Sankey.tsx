@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useThemeColors } from "@/context/ThemeContext";
 import { Panel } from "@/components/ui/Panel";
 import styles from "../DeltaCharts.module.css";
 
@@ -33,18 +34,20 @@ export interface SankeyProps {
   height?: number;
 }
 
-/* ── Default palette ── */
+/* ── Default palette — first 2 come from theme, rest are fixed ── */
 
-const PALETTE = [
-  "#3b82f6",
-  "#22d3ee",
-  "#a78bfa",
-  "#f472b6",
-  "#34d399",
-  "#facc15",
-  "#f97316",
-  "#ef4444",
-];
+function buildPalette(primary: string, accent: string): string[] {
+  return [
+    primary,
+    accent,
+    "#a78bfa",
+    "#f472b6",
+    "#34d399",
+    "#facc15",
+    "#f97316",
+    "#ef4444",
+  ];
+}
 
 /* ── Layout engine ── */
 
@@ -74,6 +77,7 @@ interface LayoutLink {
 function layout(
   props: SankeyProps,
   pad: { top: number; bottom: number; nodeWidth: number; colGap: number },
+  palette: string[],
 ) {
   const { sources, targets, links, width = 900 } = props;
   const nodeGap = 6;
@@ -107,7 +111,7 @@ function layout(
     const node: LayoutNode = {
       id: n.id,
       label: n.label,
-      color: n.color ?? PALETTE[i % PALETTE.length],
+      color: n.color ?? palette[i % palette.length],
       x: 0,
       y: sy,
       h,
@@ -213,14 +217,24 @@ export function Sankey({
   width = 900,
   height: heightProp,
 }: SankeyProps) {
+  const { primary, accent } = useThemeColors();
+  const palette = useMemo(
+    () => buildPalette(primary, accent),
+    [primary, accent],
+  );
   const [hovered, setHovered] = useState<string | null>(null);
 
   const pad = { top: 8, bottom: 8, nodeWidth: 14, colGap: 60 };
   const labelW = 180;
 
   const { srcNodes, tgtNodes, layoutLinks, height } = useMemo(
-    () => layout({ sources, targets, links, width, height: heightProp }, pad),
-    [sources, targets, links, width, heightProp],
+    () =>
+      layout(
+        { sources, targets, links, width, height: heightProp },
+        pad,
+        palette,
+      ),
+    [sources, targets, links, width, heightProp, palette],
   );
 
   /* Build a lookup: when a source is hovered, find its weight per target */

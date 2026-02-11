@@ -10,12 +10,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import {
-  HUD_PALETTE,
-  HUD_AXIS,
-  HUD_GRID,
-  HUD_TOOLTIP_STYLE,
-} from "./hud-theme";
+import { useHudTheme } from "./useHudTheme";
 import { Panel } from "@/components/ui/Panel";
 import styles from "./charts.module.css";
 
@@ -39,11 +34,17 @@ export interface HudBarChartProps {
 }
 
 /* ── Glow filter for each bar ── */
-function GlowDefs({ series }: { series: BarSeries[] }) {
+function GlowDefs({
+  series,
+  palette,
+}: {
+  series: BarSeries[];
+  palette: readonly string[];
+}) {
   return (
     <defs>
       {series.map((s, i) => {
-        const c = s.color ?? HUD_PALETTE[i % HUD_PALETTE.length];
+        const c = s.color ?? palette[i % palette.length];
         return (
           <filter
             key={s.dataKey}
@@ -75,17 +76,18 @@ export function HudBarChart({
   title,
   height = 280,
 }: HudBarChartProps) {
+  const { PALETTE, AXIS, GRID, TOOLTIP_STYLE } = useHudTheme();
   return (
     <Panel size="flush" noAnimation>
       <div className={styles.chartInner}>
         {title && <div className={styles.chartTitle}>{title}</div>}
         <ResponsiveContainer width="100%" height={height}>
           <BarChart data={data} barCategoryGap="25%" barGap={4}>
-            <GlowDefs series={series} />
-            <CartesianGrid {...HUD_GRID} vertical={false} />
-            <XAxis dataKey="name" {...HUD_AXIS} />
-            <YAxis {...HUD_AXIS} width={40} />
-            <Tooltip {...HUD_TOOLTIP_STYLE} />
+            <GlowDefs series={series} palette={PALETTE} />
+            <CartesianGrid {...GRID} vertical={false} />
+            <XAxis dataKey="name" {...AXIS} />
+            <YAxis {...AXIS} width={40} />
+            <Tooltip {...TOOLTIP_STYLE} />
             <Legend
               iconType="circle"
               iconSize={8}
@@ -96,7 +98,7 @@ export function HudBarChart({
               }}
             />
             {series.map((s, i) => {
-              const c = s.color ?? HUD_PALETTE[i % HUD_PALETTE.length];
+              const c = s.color ?? PALETTE[i % PALETTE.length];
               return (
                 <Bar
                   key={s.dataKey}

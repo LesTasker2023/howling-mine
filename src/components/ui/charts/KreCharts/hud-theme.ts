@@ -7,66 +7,66 @@
 
 /* ── Neon palette — ordered for visual separation ── */
 export const HUD_PALETTE = [
-  "#22d3ee", // cyan
+  "#eab308", // gold
   "#f472b6", // pink / magenta
-  "#3b82f6", // primary blue
+  "#f59e0b", // amber
   "#a78bfa", // violet
   "#34d399", // emerald
-  "#facc15", // gold
-  "#fb923c", // amber
+  "#22d3ee", // cyan
+  "#fb923c", // orange
   "#e2e8f0", // silver
 ] as const;
 
 /* ── Semantic pairs (bar chart duos) ── */
 export const HUD_DUO = {
-  a: "#22d3ee",
+  a: "#eab308",
   b: "#f472b6",
 } as const;
 
 /* ── Background / surface colours matching tokens.css ── */
 export const HUD_BG = {
-  base: "#060a13",
-  surface: "#0a1020",
-  panel: "rgba(10, 16, 32, 0.85)",
-  elevated: "#0f1a2e",
-  grid: "rgba(59, 130, 246, 0.06)",
-  gridStrong: "rgba(59, 130, 246, 0.12)",
+  base: "#0a0a08",
+  surface: "#12120c",
+  panel: "rgba(18, 18, 12, 0.85)",
+  elevated: "#1a1a10",
+  grid: "rgba(234, 179, 8, 0.06)",
+  gridStrong: "rgba(234, 179, 8, 0.12)",
 } as const;
 
 /* ── Text ── */
 export const HUD_TEXT = {
   primary: "#e2e8f0",
-  secondary: "#94a3b8",
-  muted: "#475569",
+  secondary: "#a8a29e",
+  muted: "#57534e",
 } as const;
 
 /* ── Shared axis / grid style applied to Recharts props ── */
 export const HUD_AXIS = {
   tick: {
-    fill: "#94a3b8",
+    fill: "#a8a29e",
     fontSize: 11,
     fontFamily: "'JetBrains Mono', monospace",
   },
-  axisLine: { stroke: "rgba(59, 130, 246, 0.15)" },
+  axisLine: { stroke: "rgba(234, 179, 8, 0.15)" },
   tickLine: false as const,
 };
 
 export const HUD_GRID = {
-  stroke: "rgba(59, 130, 246, 0.08)",
+  stroke: "rgba(234, 179, 8, 0.08)",
   strokeDasharray: "3 3",
 };
 
 export const HUD_TOOLTIP_STYLE = {
   contentStyle: {
-    background: "rgba(10, 16, 32, 0.95)",
-    border: "1px solid rgba(59, 130, 246, 0.25)",
+    background: "rgba(18, 18, 12, 0.95)",
+    border: "1px solid rgba(234, 179, 8, 0.25)",
     borderRadius: 4,
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 12,
     color: "#e2e8f0",
-    boxShadow: "0 0 20px rgba(59, 130, 246, 0.15)",
+    boxShadow: "0 0 20px rgba(234, 179, 8, 0.15)",
   },
-  cursor: { fill: "rgba(59, 130, 246, 0.06)" },
+  cursor: { fill: "rgba(234, 179, 8, 0.06)" },
   itemStyle: { color: "#e2e8f0" },
   labelStyle: {
     color: "#94a3b8",

@@ -91,4 +91,4 @@ export function buildTicks(
 
 /* ── Dim segment fill ── */
 
-export const DIM_FILL = "rgba(59, 130, 246, 0.06)";
+export const DIM_FILL = "rgba(234, 179, 8, 0.06)";

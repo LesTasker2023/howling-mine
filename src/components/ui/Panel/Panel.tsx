@@ -70,7 +70,7 @@ function CornerBrackets({ uid }: { uid: string }) {
         <filter id={`${uid}-glow`} x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="2.5" in="SourceGraphic" result="blur" />
           <feFlood
-            floodColor="rgb(6, 182, 212)"
+            floodColor="var(--color-accent)"
             floodOpacity="0.5"
             result="color"
           />
@@ -93,7 +93,7 @@ function CornerBrackets({ uid }: { uid: string }) {
             y1="0"
             x2="0"
             y2="6"
-            stroke="var(--corner-accent, rgba(6,182,212,0.35))"
+            stroke="var(--corner-accent, rgba(var(--color-accent-rgb),0.35))"
             strokeWidth="2"
           />
         </pattern>
@@ -157,7 +157,7 @@ function CornerBrackets({ uid }: { uid: string }) {
         style={{
           strokeWidth: 2,
           fill: "none",
-          stroke: "var(--corner-accent, rgba(6,182,212,0.4))",
+          stroke: "var(--corner-accent, rgba(var(--color-accent-rgb),0.4))",
         }}
       />
 

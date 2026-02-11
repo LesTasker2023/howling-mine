@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { NavShell } from "@/components/layout";
 import { TopBarProvider } from "@/context/TopBarContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -30,10 +31,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <TopBarProvider>
-          <NavShell>{children}</NavShell>
-        </TopBarProvider>
+      <body suppressHydrationWarning>
+        <ThemeProvider>
+          <TopBarProvider>
+            <NavShell>{children}</NavShell>
+          </TopBarProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

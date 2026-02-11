@@ -269,20 +269,20 @@
 }
 
 .radarFill {
-  fill: rgba(34, 211, 238, 0.15);
+  fill: rgba(var(--color-primary-rgb), 0.15);
   stroke: none;
 }
 
 .radarStroke {
   fill: none;
-  stroke: rgba(34, 211, 238, 0.8);
+  stroke: rgba(var(--color-primary-rgb), 0.8);
   stroke-width: 1.5;
-  filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.4));
+  filter: drop-shadow(0 0 4px rgba(var(--color-primary-rgb), 0.4));
 }
 
 .radarDot {
-  fill: #22d3ee;
-  filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.6));
+  fill: #eab308;
+  filter: drop-shadow(0 0 3px rgba(var(--color-primary-rgb), 0.6));
 }
 
 .radarLabel {
@@ -300,7 +300,7 @@
 
 .radarPct {
   font-size: 7px;
-  fill: rgba(34, 211, 238, 0.7);
+  fill: rgba(var(--color-primary-rgb), 0.7);
 }
 
 /* ── Badge row (for CombatStats AoE / Tameable) ── */

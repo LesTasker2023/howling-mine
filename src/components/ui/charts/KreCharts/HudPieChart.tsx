@@ -2,7 +2,7 @@
 
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import type { PieLabelRenderProps } from "recharts";
-import { HUD_PALETTE, HUD_TOOLTIP_STYLE } from "./hud-theme";
+import { useHudTheme } from "./useHudTheme";
 import { Panel } from "@/components/ui/Panel";
 import styles from "./charts.module.css";
 
@@ -68,6 +68,7 @@ export function HudPieChart({
   height = 220,
   showLegend = true,
 }: HudPieChartProps) {
+  const { PALETTE, TOOLTIP_STYLE } = useHudTheme();
   return (
     <Panel size="flush" noAnimation>
       <div className={styles.chartInner}>
@@ -77,7 +78,7 @@ export function HudPieChart({
             <PieChart>
               <defs>
                 {data.map((d, i) => {
-                  const c = d.color ?? HUD_PALETTE[i % HUD_PALETTE.length];
+                  const c = d.color ?? PALETTE[i % PALETTE.length];
                   return (
                     <filter
                       key={d.name}
@@ -125,7 +126,7 @@ export function HudPieChart({
                 animationDuration={800}
               >
                 {data.map((d, i) => {
-                  const c = d.color ?? HUD_PALETTE[i % HUD_PALETTE.length];
+                  const c = d.color ?? PALETTE[i % PALETTE.length];
                   return (
                     <Cell
                       key={d.name}
@@ -136,7 +137,7 @@ export function HudPieChart({
                   );
                 })}
               </Pie>
-              <Tooltip {...HUD_TOOLTIP_STYLE} />
+              <Tooltip {...TOOLTIP_STYLE} />
             </PieChart>
           </ResponsiveContainer>
 
@@ -147,8 +148,7 @@ export function HudPieChart({
                   <span
                     className={styles.pieLegendDot}
                     style={{
-                      backgroundColor:
-                        d.color ?? HUD_PALETTE[i % HUD_PALETTE.length],
+                      backgroundColor: d.color ?? PALETTE[i % PALETTE.length],
                     }}
                   />
                   {d.name}

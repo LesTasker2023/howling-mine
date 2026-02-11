@@ -20,25 +20,11 @@ export {
 
 // DeltaCharts (custom visualizations)
 export {
-  DamageBreakdown,
-  DamageDonut,
-  DamageRadar,
-  ThreatRing,
-  PlanetGlobe,
-  CombatStats,
   HudGauge,
   type HudGaugeProps,
-  MaturityLine,
-  DefenseBars,
-  AttackBars,
-  AttackRadial,
-  AttributeBars,
-  AttributeRadial,
   Sankey,
   type SankeyNode,
   type SankeyLink,
   DialGauge,
   type DialGaugeProps,
-  DamageProfile,
-  type DamageProfileProps,
 } from "./DeltaCharts";
