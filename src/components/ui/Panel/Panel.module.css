@@ -1,0 +1,279 @@
+/* ============================================================================
+   Panel — Notched-corner container with HUD corner brackets + accent lines
+
+   Structure:
+     .panel          — outer wrapper, NO clip-path (so SVG can protrude)
+     .panelBg        — absolute child, carries bg / border / clip-path
+     .cornerSvg      — absolute SVG overlay, can overflow past panel edges
+     .content        — z-stacked above bg
+   ============================================================================ */
+
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* Fill parent in grid/flex without overflowing due to margin */
+  align-self: stretch;
+  /* Breathing room for protruding brackets */
+  margin: 6px;
+  transition: box-shadow var(--duration-base) var(--ease-out);
+}
+
+/* Visual shell — bg + border + notch clip */
+.panelBg {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-default);
+  clip-path: var(--notch-clip);
+  z-index: 0;
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+
+/* TR corner tab — solid block with diagonal hatching */
+.cornerTab {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: min(50%, 200px);
+  height: 26px;
+  z-index: 1;
+  pointer-events: none;
+  clip-path: polygon(
+    14px 100%,
+    0% calc(100% - 14px),
+    0% 0%,
+    100% 0%,
+    100% 100%
+  );
+  overflow: hidden;
+}
+
+/* Solid base tint */
+.cornerTab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--corner-accent, rgba(6, 182, 212, 0.08));
+}
+
+/* Diagonal stripe overlay */
+.cornerTab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--corner-accent, rgba(6, 182, 212, 0.18)) 0px,
+    var(--corner-accent, rgba(6, 182, 212, 0.18)) 2px,
+    transparent 2px,
+    transparent 5px
+  );
+}
+
+/* ── SVG corner-bracket overlay — sits OUTSIDE clip so it can protrude ── */
+.cornerSvg {
+  position: absolute;
+  /* Extend past panel edges so protruding brackets are visible */
+  inset: -8px;
+  width: calc(100% + 16px);
+  height: calc(100% + 16px);
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+}
+
+.cornerLine {
+  fill: none;
+  stroke: var(--corner-accent, rgba(6, 182, 212, 0.55));
+  stroke-width: 2;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  transition: stroke var(--duration-base) var(--ease-out);
+}
+
+/* Filled wedge at notch bends */
+.cornerFill {
+  fill: var(--corner-accent, rgba(6, 182, 212, 0.25));
+  stroke: none;
+  transition: fill var(--duration-base) var(--ease-out);
+}
+
+.accentBar {
+  fill: var(--corner-accent, rgba(6, 182, 212, 0.55));
+  transition: fill var(--duration-base) var(--ease-out);
+}
+
+/* Solid tab near BL bracket */
+.accentTab {
+  fill: var(--corner-accent, rgba(6, 182, 212, 0.45));
+  transition: fill var(--duration-base) var(--ease-out);
+}
+
+/* Hash marks — diagonal score lines near TR */
+.hashMark {
+  stroke: var(--corner-accent, rgba(6, 182, 212, 0.7));
+  stroke-width: 2;
+  stroke-linecap: round;
+  transition: stroke var(--duration-base) var(--ease-out);
+}
+
+/* Vent lines — dense diagonal hatching inside TR corner bracket */
+.ventLine {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+/* Small cross marks inside TR / BL corners */
+.crossMark {
+  stroke: var(--corner-accent, rgba(6, 182, 212, 0.25));
+  stroke-width: 1;
+  stroke-linecap: round;
+  transition: stroke var(--duration-base) var(--ease-out);
+}
+
+/* Hatched accent block — uses SVG pattern fill */
+.hatchBlock {
+  fill: var(--corner-accent, rgba(6, 182, 212, 0.2));
+  stroke: var(--corner-accent, rgba(6, 182, 212, 0.3));
+  stroke-width: 1;
+  transition: fill var(--duration-base) var(--ease-out);
+}
+
+/* Small indicator dots near brackets */
+.indicatorDot {
+  fill: var(--corner-accent, rgba(6, 182, 212, 0.3));
+  transition: fill var(--duration-base) var(--ease-out);
+}
+
+.indicatorDotBright {
+  fill: var(--corner-accent, rgba(6, 182, 212, 0.7));
+  transition: fill var(--duration-base) var(--ease-out);
+}
+
+/* Mid-edge tick marks */
+.tickMark {
+  stroke: var(--corner-accent, rgba(6, 182, 212, 0.3));
+  stroke-width: 2;
+  stroke-linecap: round;
+  transition: stroke var(--duration-base) var(--ease-out);
+}
+
+/* Content */
+.content {
+  position: relative;
+  padding: var(--space-6);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hover — brackets brighten */
+.panel:hover .panelBg {
+  border-color: var(--border-strong);
+}
+
+.panel:hover .cornerLine {
+  stroke: rgba(6, 182, 212, 0.9);
+}
+
+.panel:hover .cornerFill {
+  fill: rgba(6, 182, 212, 0.4);
+}
+
+.panel:hover .accentBar {
+  fill: rgba(6, 182, 212, 0.9);
+}
+
+.panel:hover .accentTab {
+  fill: rgba(6, 182, 212, 0.7);
+}
+
+.panel:hover .hashMark {
+  stroke: rgba(6, 182, 212, 0.6);
+}
+
+.panel:hover .tickMark {
+  stroke: rgba(6, 182, 212, 0.55);
+}
+
+.panel:hover .indicatorDot {
+  fill: rgba(6, 182, 212, 0.5);
+}
+
+.panel:hover .indicatorDotBright {
+  fill: rgba(6, 182, 212, 1);
+}
+
+.panel:hover .hatchBlock {
+  fill: rgba(6, 182, 212, 0.35);
+}
+
+.panel:hover .crossMark {
+  stroke: rgba(6, 182, 212, 0.45);
+}
+
+/* ── Variants ── */
+
+.panel--interactive {
+  cursor: pointer;
+}
+
+.panel--interactive:hover {
+  box-shadow: var(--glow-sm);
+}
+
+.panel--interactive:hover .panelBg {
+  border-color: var(--color-primary);
+}
+
+.panel--accent .panelBg {
+  border-color: var(--border-accent);
+}
+
+.panel--accent {
+  --corner-accent: rgba(6, 182, 212, 0.7);
+}
+
+.panel--danger .panelBg {
+  border-color: rgba(var(--status-danger-rgb), 0.3);
+  background: rgba(var(--status-danger-rgb), 0.05);
+}
+
+.panel--danger {
+  --corner-accent: rgba(var(--status-danger-rgb), 0.55);
+}
+
+.panel--ghost .panelBg {
+  background: transparent;
+  border-color: var(--border-subtle);
+}
+
+.panel--ghost {
+  --corner-accent: rgba(59, 130, 246, 0.2);
+}
+
+/* Size variants */
+.panel--sm .content {
+  padding: var(--space-3) var(--space-4);
+}
+
+.panel--sm {
+  --notch-size: 8px;
+}
+
+.panel--lg .content {
+  padding: var(--space-8) var(--space-10);
+}
+
+.panel--lg {
+  --notch-size: 16px;
+}
+
+.panel--flush .content {
+  padding: 0;
+}

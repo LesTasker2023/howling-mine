@@ -1,0 +1,104 @@
+/* ── Tooltip ── */
+
+.trigger {
+  display: inline-flex;
+}
+
+/* ── Bubble ── */
+
+.tooltip {
+  position: absolute;
+  z-index: var(--z-toast);
+  pointer-events: none;
+  animation: tooltipIn var(--duration-fast) var(--ease-out) forwards;
+}
+
+.content {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  padding: var(--space-2) var(--space-3);
+  max-width: 260px;
+  white-space: normal;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Placement ── */
+
+.tooltip--top {
+  transform: translateX(-50%) translateY(-100%);
+  padding-bottom: 6px;
+}
+
+.tooltip--bottom {
+  transform: translateX(-50%);
+  padding-top: 6px;
+}
+
+.tooltip--left {
+  transform: translateX(-100%) translateY(-50%);
+  padding-right: 6px;
+}
+
+.tooltip--right {
+  transform: translateY(-50%);
+  padding-left: 6px;
+}
+
+/* ── Arrow ── */
+
+.content::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  transform: rotate(45deg);
+}
+
+.tooltip--top .content::after {
+  bottom: -4px;
+  left: 50%;
+  margin-left: -3px;
+  border-top: none;
+  border-left: none;
+}
+
+.tooltip--bottom .content::after {
+  top: -4px;
+  left: 50%;
+  margin-left: -3px;
+  border-bottom: none;
+  border-right: none;
+}
+
+.tooltip--left .content::after {
+  right: -4px;
+  top: 50%;
+  margin-top: -3px;
+  border-bottom: none;
+  border-left: none;
+}
+
+.tooltip--right .content::after {
+  left: -4px;
+  top: 50%;
+  margin-top: -3px;
+  border-top: none;
+  border-right: none;
+}
+
+/* ── Animation ── */
+
+@keyframes tooltipIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

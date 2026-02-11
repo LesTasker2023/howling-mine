@@ -1,0 +1,10 @@
+/* PlanetCard — layout helpers */
+
+.parentLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: calc(-1 * var(--space-1));
+}

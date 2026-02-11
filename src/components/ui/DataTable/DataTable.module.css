@@ -1,0 +1,122 @@
+/* ============================================================================
+   DataTable — Sortable data grid
+   ============================================================================ */
+
+.wrapper {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-panel);
+}
+
+.scroll {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+/* -- Header cells -- */
+.th {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-default);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.thSortable {
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.thSortable:hover {
+  color: var(--text-primary);
+}
+
+.thActive {
+  color: var(--color-primary);
+}
+
+.thContent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.sortIcon {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.5;
+}
+
+.thActive .sortIcon {
+  opacity: 1;
+  color: var(--color-primary);
+}
+
+/* -- Body cells -- */
+.td {
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+
+/* -- Row -- */
+.row {
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.row:last-child .td {
+  border-bottom: none;
+}
+
+.row:hover {
+  background: var(--bg-hover);
+}
+
+.rowClickable {
+  cursor: pointer;
+}
+
+.rowClickable:hover .td {
+  color: var(--text-primary);
+}
+
+/* -- Empty -- */
+.empty {
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* -- Compact modifier -- */
+.wrapper--compact .th {
+  padding: var(--space-2) var(--space-3);
+}
+
+.wrapper--compact .td {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-xs);
+}
+
+/* -- Striped modifier -- */
+.wrapper--striped .row:nth-child(even) {
+  background: rgba(var(--color-primary-rgb), 0.03);
+}
+
+.wrapper--striped .row:nth-child(even):hover {
+  background: var(--bg-hover);
+}

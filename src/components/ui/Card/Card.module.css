@@ -1,0 +1,121 @@
+/* ============================================================================
+   Card — Entity card for lists / grids
+   Panel provides the container shell (bg, border, clip-path, corner brackets).
+   These styles handle Card-specific layout + features only.
+   ============================================================================ */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  color: inherit;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+/* -- Background Icon (decorative watermark, bottom-right) -- */
+.bgIcon {
+  position: absolute;
+  right: var(--space-2);
+  bottom: var(--space-2);
+  height: calc(100% - var(--space-4));
+  width: auto;
+  aspect-ratio: 1;
+  opacity: 0.05;
+  color: var(--color-primary);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+/* -- Background Image (planet, bottom-right overflow) -- */
+.bgImage {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 200%;
+  width: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  opacity: 1;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  transform: translate(40%, 40%);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.card:hover .bgIcon {
+  opacity: 0.1;
+  transform: translateY(-2px);
+}
+
+.card:hover .bgImage {
+  transform: translate(40%, 40%) scale(1.04);
+}
+
+/* -- Interactive — Panel handles border/glow hover, Card adds lift -- */
+.card--clickable {
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  width: 100%;
+}
+
+.card--clickable:hover {
+  transform: translateY(-1px);
+}
+
+.card--clickable:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* -- Compact -- */
+.card--compact .body {
+  padding: var(--space-2) var(--space-3);
+}
+
+/* -- Image -- */
+.imageWrap {
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  position: relative;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* -- Body -- */
+.body {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+}
+
+/* -- Sizes -- */
+.card--sm .body {
+  padding: var(--space-3);
+  gap: var(--space-1);
+}
+
+.card--lg .body {
+  padding: var(--space-6);
+  gap: var(--space-3);
+}

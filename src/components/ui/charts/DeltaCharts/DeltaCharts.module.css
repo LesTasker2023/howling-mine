@@ -1,0 +1,766 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   DeltaCharts — shared styles for all custom visualization components.
+   Mirrors the HudGauge aesthetic: segmented rings, tick marks, glow.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Wrapper inside Panel ── */
+.chartInner {
+  padding: var(--space-3);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+}
+
+.chartTitle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  align-self: flex-start;
+}
+
+/* ── Compact dial layout (label + value above, gauge below) ── */
+.dialCompact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  gap: 0;
+  padding: var(--space-1);
+}
+
+.dialLabel {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+
+.dialLabelText {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.dialLabelValue {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dialHint {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+/* ── Gauge ring wrapper (reused across ring-type charts) ── */
+.gaugeWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.tickRing {
+  position: absolute;
+  inset: 0;
+}
+
+.gaugeCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: auto;
+}
+
+.gaugeValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--text-bright);
+  line-height: 1;
+}
+
+.gaugeLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+/* ── Help icon ── */
+.helpIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--border-default);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: help;
+  transition:
+    color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease;
+}
+
+.helpIcon:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+/* ── Legend rows (shared across donut / breakdown / radar) ── */
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.legendRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  opacity: 0.8;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.legendRow:hover,
+.legendRowActive {
+  opacity: 1;
+}
+
+.legendDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legendName {
+  flex: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+.legendPct {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* ── Horizontal bar track (for breakdown) ── */
+.barTrack {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s var(--ease-out);
+}
+
+/* ── Stacked bar (breakdown header) ── */
+.stackedBar {
+  display: flex;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  gap: 1px;
+}
+
+.stackedSeg {
+  height: 100%;
+  transition: flex 0.6s var(--ease-out);
+}
+
+/* ── Stat grid (CombatStats) ── */
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-2) var(--space-1);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: border-color var(--duration-fast) ease;
+}
+
+.statCard:hover {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.statCardLabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.statCardValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-bright);
+  line-height: 1;
+}
+
+.statCardHint {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* ── Radar polygon styles ── */
+.radarGrid {
+  fill: none;
+  stroke: rgba(148, 163, 184, 0.08);
+  stroke-width: 1;
+}
+
+.radarAxis {
+  stroke: rgba(148, 163, 184, 0.12);
+  stroke-width: 0.5;
+}
+
+.radarFill {
+  fill: rgba(34, 211, 238, 0.15);
+  stroke: none;
+}
+
+.radarStroke {
+  fill: none;
+  stroke: rgba(34, 211, 238, 0.8);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.4));
+}
+
+.radarDot {
+  fill: #22d3ee;
+  filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.6));
+}
+
+.radarLabel {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  fill: var(--text-muted);
+}
+
+.radarLabelActive {
+  fill: var(--text-secondary);
+}
+
+.radarPct {
+  font-size: 7px;
+  fill: rgba(34, 211, 238, 0.7);
+}
+
+/* ── Badge row (for CombatStats AoE / Tameable) ── */
+.badgeRow {
+  display: flex;
+  gap: var(--space-2);
+  align-self: flex-start;
+}
+
+/* ── Body layout (chart + legend side-by-side) ── */
+.chartBody {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.chartBodyCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Linear / bar chart shared styles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Horizontal bar rows (DefenseBars, AttackBars, AttributeBars)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Summary line below chart title ── */
+.chartSummary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  align-self: stretch;
+}
+
+.chartSummaryVal {
+  color: var(--text-bright);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.chartSummaryUnit {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.chartSummarySep {
+  color: rgba(255, 255, 255, 0.12);
+}
+
+/* ── Bar rows ── */
+.hBarRow {
+  display: grid;
+  grid-template-columns: 40px 1fr 44px;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: help;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.hBarRowRanked {
+  display: grid;
+  grid-template-columns: 22px 36px 1fr 58px;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: help;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.hBarRowRanked:hover {
+  opacity: 1;
+}
+
+/* ── Rank badge ── */
+.hBarRank {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-bright);
+  border: 1.5px solid;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.hBarLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.hBarTrack {
+  height: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  min-width: 40px;
+}
+
+/* Segmented overlay on bar track — creates tick marks */
+.hBarTrack::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 7px,
+    rgba(0, 0, 0, 0.4) 7px,
+    rgba(0, 0, 0, 0.4) 8px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hBarFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s var(--ease-out);
+  position: relative;
+}
+
+.hBarValue {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: right;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.hBarPct {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.hBarRows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  align-self: stretch;
+}
+
+/* Ensure Tooltip span wrappers stretch inside bar rows */
+.hBarRows > * {
+  display: flex;
+  width: 100%;
+}
+
+/* ── Attack group (left accent border) ── */
+.attackGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: var(--space-3);
+  border-left: 2px solid;
+}
+
+.attackHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.attackName {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.attackTotalVal {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-bright);
+  line-height: 1;
+}
+
+.attackTotalUnit {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-left: 4px;
+}
+
+/* Thick stacked bar for attack totals */
+.attackStackedBar {
+  display: flex;
+  width: 100%;
+  height: 5px;
+  overflow: hidden;
+  gap: 2px;
+  position: relative;
+  border-radius: 2px;
+}
+
+.attackStackedSeg {
+  height: 100%;
+  transition: flex 0.6s var(--ease-out);
+}
+
+.attackStackedBar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 7px,
+    rgba(0, 0, 0, 0.35) 7px,
+    rgba(0, 0, 0, 0.35) 8px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Attribute colored dot ── */
+.attrDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.hBarRowAttr {
+  display: grid;
+  grid-template-columns: 10px 44px 1fr 44px;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: help;
+  transition: opacity var(--duration-fast) ease;
+  min-height: 18px;
+  width: 100%;
+}
+
+.hBarRowAttr:hover {
+  opacity: 1;
+}
+
+/* ── Line chart (MaturityLine) ── */
+.lineChartWrap {
+  width: 100%;
+  position: relative;
+}
+
+.lineGrid {
+  stroke: rgba(148, 163, 184, 0.08);
+  stroke-width: 0.5;
+}
+
+.linePath {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lineArea {
+  opacity: 0.15;
+}
+
+.lineDot {
+  r: 3;
+  transition:
+    r 0.15s ease,
+    filter 0.15s ease;
+  cursor: pointer;
+}
+
+.lineDot:hover {
+  r: 5;
+}
+
+.lineXLabel {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  fill: var(--text-muted);
+}
+
+.lineYLabel {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  fill: var(--text-muted);
+}
+
+/* ── Stat toggle row for line chart ── */
+.lineToggles {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  align-self: flex-start;
+}
+
+.lineToggle {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease;
+}
+
+.lineToggle:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.lineToggleActive {
+  border-color: currentColor;
+  color: var(--text-bright);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Maturity step cards ── */
+
+.matStepFloat {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+  animation: matStepFadeIn 0.15s ease;
+}
+
+@keyframes matStepFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.matStepCard {
+  flex: 0 0 auto;
+  min-width: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  transition: border-color var(--duration-fast) ease;
+}
+
+.matStepCard:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.matStepName {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.matStepStat {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.matStepLabel {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Sankey flow diagram
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.sankeyWrap {
+  width: 100%;
+  position: relative;
+}
+
+.sankeyRibbon {
+  transition:
+    fill-opacity 0.2s ease,
+    stroke-opacity 0.2s ease;
+}
+
+.sankeyLabel {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  fill: var(--text-muted);
+  transition: fill var(--duration-fast) ease;
+}
+
+.sankeyLabelActive {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  fill: var(--text-secondary);
+}
+
+.sankeyWeight {
+  font-size: 7px;
+  font-weight: 700;
+  fill: var(--text-bright);
+}

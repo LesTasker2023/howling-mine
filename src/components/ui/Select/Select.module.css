@@ -1,0 +1,142 @@
+/* ============================================================================
+   Select — Custom dropdown with keyboard nav
+   ============================================================================ */
+
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 160px;
+}
+
+/* -- Label -- */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* -- Trigger button -- */
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.trigger:hover {
+  border-color: var(--border-strong);
+}
+
+.trigger:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--glow-sm);
+}
+
+.placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.value {
+  color: var(--text-primary);
+}
+
+/* -- Chevron -- */
+.chevron {
+  width: 14px;
+  height: 14px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* -- Dropdown -- */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: var(--space-1);
+  padding: var(--space-1) 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-dropdown);
+  z-index: var(--z-dropdown);
+  max-height: 240px;
+  overflow-y: auto;
+  list-style: none;
+}
+
+/* -- Option -- */
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.option:hover,
+.optionHighlighted {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.optionSelected {
+  color: var(--color-primary);
+}
+
+.optionDisabled {
+  color: var(--text-muted);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.check {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* -- Size: sm -- */
+.wrapper--sm .trigger {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.wrapper--sm .dropdown {
+  font-size: var(--text-xs);
+}
+
+/* -- Size: lg -- */
+.wrapper--lg .trigger {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-base);
+}

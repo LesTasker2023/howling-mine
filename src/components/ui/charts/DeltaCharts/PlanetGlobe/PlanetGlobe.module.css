@@ -1,0 +1,731 @@
+/* ============================================================================
+   PlanetGlobe  Clean globe + beginner-friendly spawn cards
+   ============================================================================ */
+
+.outer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+/*  Planet Globe  */
+.wrap {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+
+.globe {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  z-index: 2;
+  box-shadow:
+    0 0 40px rgba(6, 182, 212, 0.1),
+    0 0 80px rgba(6, 182, 212, 0.05),
+    inset -20px -20px 60px rgba(0, 0, 0, 0.7);
+}
+
+.planetImg {
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.fallback {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 35%,
+    #1a2a4a 0%,
+    #0a1020 60%,
+    #060a13 100%
+  );
+}
+
+.lighting {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 30% 30%,
+      rgba(255, 255, 255, 0.08) 0%,
+      transparent 50%
+    ),
+    radial-gradient(circle at 75% 75%, rgba(0, 0, 0, 0.6) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/*  Pin Layer  */
+.pinLayer {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.pinIcon {
+  color: var(--color-accent);
+  filter: drop-shadow(0 0 4px rgba(6, 182, 212, 0.6));
+  animation: pin-pulse 3s ease-in-out infinite;
+}
+
+.pinSelected .pinIcon {
+  color: #d4a017;
+  animation: none;
+  filter: drop-shadow(0 0 8px rgba(212, 160, 23, 0.9));
+}
+
+.pinRing {
+  position: absolute;
+  inset: -8px;
+  border: 1.5px solid #d4a017;
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: ring-pulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ring-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes pin-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+/*  Name Badge  */
+.nameBadge {
+  position: absolute;
+  bottom: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  text-align: center;
+}
+
+.nameLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 2px 12px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(6, 10, 19, 0.8);
+}
+
+/* RipCraze map link */
+.mapLink {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: rgba(6, 10, 19, 0.75);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  text-decoration: none;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+}
+
+.mapLink:hover {
+  color: var(--color-accent);
+  border-color: rgba(6, 182, 212, 0.4);
+  background: rgba(6, 10, 19, 0.9);
+}
+
+/*  No-Signal State  */
+.globeOffline {
+  animation: globePulse 4s ease-in-out infinite;
+}
+
+@keyframes globePulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 40px rgba(6, 182, 212, 0.05),
+      0 0 80px rgba(6, 182, 212, 0.02),
+      inset -20px -20px 60px rgba(0, 0, 0, 0.7);
+  }
+  50% {
+    box-shadow:
+      0 0 50px rgba(6, 182, 212, 0.12),
+      0 0 100px rgba(6, 182, 212, 0.06),
+      inset -20px -20px 60px rgba(0, 0, 0, 0.7);
+  }
+}
+
+.noSignal {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.scanLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(6, 182, 212, 0.15) 20%,
+    rgba(6, 182, 212, 0.3) 50%,
+    rgba(6, 182, 212, 0.15) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.15);
+  animation: scanSweep 3.5s ease-in-out infinite;
+  opacity: 0.7;
+}
+
+@keyframes scanSweep {
+  0% {
+    top: -2px;
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.7;
+  }
+  95% {
+    opacity: 0.7;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+.staticNoise {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.01) 2px,
+    rgba(255, 255, 255, 0.01) 4px
+  );
+  animation: staticFlicker 0.15s steps(2) infinite;
+  opacity: 0.5;
+}
+
+@keyframes staticFlicker {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+.noSignalText {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+  animation: textGlitch 4s ease-in-out infinite;
+}
+
+@keyframes textGlitch {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateX(0);
+  }
+  2% {
+    opacity: 0.7;
+    transform: translateX(-2px);
+    text-shadow:
+      2px 0 rgba(6, 182, 212, 0.4),
+      -2px 0 rgba(212, 160, 23, 0.3);
+  }
+  4% {
+    opacity: 0.3;
+    transform: translateX(0);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+  }
+  50% {
+    opacity: 0.25;
+  }
+  52% {
+    opacity: 0.6;
+    transform: translateX(1px);
+    text-shadow:
+      -1px 0 rgba(6, 182, 212, 0.3),
+      1px 0 rgba(212, 160, 23, 0.2);
+  }
+  54% {
+    opacity: 0.3;
+    transform: translateX(0);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* ============================================================================
+   Spawn Section  beginner-friendly cards
+   ============================================================================ */
+
+.spawnSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  margin-bottom: var(--space-2);
+}
+
+.sectionIcon {
+  color: var(--color-accent);
+  opacity: 0.7;
+}
+
+.sectionTitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
+.sectionCount {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/*  Card list  */
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(6, 182, 212, 0.2) transparent;
+}
+
+/*  Spawn Card  */
+.card {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  text-align: left;
+  background: rgba(6, 10, 19, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  padding: 0;
+  overflow: hidden;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+}
+
+.card:hover {
+  border-color: rgba(6, 182, 212, 0.25);
+  background: rgba(6, 10, 19, 0.85);
+}
+
+.cardActive {
+  border-color: rgba(212, 160, 23, 0.4);
+  background: rgba(20, 16, 6, 0.8);
+}
+
+/* Left difficulty stripe */
+.cardStripe {
+  width: 4px;
+  flex-shrink: 0;
+  background: var(--border-subtle);
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.diffBeginner .cardStripe {
+  background: #22c55e;
+}
+.diffEasy .cardStripe {
+  background: #6ee7b7;
+}
+.diffModerate .cardStripe {
+  background: #fbbf24;
+}
+.diffHard .cardStripe {
+  background: #f97316;
+}
+.diffDangerous .cardStripe {
+  background: #ef4444;
+}
+
+/* Card body */
+.cardBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  min-width: 0;
+}
+
+/*  Top row: difficulty badge + "best for beginners"  */
+.cardTop {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.diffBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+.diffBadge.diffBeginner {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.diffBadge.diffEasy {
+  color: #6ee7b7;
+  background: rgba(110, 231, 183, 0.1);
+  border: 1px solid rgba(110, 231, 183, 0.2);
+}
+
+.diffBadge.diffModerate {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.diffBadge.diffHard {
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.1);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+}
+
+.diffBadge.diffDangerous {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* "Best for Beginners" star badge */
+.bestBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #d4a017;
+  background: rgba(212, 160, 23, 0.1);
+  border: 1px solid rgba(212, 160, 23, 0.25);
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  animation: bestGlow 2s ease-in-out infinite;
+}
+
+@keyframes bestGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(212, 160, 23, 0);
+  }
+  50% {
+    box-shadow: 0 0 8px rgba(212, 160, 23, 0.15);
+  }
+}
+
+/*  Main info: maturity range + level  */
+.cardMain {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.cardMatRange {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+}
+
+.cardLevels {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/*  Info pills: density, other species  */
+.cardPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-muted);
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pill svg {
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.pill.densityLow {
+  color: #6ee7b7;
+  border-color: rgba(110, 231, 183, 0.15);
+}
+.pill.densityMedium {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.15);
+}
+.pill.densityHigh {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.15);
+}
+.pill.densityVeryHigh {
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+/*  Bottom row: TP + waypoint  */
+.cardBottom {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  padding-top: var(--space-2);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tpLabel {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.tpLabel svg {
+  color: var(--color-accent);
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.tpLabel strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Waypoint copy button */
+.wpButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 3px 8px;
+  border-radius: 2px;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.wpButton:hover {
+  background: rgba(34, 197, 94, 0.18);
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+.wpCopied {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+/*  Expanded card detail  */
+.cardExpanded {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid rgba(212, 160, 23, 0.1);
+  animation: slideDown 0.15s var(--ease-out);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.expandCell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.expandLabel {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Maturity tags */
+.matList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.matTag {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: rgba(6, 182, 212, 0.08);
+  border: 1px solid rgba(6, 182, 212, 0.15);
+  color: var(--text-secondary);
+}
+
+.matLvl {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.matHp {
+  color: var(--text-muted);
+  font-size: 9px;
+}
+
+.speciesTag {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+}
+
+/* Show more / fewer button */
+.showMoreBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: var(--space-3) 0;
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.04em;
+  background: transparent;
+  border: 1px dashed rgba(6, 182, 212, 0.2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.showMoreBtn:hover {
+  background: rgba(6, 182, 212, 0.06);
+  border-color: rgba(6, 182, 212, 0.35);
+}
+
+.chevronUp {
+  transform: rotate(180deg);
+}
