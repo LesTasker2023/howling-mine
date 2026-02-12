@@ -70,6 +70,12 @@ export function NavShell({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // On /studio routes, skip NavShell chrome entirely — let Sanity own the page
+  const isStudio = pathname.startsWith("/studio");
+  if (isStudio) {
+    return <>{children}</>;
+  }
+
   return (
     <div
       className={styles.shell}
@@ -118,6 +124,7 @@ export function NavShell({ children }: { children: React.ReactNode }) {
               );
             })}
           </div>
+
           <div className={styles.navSpacer} />
           <div className={styles.navGroup}>
             {NAV_BOTTOM.map((item) => {

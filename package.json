@@ -9,12 +9,17 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@portabletext/react": "^6.0.2",
+    "@sanity/image-url": "^2.0.3",
+    "@sanity/vision": "^5.9.0",
     "framer-motion": "^12.33.0",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
+    "next-sanity": "^12.1.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "recharts": "^3.7.0"
+    "recharts": "^3.7.0",
+    "sanity": "^5.9.0"
   },
   "devDependencies": {
     "@types/node": "^20",

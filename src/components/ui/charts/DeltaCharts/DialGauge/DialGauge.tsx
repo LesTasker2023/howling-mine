@@ -88,10 +88,10 @@ function buildDialTicks(cx: number, cy: number, tickR: number): Tick[] {
     const oR = tickR + 4;
     const iR = i % TICK_MAJOR_EVERY === 0 ? oR - 6 : oR - 3;
     return {
-      x1: cx + iR * Math.cos(rad),
-      y1: cy + iR * Math.sin(rad),
-      x2: cx + oR * Math.cos(rad),
-      y2: cy + oR * Math.sin(rad),
+      x1: Math.round((cx + iR * Math.cos(rad)) * 1e4) / 1e4,
+      y1: Math.round((cy + iR * Math.sin(rad)) * 1e4) / 1e4,
+      x2: Math.round((cx + oR * Math.cos(rad)) * 1e4) / 1e4,
+      y2: Math.round((cy + oR * Math.sin(rad)) * 1e4) / 1e4,
       major: i % TICK_MAJOR_EVERY === 0,
     };
   });

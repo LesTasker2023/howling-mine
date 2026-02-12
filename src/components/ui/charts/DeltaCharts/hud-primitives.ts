@@ -19,7 +19,10 @@ export function polarXY(
   deg: number,
 ): { x: number; y: number } {
   const rad = ((deg - 90) * Math.PI) / 180;
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  return {
+    x: Math.round((cx + r * Math.cos(rad)) * 1e4) / 1e4,
+    y: Math.round((cy + r * Math.sin(rad)) * 1e4) / 1e4,
+  };
 }
 
 /* ── Segmented ring arc path ── */

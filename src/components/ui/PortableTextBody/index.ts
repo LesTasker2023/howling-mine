@@ -1,0 +1,1 @@
+export { PortableTextBody } from "./PortableTextBody";

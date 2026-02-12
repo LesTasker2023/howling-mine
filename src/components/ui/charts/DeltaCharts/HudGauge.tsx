@@ -30,7 +30,10 @@ const RING_R = 0.48; // outer tick ring radius
 
 function polarXY(cx: number, cy: number, r: number, deg: number) {
   const rad = ((deg - 90) * Math.PI) / 180;
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  return {
+    x: Math.round((cx + r * Math.cos(rad)) * 1e4) / 1e4,
+    y: Math.round((cy + r * Math.sin(rad)) * 1e4) / 1e4,
+  };
 }
 
 function segPath(
@@ -84,10 +87,10 @@ export function HudGauge({
     const oR = ringR + 4;
     const iR = i % 6 === 0 ? oR - 7 : oR - 3;
     return {
-      x1: cx + iR * Math.cos(rad),
-      y1: cy + iR * Math.sin(rad),
-      x2: cx + oR * Math.cos(rad),
-      y2: cy + oR * Math.sin(rad),
+      x1: Math.round((cx + iR * Math.cos(rad)) * 1e4) / 1e4,
+      y1: Math.round((cy + iR * Math.sin(rad)) * 1e4) / 1e4,
+      x2: Math.round((cx + oR * Math.cos(rad)) * 1e4) / 1e4,
+      y2: Math.round((cy + oR * Math.sin(rad)) * 1e4) / 1e4,
       major: i % 6 === 0,
     };
   });
