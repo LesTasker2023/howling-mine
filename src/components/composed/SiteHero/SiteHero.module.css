@@ -1,16 +1,17 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   SiteHero — Full-viewport sci-fi landing hero
+   SiteHero — Cinematic full-viewport hero with HUD overlays
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .hero {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - var(--topbar-height, 48px));
-  padding: var(--space-16) var(--space-8);
+  justify-content: flex-start;
+  height: calc(100vh - var(--topbar-height, 48px));
+  max-height: calc(100vh - var(--topbar-height, 48px));
+  padding: var(--space-8) clamp(var(--space-6), 8vw, 120px);
   overflow: hidden;
-  background: var(--bg-base);
+  background: #000;
 }
 
 /* ── Video background ── */
@@ -38,120 +39,462 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(var(--hero-overlay-brightness, 0.35)) saturate(0.7);
+  filter: brightness(0.3) saturate(0.6);
 }
 
-/* ── Animated grid backdrop ── */
-.gridCanvas {
+/* ── Noise grain overlay ── */
+.noiseOverlay {
+  position: absolute;
+  inset: -50%;
+  z-index: 1;
+  width: 200%;
+  height: 200%;
+  opacity: 0.035;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  animation: noiseShift 0.15s steps(3) infinite;
+}
+
+@keyframes noiseShift {
+  0% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(-20px, -15px);
+  }
+  66% {
+    transform: translate(15px, -25px);
+  }
+  100% {
+    transform: translate(-10px, 10px);
+  }
+}
+
+/* ── CRT scan lines ── */
+.scanLines {
   position: absolute;
   inset: 0;
-  z-index: 0;
-  opacity: 0.12;
-  background-image:
-    linear-gradient(rgba(var(--color-primary-rgb), 0.3) 1px, transparent 1px),
-    linear-gradient(
-      90deg,
-      rgba(var(--color-primary-rgb), 0.3) 1px,
-      transparent 1px
-    );
-  background-size: 60px 60px;
-  mask-image: radial-gradient(
-    ellipse 70% 60% at 50% 50%,
-    black 0%,
-    transparent 100%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse 70% 60% at 50% 50%,
-    black 0%,
-    transparent 100%
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
   );
 }
 
-/* ── Radial glow behind content ── */
+/* ── Vignette ── */
+.vignetteOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 80% 80% at 50% 50%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+}
+
+/* ── Radial glow ── */
 .glow {
   position: absolute;
-  top: 40%;
-  left: 50%;
-  width: 800px;
-  height: 500px;
+  top: 35%;
+  left: 30%;
+  width: 900px;
+  height: 600px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    rgba(var(--color-primary-rgb), 0.08) 0%,
+    rgba(var(--color-primary-rgb), 0.06) 0%,
     transparent 70%
   );
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* ── Horizontal scan line ── */
-.scanLine {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: rgba(var(--color-primary-rgb), 0.15);
   z-index: 1;
-  animation: scanDown 8s linear infinite;
   pointer-events: none;
 }
 
-@keyframes scanDown {
-  0% {
-    top: -2%;
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  95% {
-    opacity: 1;
-  }
-  100% {
-    top: 102%;
-    opacity: 0;
-  }
-}
-
-/* ── Corner brackets ── */
+/* ── Corner HUD brackets ── */
 .cornerTL,
 .cornerTR,
 .cornerBL,
 .cornerBR {
   position: absolute;
-  width: 32px;
-  height: 32px;
-  z-index: 2;
+  width: 48px;
+  height: 48px;
+  z-index: 4;
   pointer-events: none;
 }
 
 .cornerTL {
   top: var(--space-6);
   left: var(--space-6);
-  border-top: 1px solid rgba(var(--color-primary-rgb), 0.3);
-  border-left: 1px solid rgba(var(--color-primary-rgb), 0.3);
+  border-top: 2px solid rgba(var(--color-primary-rgb), 0.4);
+  border-left: 2px solid rgba(var(--color-primary-rgb), 0.4);
 }
 
 .cornerTR {
   top: var(--space-6);
   right: var(--space-6);
-  border-top: 1px solid rgba(var(--color-primary-rgb), 0.3);
-  border-right: 1px solid rgba(var(--color-primary-rgb), 0.3);
+  border-top: 2px solid rgba(var(--color-primary-rgb), 0.4);
+  border-right: 2px solid rgba(var(--color-primary-rgb), 0.4);
 }
 
 .cornerBL {
   bottom: var(--space-6);
   left: var(--space-6);
-  border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.3);
-  border-left: 1px solid rgba(var(--color-primary-rgb), 0.3);
+  border-bottom: 2px solid rgba(var(--color-primary-rgb), 0.4);
+  border-left: 2px solid rgba(var(--color-primary-rgb), 0.4);
 }
 
 .cornerBR {
   bottom: var(--space-6);
   right: var(--space-6);
-  border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.3);
-  border-right: 1px solid rgba(var(--color-primary-rgb), 0.3);
+  border-bottom: 2px solid rgba(var(--color-primary-rgb), 0.4);
+  border-right: 2px solid rgba(var(--color-primary-rgb), 0.4);
+}
+
+/* ── Side HUD readout ── */
+.sideReadout {
+  position: absolute;
+  right: var(--space-8);
+  top: var(--space-8);
+  z-index: 4;
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(var(--color-primary-rgb), 0.25);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Tactical Overview HUD Panel ── */
+.tacPanel {
+  position: absolute;
+  right: clamp(var(--space-8), 6vw, 80px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: var(--font-mono);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Mini map */
+.miniMap {
+  position: relative;
+  width: 100%;
+  height: 140px;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.mapGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(var(--color-primary-rgb), 0.04) 1px, transparent 1px),
+    linear-gradient(
+      90deg,
+      rgba(var(--color-primary-rgb), 0.04) 1px,
+      transparent 1px
+    );
+  background-size: 20px 20px;
+}
+
+.mapPoint {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.mp1 {
+  top: 30%;
+  left: 55%;
+  background: var(--color-primary);
+  box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.5);
+  animation: mapPing 2s ease-out infinite;
+}
+
+.mp2 {
+  top: 55%;
+  left: 35%;
+  background: rgba(var(--color-primary-rgb), 0.4);
+  width: 4px;
+  height: 4px;
+}
+
+.mp3 {
+  top: 40%;
+  left: 70%;
+  background: rgba(var(--color-primary-rgb), 0.3);
+  width: 4px;
+  height: 4px;
+}
+
+.mp4 {
+  top: 70%;
+  left: 60%;
+  background: rgba(var(--color-primary-rgb), 0.25);
+  width: 3px;
+  height: 3px;
+}
+
+.mp5 {
+  top: 20%;
+  left: 25%;
+  background: rgba(var(--color-primary-rgb), 0.2);
+  width: 3px;
+  height: 3px;
+}
+
+.mapLabel {
+  position: absolute;
+  font-size: 0.35rem;
+  letter-spacing: 0.1em;
+  color: rgba(var(--color-primary-rgb), 0.3);
+}
+
+.ml1 {
+  top: calc(30% + 8px);
+  left: calc(55% + 6px);
+  color: rgba(var(--color-primary-rgb), 0.5);
+}
+
+.ml2 {
+  top: calc(55% + 6px);
+  left: calc(35% + 6px);
+}
+
+.mapRing {
+  position: absolute;
+  top: 30%;
+  left: 55%;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.15);
+  transform: translate(-50%, -50%);
+  animation: mapRingPulse 3s ease-out infinite;
+}
+
+.mapHeader {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 0.4rem;
+  letter-spacing: 0.15em;
+  color: rgba(var(--color-primary-rgb), 0.35);
+  text-transform: uppercase;
+}
+
+@keyframes mapPing {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes mapRingPulse {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 0.4;
+  }
+  100% {
+    width: 50px;
+    height: 50px;
+    opacity: 0;
+  }
+}
+
+/* Threat + signal row */
+.tacRow {
+  display: flex;
+  gap: 16px;
+}
+
+.tacBox {
+  flex: 1;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.08);
+  border-radius: 2px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tacBoxTitle {
+  font-size: 0.4rem;
+  letter-spacing: 0.2em;
+  color: rgba(var(--color-primary-rgb), 0.35);
+  text-transform: uppercase;
+}
+
+/* Threat meter */
+.threatMeter {
+  display: flex;
+  gap: 3px;
+  height: 6px;
+}
+
+.threatSeg {
+  flex: 1;
+  border-radius: 1px;
+  background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+.threatActive {
+  background: var(--color-primary);
+  opacity: 0.6;
+}
+
+.threatHigh {
+  background: #dc2626;
+  opacity: 0.7;
+}
+
+.threatVal {
+  font-size: 0.5rem;
+  color: #dc2626;
+  opacity: 0.7;
+  letter-spacing: 0.1em;
+}
+
+/* Signal wave */
+.sigWave {
+  height: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sigWave svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sigWave path {
+  fill: none;
+  stroke: rgba(var(--color-primary-rgb), 0.3);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+  animation: sigDash 2s linear infinite;
+}
+
+@keyframes sigDash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+/* Stat strip */
+.tacStats {
+  display: flex;
+  gap: 6px;
+}
+
+.tacStat {
+  flex: 1;
+  text-align: center;
+  padding: 6px 0;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.06);
+  border-radius: 2px;
+}
+
+.tacStatVal {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.tacStatLabel {
+  font-size: 0.35rem;
+  letter-spacing: 0.15em;
+  color: rgba(var(--color-primary-rgb), 0.3);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* Divider */
+.tacDivider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(var(--color-primary-rgb), 0.15),
+    transparent
+  );
+}
+
+/* Status rows */
+.tacStatusRows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tacStatusRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+}
+
+.tacStatusLabel {
+  color: rgba(var(--color-primary-rgb), 0.35);
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tacStatusValue {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tacLive {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-primary);
+  opacity: 0.7;
+}
+
+.tacLiveDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: tacPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes tacPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 
 /* ── Content ── */
@@ -160,66 +503,87 @@
   z-index: 3;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
   gap: var(--space-6);
-  max-width: 720px;
+  max-width: 900px;
 }
 
-/* ── Status badge ── */
-.statusLine {
+/* ── Eyebrow ── */
+.eyebrow {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--color-primary);
+  opacity: 0.8;
 }
 
-.statusDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.6);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.4;
-  }
+.eyebrowLine {
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--color-primary-rgb), 0.6),
+    rgba(var(--color-primary-rgb), 0)
+  );
 }
 
 /* ── Title ── */
 .title {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 7vw, 4.5rem);
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: clamp(3.2rem, 9vw, 7rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-primary);
-  line-height: 1.05;
-  text-shadow: 0 0 60px rgba(var(--color-primary-rgb), 0.15);
+  line-height: 0.95;
+  text-shadow:
+    0 0 80px rgba(var(--color-primary-rgb), 0.12),
+    0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
+/* ── Title accent word ── */
 .titleAccent {
   color: var(--color-primary);
-  text-shadow: 0 0 40px rgba(var(--color-primary-rgb), 0.3);
+  text-shadow:
+    0 0 40px rgba(var(--color-primary-rgb), 0.4),
+    0 0 80px rgba(var(--color-primary-rgb), 0.15);
 }
 
-/* ── Subtitle ── */
-.subtitle {
-  font-size: var(--text-lg);
+/* ── Tagline ── */
+.tagline {
+  font-family: var(--font-mono);
+  font-size: clamp(0.85rem, 1.5vw, 1.05rem);
   color: var(--text-secondary);
-  line-height: 1.7;
-  max-width: 520px;
+  line-height: 1.8;
+  max-width: 640px;
+  letter-spacing: 0.02em;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.1em;
+  margin-left: 4px;
+  background: var(--color-primary);
+  vertical-align: text-bottom;
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 /* ── CTA buttons ── */
@@ -230,8 +594,26 @@
   margin-top: var(--space-4);
 }
 
-.actions a {
+.ctaLink {
   text-decoration: none;
+}
+
+/* ── Coordinate bar ── */
+.coordBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(var(--color-primary-rgb), 0.3);
+  margin-top: var(--space-4);
+  user-select: none;
+}
+
+.coordDivider {
+  opacity: 0.4;
 }
 
 /* ── Bottom accent line ── */
@@ -240,15 +622,16 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 1px;
+  height: 2px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(var(--color-primary-rgb), 0.5) 30%,
-    rgba(var(--color-primary-rgb), 0.5) 70%,
+    rgba(var(--color-primary-rgb), 0.5) 20%,
+    rgba(var(--color-primary-rgb), 0.8) 50%,
+    rgba(var(--color-primary-rgb), 0.5) 80%,
     transparent 100%
   );
-  z-index: 3;
+  z-index: 4;
 }
 
 /* ── Footage disclaimer ── */
@@ -256,18 +639,28 @@
   position: absolute;
   bottom: var(--space-4);
   right: var(--space-5);
-  z-index: 4;
-  font-size: 0.65rem;
-  letter-spacing: 0.04em;
-  color: rgba(255 255 255 / 0.25);
+  z-index: 5;
+  font-size: 0.6rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  color: rgba(255 255 255 / 0.2);
   pointer-events: none;
   user-select: none;
 }
 
-/* ── Mobile ── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @media (max-width: 768px) {
   .hero {
-    padding: var(--space-10) var(--space-4);
+    padding: var(--space-10) var(--space-5);
+    align-items: flex-end;
+    padding-bottom: calc(var(--space-16) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .content {
+    max-width: 100%;
   }
 
   .actions {
@@ -275,11 +668,61 @@
     width: 100%;
   }
 
+  .ctaLink {
+    width: 100%;
+  }
+
+  .ctaLink button {
+    width: 100%;
+  }
+
+  .sideReadout {
+    display: none;
+  }
+
+  .tacPanel {
+    display: none;
+  }
+
   .cornerTL,
   .cornerTR,
   .cornerBL,
   .cornerBR {
+    width: 24px;
+    height: 24px;
+  }
+
+  .coordBar {
+    flex-wrap: wrap;
+  }
+
+  .eyebrowLine {
     width: 20px;
-    height: 20px;
+  }
+}
+
+/* ── Reduce motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .noiseOverlay {
+    animation: none;
+  }
+
+  .cursor {
+    animation: none;
+    opacity: 1;
+  }
+
+  .mp1,
+  .mapRing {
+    animation: none;
+  }
+
+  .sigWave path {
+    animation: none;
+  }
+
+  .tacLiveDot {
+    animation: none;
+    opacity: 1;
   }
 }
