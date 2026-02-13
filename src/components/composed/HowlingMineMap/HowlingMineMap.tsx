@@ -109,6 +109,73 @@ function createLabel(text: string, color: string, fontSize = 48): THREE.Sprite {
   return sprite;
 }
 
+/* ── Procedural nebula cloud texture ── */
+function createNebulaTexture(
+  r: number,
+  g: number,
+  b: number,
+  size = 512,
+): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+  const cx = size / 2;
+  const cy = size / 2;
+
+  // Base radial gradient
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.48);
+  grad.addColorStop(0, `rgba(${r},${g},${b},0.35)`);
+  grad.addColorStop(0.25, `rgba(${r},${g},${b},0.18)`);
+  grad.addColorStop(0.55, `rgba(${r},${g},${b},0.06)`);
+  grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, size, size);
+
+  // Sub-clouds for wispy structure
+  for (let i = 0; i < 8; i++) {
+    const ox = cx + (Math.random() - 0.5) * size * 0.5;
+    const oy = cy + (Math.random() - 0.5) * size * 0.5;
+    const rad = size * (0.1 + Math.random() * 0.22);
+    const r2 = Math.min(255, r + Math.floor(Math.random() * 50 - 25));
+    const g2 = Math.min(255, g + Math.floor(Math.random() * 50 - 25));
+    const b2 = Math.min(255, b + Math.floor(Math.random() * 50 - 25));
+    const sg = ctx.createRadialGradient(ox, oy, 0, ox, oy, rad);
+    sg.addColorStop(0, `rgba(${r2},${g2},${b2},0.22)`);
+    sg.addColorStop(0.5, `rgba(${r2},${g2},${b2},0.07)`);
+    sg.addColorStop(1, `rgba(${r2},${g2},${b2},0)`);
+    ctx.fillStyle = sg;
+    ctx.fillRect(0, 0, size, size);
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.needsUpdate = true;
+  return tex;
+}
+
+/* ── Soft glow halo texture ── */
+function createGlowTexture(
+  r: number,
+  g: number,
+  b: number,
+  size = 64,
+): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+  const c = size / 2;
+  const grad = ctx.createRadialGradient(c, c, 0, c, c, c);
+  grad.addColorStop(0, `rgba(${r},${g},${b},0.6)`);
+  grad.addColorStop(0.3, `rgba(${r},${g},${b},0.15)`);
+  grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, size, size);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.needsUpdate = true;
+  return tex;
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════ */
 export function HowlingMineMap({ pois }: HowlingMineMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -210,8 +277,8 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     // ─── Scene ───
     const scene = new THREE.Scene();
 
-    // Fog for depth
-    scene.fog = new THREE.FogExp2(0x050508, 0.06);
+    // Fog — only affects POIs (space visuals use fog:false)
+    scene.fog = new THREE.FogExp2(0x050508, 0.035);
 
     // Ambient + directional
     scene.add(new THREE.AmbientLight(0x334466, 0.6));
@@ -219,12 +286,17 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     dirLight.position.set(5, 8, 3);
     scene.add(dirLight);
 
+    // Subtle blue fill from below for depth
+    const fillLight = new THREE.DirectionalLight(0x334488, 0.15);
+    fillLight.position.set(-3, -5, -2);
+    scene.add(fillLight);
+
     // ─── Camera ───
     const camera = new THREE.PerspectiveCamera(
       50,
       container.clientWidth / container.clientHeight,
       0.01,
-      200,
+      500,
     );
     camera.position.set(0, 6, 8);
 
@@ -233,32 +305,222 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
     controls.minDistance = 1;
-    controls.maxDistance = 30;
+    controls.maxDistance = 50;
     controls.target.set(0, 0, 0);
 
-    // ─── Starfield ───
-    const starGeo = new THREE.BufferGeometry();
-    const starCount = 2000;
-    const starPos = new Float32Array(starCount * 3);
-    for (let i = 0; i < starCount; i++) {
-      starPos[i * 3] = (Math.random() - 0.5) * 80;
-      starPos[i * 3 + 1] = (Math.random() - 0.5) * 80;
-      starPos[i * 3 + 2] = (Math.random() - 0.5) * 80;
-    }
-    starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
-    const starMat = new THREE.PointsMaterial({
-      color: 0xffffff,
-      size: 0.05,
-      transparent: true,
-      opacity: 0.6,
-      sizeAttenuation: true,
-    });
-    scene.add(new THREE.Points(starGeo, starMat));
+    // ─── Deep Starfield (3 density layers) ───
 
-    // ─── Reference grid (subtle) ───
-    const gridHelper = new THREE.GridHelper(12, 24, 0x1a1a10, 0x1a1a10);
+    // Layer 1 — Dense far-field (tiny, cool-dominant)
+    const farCount = 5000;
+    const farGeo = new THREE.BufferGeometry();
+    const farPos = new Float32Array(farCount * 3);
+    const farCol = new Float32Array(farCount * 3);
+    for (let i = 0; i < farCount; i++) {
+      farPos[i * 3] = (Math.random() - 0.5) * 160;
+      farPos[i * 3 + 1] = (Math.random() - 0.5) * 160;
+      farPos[i * 3 + 2] = (Math.random() - 0.5) * 160;
+      const temp = Math.random();
+      if (temp < 0.55) {
+        farCol[i * 3] = 0.72;
+        farCol[i * 3 + 1] = 0.78;
+        farCol[i * 3 + 2] = 1.0;
+      } else if (temp < 0.8) {
+        farCol[i * 3] = 1.0;
+        farCol[i * 3 + 1] = 0.93;
+        farCol[i * 3 + 2] = 0.78;
+      } else if (temp < 0.92) {
+        farCol[i * 3] = 1.0;
+        farCol[i * 3 + 1] = 0.82;
+        farCol[i * 3 + 2] = 0.5;
+      } else {
+        farCol[i * 3] = 1.0;
+        farCol[i * 3 + 1] = 0.55;
+        farCol[i * 3 + 2] = 0.35;
+      }
+    }
+    farGeo.setAttribute("position", new THREE.BufferAttribute(farPos, 3));
+    farGeo.setAttribute("color", new THREE.BufferAttribute(farCol, 3));
+    scene.add(
+      new THREE.Points(
+        farGeo,
+        new THREE.PointsMaterial({
+          size: 0.04,
+          transparent: true,
+          opacity: 0.4,
+          sizeAttenuation: true,
+          vertexColors: true,
+          fog: false,
+        }),
+      ),
+    );
+
+    // Layer 2 — Mid-field (larger, bolder)
+    const midCount = 1500;
+    const midGeo = new THREE.BufferGeometry();
+    const midPos = new Float32Array(midCount * 3);
+    const midCol = new Float32Array(midCount * 3);
+    for (let i = 0; i < midCount; i++) {
+      midPos[i * 3] = (Math.random() - 0.5) * 100;
+      midPos[i * 3 + 1] = (Math.random() - 0.5) * 100;
+      midPos[i * 3 + 2] = (Math.random() - 0.5) * 100;
+      const temp = Math.random();
+      if (temp < 0.5) {
+        midCol[i * 3] = 0.8;
+        midCol[i * 3 + 1] = 0.87;
+        midCol[i * 3 + 2] = 1.0;
+      } else if (temp < 0.78) {
+        midCol[i * 3] = 1.0;
+        midCol[i * 3 + 1] = 0.95;
+        midCol[i * 3 + 2] = 0.82;
+      } else {
+        midCol[i * 3] = 1.0;
+        midCol[i * 3 + 1] = 0.72;
+        midCol[i * 3 + 2] = 0.5;
+      }
+    }
+    midGeo.setAttribute("position", new THREE.BufferAttribute(midPos, 3));
+    midGeo.setAttribute("color", new THREE.BufferAttribute(midCol, 3));
+    scene.add(
+      new THREE.Points(
+        midGeo,
+        new THREE.PointsMaterial({
+          size: 0.08,
+          transparent: true,
+          opacity: 0.55,
+          sizeAttenuation: true,
+          vertexColors: true,
+          fog: false,
+        }),
+      ),
+    );
+
+    // Layer 3 — Bright accent stars (sparse, eye-catching)
+    const brightCount = 100;
+    const brightGeo = new THREE.BufferGeometry();
+    const brightPos = new Float32Array(brightCount * 3);
+    const brightCol = new Float32Array(brightCount * 3);
+    for (let i = 0; i < brightCount; i++) {
+      brightPos[i * 3] = (Math.random() - 0.5) * 110;
+      brightPos[i * 3 + 1] = (Math.random() - 0.5) * 110;
+      brightPos[i * 3 + 2] = (Math.random() - 0.5) * 110;
+      const h = Math.random();
+      if (h < 0.35) {
+        brightCol[i * 3] = 0.7;
+        brightCol[i * 3 + 1] = 0.8;
+        brightCol[i * 3 + 2] = 1.0;
+      } else if (h < 0.65) {
+        brightCol[i * 3] = 1.0;
+        brightCol[i * 3 + 1] = 1.0;
+        brightCol[i * 3 + 2] = 0.95;
+      } else {
+        brightCol[i * 3] = 1.0;
+        brightCol[i * 3 + 1] = 0.85;
+        brightCol[i * 3 + 2] = 0.5;
+      }
+    }
+    brightGeo.setAttribute("position", new THREE.BufferAttribute(brightPos, 3));
+    brightGeo.setAttribute("color", new THREE.BufferAttribute(brightCol, 3));
+    const brightMat = new THREE.PointsMaterial({
+      size: 0.18,
+      transparent: true,
+      opacity: 0.8,
+      sizeAttenuation: true,
+      vertexColors: true,
+      fog: false,
+    });
+    scene.add(new THREE.Points(brightGeo, brightMat));
+
+    // ─── Star glow halos (brightest points get visible halos) ───
+    for (let i = 0; i < 35; i++) {
+      const warm = Math.random() > 0.5;
+      const tex = createGlowTexture(
+        warm ? 255 : 180,
+        warm ? 220 : 200,
+        warm ? 170 : 255,
+      );
+      const mat = new THREE.SpriteMaterial({
+        map: tex,
+        transparent: true,
+        opacity: 0.35,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        fog: false,
+      });
+      const s = new THREE.Sprite(mat);
+      s.position.set(
+        (Math.random() - 0.5) * 90,
+        (Math.random() - 0.5) * 90,
+        (Math.random() - 0.5) * 90,
+      );
+      s.scale.setScalar(0.6 + Math.random() * 1.0);
+      scene.add(s);
+    }
+
+    // ─── Nebula clouds ───
+    const nebulaSprites: THREE.Sprite[] = [];
+    const nebulaDefs = [
+      { r: 90, g: 40, b: 160, x: -28, y: 10, z: -38, s: 32, rot: 0.0 },
+      { r: 25, g: 75, b: 140, x: 32, y: -6, z: -42, s: 38, rot: 1.2 },
+      { r: 145, g: 45, b: 75, x: -18, y: -12, z: 32, s: 26, rot: 0.5 },
+      { r: 45, g: 115, b: 125, x: 22, y: 14, z: 28, s: 30, rot: 2.1 },
+      { r: 140, g: 85, b: 25, x: -32, y: 4, z: -12, s: 24, rot: 3.8 },
+      { r: 55, g: 28, b: 115, x: 38, y: -9, z: -22, s: 34, rot: 4.5 },
+      { r: 115, g: 40, b: 95, x: -6, y: 18, z: -48, s: 42, rot: 1.8 },
+      { r: 35, g: 95, b: 95, x: 12, y: -14, z: 42, s: 28, rot: 5.2 },
+    ];
+    for (const nd of nebulaDefs) {
+      const tex = createNebulaTexture(nd.r, nd.g, nd.b);
+      const mat = new THREE.SpriteMaterial({
+        map: tex,
+        transparent: true,
+        opacity: 0.3,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        fog: false,
+      });
+      const sprite = new THREE.Sprite(mat);
+      sprite.position.set(nd.x, nd.y, nd.z);
+      sprite.scale.setScalar(nd.s);
+      mat.rotation = nd.rot;
+      scene.add(sprite);
+      nebulaSprites.push(sprite);
+    }
+
+    // ─── Floating cosmic dust (2 counter-rotating layers) ───
+    const dustLayers: THREE.Points[] = [];
+    for (let layer = 0; layer < 2; layer++) {
+      const count = 1800;
+      const geo = new THREE.BufferGeometry();
+      const pos = new Float32Array(count * 3);
+      const col = new Float32Array(count * 3);
+      for (let i = 0; i < count; i++) {
+        pos[i * 3] = (Math.random() - 0.5) * 60;
+        pos[i * 3 + 1] = (Math.random() - 0.5) * 60;
+        pos[i * 3 + 2] = (Math.random() - 0.5) * 60;
+        const warmth = layer * 0.1;
+        col[i * 3] = 0.65 + Math.random() * 0.3 + warmth;
+        col[i * 3 + 1] = 0.55 + Math.random() * 0.25;
+        col[i * 3 + 2] = 0.45 + Math.random() * 0.2;
+      }
+      geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+      geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+      const mat = new THREE.PointsMaterial({
+        size: 0.025,
+        transparent: true,
+        opacity: 0.18,
+        sizeAttenuation: true,
+        vertexColors: true,
+        fog: false,
+        depthWrite: false,
+      });
+      dustLayers.push(new THREE.Points(geo, mat));
+      scene.add(dustLayers[layer]);
+    }
+
+    // ─── Reference grid (subtle, deep-space tint) ───
+    const gridHelper = new THREE.GridHelper(12, 24, 0x0c0c1a, 0x0c0c1a);
     gridHelper.position.y = -2;
-    (gridHelper.material as THREE.Material).opacity = 0.3;
+    (gridHelper.material as THREE.Material).opacity = 0.2;
     (gridHelper.material as THREE.Material).transparent = true;
     scene.add(gridHelper);
 
@@ -461,6 +723,26 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
           }
         }
       }
+
+      // ─── Space environment animation ───
+
+      // Cosmic dust drift — counter-rotating layers
+      if (dustLayers[0]) {
+        dustLayers[0].rotation.y += 0.00015;
+        dustLayers[0].rotation.x += 0.00003;
+      }
+      if (dustLayers[1]) {
+        dustLayers[1].rotation.y -= 0.00012;
+        dustLayers[1].rotation.x -= 0.00004;
+      }
+
+      // Nebula micro-rotation
+      for (const ns of nebulaSprites) {
+        ns.material.rotation += 0.00008;
+      }
+
+      // Bright-star shimmer
+      brightMat.opacity = 0.7 + Math.sin(t * 0.6) * 0.15;
 
       renderer.render(scene, camera);
     };
