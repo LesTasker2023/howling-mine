@@ -78,7 +78,7 @@
 .cover {
   width: 100%;
   height: auto;
-  clip-path: var(--notch-clip);
+  border-radius: var(--radius-md);
   margin-bottom: var(--space-8);
   border: 1px solid var(--border-subtle);
 }

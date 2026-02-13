@@ -60,7 +60,7 @@
 .imageWrap {
   position: relative;
   overflow: hidden;
-  clip-path: var(--notch-clip);
+  border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);
   transition:
     border-color var(--duration-base) var(--ease-out),
