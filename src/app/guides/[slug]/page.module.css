@@ -4,7 +4,8 @@
 
 .article {
   padding: var(--space-8);
-  max-width: 80ch;
+  max-width: 1440px;
+  margin: 0 auto;
 }
 
 .header {

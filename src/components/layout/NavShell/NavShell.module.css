@@ -11,7 +11,8 @@
   grid-template-areas:
     "logo topbar"
     "sidebar content";
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   transition: grid-template-columns var(--duration-normal, 0.2s) var(--ease-out);
 }
 
@@ -406,6 +407,7 @@
 .content {
   grid-area: content;
   min-height: 0;
+  overflow-y: auto;
   overflow-x: hidden;
   position: relative;
   display: flex;
