@@ -1,4 +1,7 @@
-/* ─── Hero Section ─── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   HeroSection — CMS page-builder hero with sci-fi HUD treatment
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .hero {
   position: relative;
   display: flex;
@@ -45,6 +48,64 @@
     transparent 0%,
     rgba(var(--color-primary-rgb), 0.03) 100%
   );
+}
+
+/* ── Radial glow behind content ── */
+.glow {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 700px;
+  height: 400px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(var(--color-primary-rgb), 0.06) 0%,
+    transparent 70%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Corner brackets ── */
+.cornerTL,
+.cornerTR,
+.cornerBL,
+.cornerBR {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.cornerTL {
+  top: var(--space-4);
+  left: var(--space-4);
+  border-top: 1px solid rgba(var(--color-primary-rgb), 0.25);
+  border-left: 1px solid rgba(var(--color-primary-rgb), 0.25);
+}
+
+.cornerTR {
+  top: var(--space-4);
+  right: var(--space-4);
+  border-top: 1px solid rgba(var(--color-primary-rgb), 0.25);
+  border-right: 1px solid rgba(var(--color-primary-rgb), 0.25);
+}
+
+.cornerBL {
+  bottom: var(--space-4);
+  left: var(--space-4);
+  border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.25);
+  border-left: 1px solid rgba(var(--color-primary-rgb), 0.25);
+}
+
+.cornerBR {
+  bottom: var(--space-4);
+  right: var(--space-4);
+  border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.25);
+  border-right: 1px solid rgba(var(--color-primary-rgb), 0.25);
 }
 
 /* Content sits above image + overlay */
@@ -97,7 +158,7 @@
   margin-top: var(--space-2);
 }
 
-/* Subtle bottom scan-line effect */
+/* Bottom accent line */
 .hero::after {
   content: "";
   position: absolute;
@@ -112,4 +173,19 @@
     transparent 100%
   );
   z-index: 3;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 320px;
+    padding: var(--space-12) var(--space-4);
+  }
+
+  .cornerTL,
+  .cornerTR,
+  .cornerBL,
+  .cornerBR {
+    width: 20px;
+    height: 20px;
+  }
 }

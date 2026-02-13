@@ -1,20 +1,43 @@
-/* ─── Rich Text Section ─── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   RichTextSection — Tactical content block with HUD accent
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .section {
+  position: relative;
   padding: var(--space-12) var(--space-8);
+  border-left: 2px solid rgba(var(--color-primary-rgb), 0.12);
+  margin-left: var(--space-4);
+}
+
+/* Left edge accent dot */
+.section::before {
+  content: "";
+  position: absolute;
+  top: var(--space-12);
+  left: -4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  opacity: 0.4;
 }
 
 .section--narrow {
   max-width: 48rem;
-  margin-inline: auto;
 }
 
 .section--medium {
   max-width: 64rem;
-  margin-inline: auto;
 }
 
 .section--full {
   max-width: none;
+  margin-left: 0;
+  border-left: none;
+}
+
+.section--full::before {
+  display: none;
 }
 
 .body {

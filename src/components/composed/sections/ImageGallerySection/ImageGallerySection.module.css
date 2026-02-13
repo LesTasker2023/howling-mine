@@ -1,11 +1,30 @@
-/* ─── Image Gallery Section ─── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   ImageGallerySection — Tactical image gallery with HUD framing
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .section {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
   padding: var(--space-12) var(--space-8);
   content-visibility: auto;
   contain-intrinsic-size: auto 600px;
+}
+
+/* Top accent line */
+.section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--space-8);
+  right: var(--space-8);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--color-primary-rgb), 0.3) 0%,
+    rgba(var(--color-primary-rgb), 0.08) 100%
+  );
 }
 
 /* Grid layout */
@@ -41,13 +60,16 @@
 .imageWrap {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-md);
+  clip-path: var(--notch-clip);
   border: 1px solid var(--border-subtle);
-  transition: border-color var(--duration-base) var(--ease-out);
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
 }
 
 .imageWrap:hover {
   border-color: var(--border-default);
+  box-shadow: var(--glow-sm);
 }
 
 .image {
@@ -59,7 +81,9 @@
 }
 
 .caption {
-  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
   color: var(--text-muted);
   padding: var(--space-2) 0;
   text-align: center;

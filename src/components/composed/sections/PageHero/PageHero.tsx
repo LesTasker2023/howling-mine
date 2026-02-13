@@ -51,6 +51,12 @@ export function PageHero({
       {/* Subtle grid texture */}
       <div className={styles.gridTexture} />
 
+      {/* Corner brackets */}
+      <div className={styles.cornerTL} />
+      <div className={styles.cornerTR} />
+      <div className={styles.cornerBL} />
+      <div className={styles.cornerBR} />
+
       {/* Content */}
       <div className={styles.content}>
         {breadcrumb && <span className={styles.breadcrumb}>{breadcrumb}</span>}

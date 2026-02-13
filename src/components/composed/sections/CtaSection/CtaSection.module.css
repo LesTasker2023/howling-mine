@@ -1,5 +1,9 @@
-/* ─── CTA Section ─── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   CtaSection — Call-to-action with tactical panel wrapper
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .section {
+  position: relative;
   padding: var(--space-8);
 }
 
@@ -39,6 +43,24 @@
 
 .link {
   text-decoration: none;
+}
+
+/* Subtle radial glow behind CTA */
+.section::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 250px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(var(--color-primary-rgb), 0.04) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
 }
 
 @media (max-width: 640px) {

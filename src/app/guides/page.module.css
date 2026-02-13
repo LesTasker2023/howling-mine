@@ -12,7 +12,20 @@
   font-weight: 700;
   color: var(--text-bright);
   margin-bottom: var(--space-8);
-  letter-spacing: -0.02em;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.title::before {
+  content: "[ ";
+  color: var(--color-primary);
+  opacity: 0.5;
+}
+
+.title::after {
+  content: " ]";
+  color: var(--color-primary);
+  opacity: 0.5;
 }
 
 .section {
@@ -40,7 +53,7 @@
   display: flex;
   flex-direction: column;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  clip-path: var(--notch-clip);
   background: var(--bg-surface);
   overflow: hidden;
   text-decoration: none;

@@ -65,6 +65,46 @@
   pointer-events: none;
 }
 
+/* ── Corner brackets ── */
+.cornerTL,
+.cornerTR,
+.cornerBL,
+.cornerBR {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.cornerTL {
+  top: var(--space-3);
+  left: var(--space-3);
+  border-top: 1px solid rgba(var(--color-primary-rgb), 0.25);
+  border-left: 1px solid rgba(var(--color-primary-rgb), 0.25);
+}
+
+.cornerTR {
+  top: var(--space-3);
+  right: var(--space-3);
+  border-top: 1px solid rgba(var(--color-primary-rgb), 0.25);
+  border-right: 1px solid rgba(var(--color-primary-rgb), 0.25);
+}
+
+.cornerBL {
+  bottom: var(--space-3);
+  left: var(--space-3);
+  border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.25);
+  border-left: 1px solid rgba(var(--color-primary-rgb), 0.25);
+}
+
+.cornerBR {
+  bottom: var(--space-3);
+  right: var(--space-3);
+  border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.25);
+  border-right: 1px solid rgba(var(--color-primary-rgb), 0.25);
+}
+
 /* ── Content ── */
 .content {
   position: relative;
@@ -143,5 +183,13 @@
   .hero {
     padding: var(--space-8) var(--space-4);
     min-height: 160px;
+  }
+
+  .cornerTL,
+  .cornerTR,
+  .cornerBL,
+  .cornerBR {
+    width: 16px;
+    height: 16px;
   }
 }

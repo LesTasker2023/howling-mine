@@ -1,14 +1,51 @@
-/* ─── Stats Row Section ─── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   StatsRowSection — Tactical data readout row
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .section {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
   padding: var(--space-12) var(--space-8);
 }
 
+/* Top / bottom accent lines framing the stats row */
+.section::before,
+.section::after {
+  content: "";
+  position: absolute;
+  left: var(--space-8);
+  right: var(--space-8);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--color-primary-rgb), 0.3) 0%,
+    rgba(var(--color-primary-rgb), 0.08) 100%
+  );
+}
+
+.section::before {
+  top: 0;
+}
+
+.section::after {
+  bottom: 0;
+}
+
 .grid {
   display: grid;
-  gap: var(--space-6);
+  gap: 0;
+}
+
+/* Vertical dividers between stat blocks */
+.grid > :global(*) {
+  padding: var(--space-4) var(--space-6);
+  border-right: 1px solid var(--border-subtle);
+}
+
+.grid > :global(*:last-child) {
+  border-right: none;
 }
 
 /* Responsive stacking */
@@ -16,10 +53,25 @@
   .grid {
     grid-template-columns: repeat(2, 1fr) !important;
   }
+
+  .grid > :global(*) {
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: var(--space-4) var(--space-3);
+  }
+
+  /* Remove border from last row items */
+  .grid > :global(*:nth-last-child(-n + 2)) {
+    border-bottom: none;
+  }
 }
 
 @media (max-width: 480px) {
   .grid {
     grid-template-columns: 1fr !important;
+  }
+
+  .grid > :global(*:last-child) {
+    border-bottom: none;
   }
 }

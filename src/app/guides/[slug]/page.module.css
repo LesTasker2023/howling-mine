@@ -74,8 +74,21 @@
   font-size: var(--text-3xl);
   font-weight: 700;
   color: var(--text-bright);
-  letter-spacing: -0.02em;
+  letter-spacing: 0.02em;
   line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.title::before {
+  content: "[ ";
+  color: var(--color-primary);
+  opacity: 0.5;
+}
+
+.title::after {
+  content: " ]";
+  color: var(--color-primary);
+  opacity: 0.5;
 }
 
 .date {
@@ -87,7 +100,7 @@
 .cover {
   width: 100%;
   height: auto;
-  border-radius: var(--radius-md);
+  clip-path: var(--notch-clip);
   margin-bottom: var(--space-8);
   border: 1px solid var(--border-subtle);
 }
