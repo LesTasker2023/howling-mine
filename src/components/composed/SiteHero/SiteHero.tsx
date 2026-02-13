@@ -140,7 +140,6 @@ export function SiteHero({
 
       {/* Decorations */}
       <div className={styles.glow} aria-hidden />
-      <div className={styles.scanLine} aria-hidden />
       <div className={styles.cornerTL} aria-hidden />
       <div className={styles.cornerTR} aria-hidden />
       <div className={styles.cornerBL} aria-hidden />
