@@ -203,6 +203,13 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
 
   const [selectedPoi, setSelectedPoi] = useState<MapPoi | null>(null);
   const selectedRef = useRef<string | null>(null);
+  const [legendOpen, setLegendOpen] = useState(false);
+  const [showHint, setShowHint] = useState(true);
+  const hintDismissed = useRef(false);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+
+  /* Detect mobile once */
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
   /* ── TopBar context: expose filters as multi-select subtabs ── */
   const {
@@ -258,9 +265,15 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     const range = Math.max(maxX - minX, maxY - minY, maxZ - minZ, 1000);
     const scale = 8 / range; // Fit into ~8 Three.js units
 
+    // ─── Mobile detection ───
+    const mobile = window.innerWidth <= 768;
+
     // ─── Renderer ───
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const renderer = new THREE.WebGLRenderer({
+      antialias: !mobile,
+      alpha: true,
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.5 : 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x050508, 1);
     renderer.toneMapping = THREE.NoToneMapping;
@@ -290,7 +303,12 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
       0.01,
       500,
     );
-    camera.position.set(0, 6, 8);
+    // Pull camera back on portrait/mobile for better overview
+    if (mobile) {
+      camera.position.set(0, 8, 11);
+    } else {
+      camera.position.set(0, 6, 8);
+    }
 
     // ─── Controls ───
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -300,10 +318,17 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     controls.maxDistance = 50;
     controls.target.set(0, 0, 0);
 
+    // Better touch handling on mobile
+    if (mobile) {
+      controls.rotateSpeed = 0.5;
+      controls.zoomSpeed = 0.8;
+      controls.panSpeed = 0.5;
+    }
+
     // ─── Deep Starfield (3 density layers) ───
 
     // Layer 1 — Dense far-field (tiny, cool-dominant)
-    const farCount = 5000;
+    const farCount = mobile ? 2500 : 5000;
     const farGeo = new THREE.BufferGeometry();
     const farPos = new Float32Array(farCount * 3);
     const farCol = new Float32Array(farCount * 3);
@@ -347,7 +372,7 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     );
 
     // Layer 2 — Mid-field (larger, bolder)
-    const midCount = 1500;
+    const midCount = mobile ? 750 : 1500;
     const midGeo = new THREE.BufferGeometry();
     const midPos = new Float32Array(midCount * 3);
     const midCol = new Float32Array(midCount * 3);
@@ -387,7 +412,7 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     );
 
     // Layer 3 — Bright accent stars (sparse, eye-catching)
-    const brightCount = 100;
+    const brightCount = mobile ? 50 : 100;
     const brightGeo = new THREE.BufferGeometry();
     const brightPos = new Float32Array(brightCount * 3);
     const brightCol = new Float32Array(brightCount * 3);
@@ -423,7 +448,8 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     scene.add(new THREE.Points(brightGeo, brightMat));
 
     // ─── Star glow halos (brightest points get visible halos) ───
-    for (let i = 0; i < 35; i++) {
+    const haloCount = mobile ? 15 : 35;
+    for (let i = 0; i < haloCount; i++) {
       const warm = Math.random() > 0.5;
       const tex = createGlowTexture(
         warm ? 255 : 180,
@@ -460,7 +486,8 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
       { r: 115, g: 40, b: 95, x: -6, y: 18, z: -48, s: 42, rot: 1.8 },
       { r: 35, g: 95, b: 95, x: 12, y: -14, z: 42, s: 28, rot: 5.2 },
     ];
-    for (const nd of nebulaDefs) {
+    const activeNebulae = mobile ? nebulaDefs.slice(0, 4) : nebulaDefs;
+    for (const nd of activeNebulae) {
       const tex = createNebulaTexture(nd.r, nd.g, nd.b);
       const mat = new THREE.SpriteMaterial({
         map: tex,
@@ -480,8 +507,9 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
 
     // ─── Floating cosmic dust (2 counter-rotating layers) ───
     const dustLayers: THREE.Points[] = [];
-    for (let layer = 0; layer < 2; layer++) {
-      const count = 1800;
+    const dustLayerCount = mobile ? 1 : 2;
+    for (let layer = 0; layer < dustLayerCount; layer++) {
+      const count = mobile ? 800 : 1800;
       const geo = new THREE.BufferGeometry();
       const pos = new Float32Array(count * 3);
       const col = new Float32Array(count * 3);
@@ -776,7 +804,7 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     for (const { poi, pos, original } of poiPositions) {
       const color = getCatColor(poi.category);
       const isStation = poi.category === "station";
-      const radius = isStation ? 0.12 : 0.06;
+      const radius = isStation ? (mobile ? 0.16 : 0.12) : mobile ? 0.09 : 0.06;
 
       // Core sphere
       const geo = new THREE.SphereGeometry(radius, 16, 16);
@@ -909,13 +937,18 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
 
     // ─── Raycaster ───
     const raycaster = new THREE.Raycaster();
-    raycaster.params.Points = { threshold: 0.1 };
+    raycaster.params.Points = { threshold: mobile ? 0.3 : 0.1 };
     const mouse = new THREE.Vector2();
 
     // Track drag vs click
     let pointerDownPos = { x: 0, y: 0 };
     const onPointerDown = (e: PointerEvent) => {
       pointerDownPos = { x: e.clientX, y: e.clientY };
+      // Dismiss touch hint on first interaction
+      if (!hintDismissed.current) {
+        hintDismissed.current = true;
+        setShowHint(false);
+      }
     };
     renderer.domElement.addEventListener("pointerdown", onPointerDown);
 
@@ -1107,21 +1140,43 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
   }));
 
   return (
-    <div className={styles.mapContainer}>
+    <div ref={mapContainerRef} className={styles.mapContainer}>
       {/* 3D canvas mount point */}
       <div ref={containerRef} className={styles.canvasWrap} />
 
-      {/* ── Legend ── */}
-      <div className={styles.legend}>
-        {legendItems.map((item) => (
-          <div key={item.cat} className={styles.legendItem}>
-            <span
-              className={styles.legendDot}
-              style={{ background: item.color }}
-            />
-            {item.label}
-          </div>
-        ))}
+      {/* ── Touch hint overlay (mobile only) ── */}
+      {isMobile && showHint && (
+        <div className={styles.touchHint}>
+          Pinch to zoom · Tap a POI
+        </div>
+      )}
+
+      {/* ── Legend (collapsible on mobile) ── */}
+      <div
+        className={`${styles.legend} ${legendOpen ? styles.legendExpanded : ""}`}
+      >
+        {isMobile && (
+          <button
+            className={styles.legendToggle}
+            onClick={() => setLegendOpen((o) => !o)}
+            aria-label={legendOpen ? "Collapse legend" : "Expand legend"}
+          >
+            <span className={styles.legendToggleLabel}>Legend</span>
+            <span className={styles.legendToggleIcon}>
+              {legendOpen ? "▾" : "▸"}
+            </span>
+          </button>
+        )}
+        {(!isMobile || legendOpen) &&
+          legendItems.map((item) => (
+            <div key={item.cat} className={styles.legendItem}>
+              <span
+                className={styles.legendDot}
+                style={{ background: item.color }}
+              />
+              {item.label}
+            </div>
+          ))}
       </div>
 
       {/* ── Detail panel ── */}

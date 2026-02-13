@@ -6,6 +6,7 @@
 
 @media (max-width: 768px) {
   .page {
-    height: calc(100vh - var(--topbar-height));
+    height: 100dvh;
+    /* Use dvh so the map fills the visual viewport on mobile browsers */
   }
 }
