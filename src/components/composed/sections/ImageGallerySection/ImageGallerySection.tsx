@@ -45,6 +45,10 @@ export function ImageGallerySection({
                   alt={item.alt}
                   width={800}
                   height={600}
+                  loading="lazy"
+                  sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
+                  placeholder="blur"
+                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN88P/BfwAJhAPk3KFb5gAAAABJRU5ErkJggg=="
                   className={styles.image}
                 />
               </div>

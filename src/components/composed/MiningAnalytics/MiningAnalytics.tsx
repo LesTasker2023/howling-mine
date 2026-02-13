@@ -6,14 +6,14 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 "use client";
 
-import { useState, useMemo, useCallback, useTransition, useEffect } from "react";
 import {
-  Trophy,
-  Gem,
-  Zap,
-  Star,
-  Crown,
-} from "lucide-react";
+  useState,
+  useMemo,
+  useCallback,
+  useTransition,
+  useEffect,
+} from "react";
+import { Trophy, Gem, Zap, Star, Crown } from "lucide-react";
 import { useTopBar } from "@/context/TopBarContext";
 import {
   Panel,
@@ -256,8 +256,14 @@ export function MiningAnalytics({
   initialData,
   initialPeriod,
 }: MiningAnalyticsProps) {
-  const { setTabs, activeTab, setActiveTab, setSubTabs, activeSubTab, setActiveSubTab } =
-    useTopBar();
+  const {
+    setTabs,
+    activeTab,
+    setActiveTab,
+    setSubTabs,
+    activeSubTab,
+    setActiveSubTab,
+  } = useTopBar();
   const [data, setData] = useState<SpaceMiningStats>(initialData);
   const [period, setPeriod] = useState(initialPeriod);
   const [isPending, startTransition] = useTransition();
@@ -265,12 +271,8 @@ export function MiningAnalytics({
 
   /* Push tabs + period selector into NavShell on mount */
   useEffect(() => {
-    setTabs(
-      TABS.map((t) => ({ key: t.key, label: t.label })),
-    );
-    setSubTabs(
-      PERIODS.map((p) => ({ key: p.key, label: p.label })),
-    );
+    setTabs(TABS.map((t) => ({ key: t.key, label: t.label })));
+    setSubTabs(PERIODS.map((p) => ({ key: p.key, label: p.label })));
     // Default active tab
     setActiveTab("overview");
     setActiveSubTab(initialPeriod);
@@ -330,9 +332,7 @@ export function MiningAnalytics({
 function OverviewTab({ data }: { data: SpaceMiningStats }) {
   const { stats, records, percentiles, topMiners, topAsteroids } = data;
   const hofRate =
-    stats.totalGlobals > 0
-      ? (stats.hofCount / stats.totalGlobals) * 100
-      : 0;
+    stats.totalGlobals > 0 ? (stats.hofCount / stats.totalGlobals) * 100 : 0;
 
   return (
     <div className={styles.tabContent}>
@@ -346,11 +346,7 @@ function OverviewTab({ data }: { data: SpaceMiningStats }) {
               value={stats.totalGlobals.toLocaleString()}
               sub={`${stats.globalsPerHour.toFixed(1)}/hr`}
             />
-            <StatBlock
-              label="Total PED"
-              value={ped(stats.totalPED)}
-              accent
-            />
+            <StatBlock label="Total PED" value={ped(stats.totalPED)} accent />
             <StatBlock
               label="Active Miners"
               value={stats.uniqueMiners}
@@ -429,53 +425,63 @@ function OverviewTab({ data }: { data: SpaceMiningStats }) {
               <div className={styles.percGrid}>
                 <div className={styles.percItem}>
                   <span className={styles.percKey}>P50</span>
-                  <span className={styles.percVal}>{pedShort(percentiles.p50)}</span>
+                  <span className={styles.percVal}>
+                    {pedShort(percentiles.p50)}
+                  </span>
                 </div>
                 <div className={styles.percItem}>
                   <span className={styles.percKey}>P75</span>
-                  <span className={styles.percVal}>{pedShort(percentiles.p75)}</span>
+                  <span className={styles.percVal}>
+                    {pedShort(percentiles.p75)}
+                  </span>
                 </div>
                 <div className={styles.percItem}>
                   <span className={styles.percKey}>P90</span>
-                  <span className={styles.percVal}>{pedShort(percentiles.p90)}</span>
+                  <span className={styles.percVal}>
+                    {pedShort(percentiles.p90)}
+                  </span>
                 </div>
                 <div className={styles.percItem}>
                   <span className={styles.percKey}>P95</span>
-                  <span className={styles.percVal}>{pedShort(percentiles.p95)}</span>
+                  <span className={styles.percVal}>
+                    {pedShort(percentiles.p95)}
+                  </span>
                 </div>
                 <div className={`${styles.percItem} ${styles.percHighlight}`}>
                   <span className={styles.percKey}>P99</span>
-                  <span className={styles.percVal}>{pedShort(percentiles.p99)}</span>
+                  <span className={styles.percVal}>
+                    {pedShort(percentiles.p99)}
+                  </span>
                 </div>
               </div>
             </div>
           )}
 
           {/* Gauges */}
-            <DialGauge
-              value={stats.globalsPerHour}
-              max={Math.max(stats.globalsPerHour * 2, 20)}
-              label="Globals / Hour"
-              displayValue={stats.globalsPerHour.toFixed(1)}
-              hint={`${stats.totalGlobals} total`}
-              size={100}
-            />
-            <DialGauge
-              value={hofRate}
-              max={100}
-              label="HoF Rate"
-              displayValue={`${hofRate.toFixed(1)}%`}
-              hint={`${stats.hofCount} HoFs`}
-              size={100}
-            />
-            <DialGauge
-              value={stats.avgGlobal}
-              max={Math.max(stats.highestGlobal, stats.avgGlobal * 3)}
-              label="Avg Global"
-              displayValue={pedShort(stats.avgGlobal)}
-              hint={`median: ${pedShort(stats.medianGlobal)}`}
-              size={100}
-            />
+          <DialGauge
+            value={stats.globalsPerHour}
+            max={Math.max(stats.globalsPerHour * 2, 20)}
+            label="Globals / Hour"
+            displayValue={stats.globalsPerHour.toFixed(1)}
+            hint={`${stats.totalGlobals} total`}
+            size={100}
+          />
+          <DialGauge
+            value={hofRate}
+            max={100}
+            label="HoF Rate"
+            displayValue={`${hofRate.toFixed(1)}%`}
+            hint={`${stats.hofCount} HoFs`}
+            size={100}
+          />
+          <DialGauge
+            value={stats.avgGlobal}
+            max={Math.max(stats.highestGlobal, stats.avgGlobal * 3)}
+            label="Avg Global"
+            displayValue={pedShort(stats.avgGlobal)}
+            hint={`median: ${pedShort(stats.medianGlobal)}`}
+            size={100}
+          />
         </div>
       </Panel>
 
@@ -496,8 +502,18 @@ function OverviewTab({ data }: { data: SpaceMiningStats }) {
               globals: e.globalCount,
             }))}
             series={[
-              { dataKey: "ped", label: "PED Value", color: "#eab308", yAxisId: "left" },
-              { dataKey: "globals", label: "Globals", color: "#22c55e", yAxisId: "right" },
+              {
+                dataKey: "ped",
+                label: "PED Value",
+                color: "#eab308",
+                yAxisId: "left",
+              },
+              {
+                dataKey: "globals",
+                label: "Globals",
+                color: "#22c55e",
+                yAxisId: "right",
+              },
             ]}
             height={240}
           />
@@ -765,10 +781,7 @@ function MinersTab({ data }: { data: SpaceMiningStats }) {
 
         <div className={styles.statRows}>
           <div className={styles.statRow}>
-            <StatBlock
-              label="Total Miners"
-              value={data.stats.uniqueMiners}
-            />
+            <StatBlock label="Total Miners" value={data.stats.uniqueMiners} />
             <StatBlock
               label="Top Earner"
               value={miners[0]?.avatar ?? "—"}
@@ -777,8 +790,7 @@ function MinersTab({ data }: { data: SpaceMiningStats }) {
             <StatBlock
               label="Avg PED / Miner"
               value={pedShort(
-                data.stats.totalPED /
-                  Math.max(data.stats.uniqueMiners, 1),
+                data.stats.totalPED / Math.max(data.stats.uniqueMiners, 1),
               )}
             />
           </div>
@@ -832,7 +844,8 @@ function AsteroidsTab({ data }: { data: SpaceMiningStats }) {
   const typePieData = useMemo(() => {
     const groups: Record<string, number> = {};
     for (const a of asteroids) {
-      const prefix = a.asteroidName.match(/^[A-Z]-type/i)?.[0] ?? a.asteroidName;
+      const prefix =
+        a.asteroidName.match(/^[A-Z]-type/i)?.[0] ?? a.asteroidName;
       groups[prefix] = (groups[prefix] ?? 0) + a.totalPED;
     }
     return Object.entries(groups)
@@ -1016,9 +1029,7 @@ function FeedTab({ data }: { data: SpaceMiningStats }) {
                   </span>
                 </div>
                 <div className={styles.feedRight}>
-                  <span className={styles.feedValue}>
-                    {ped(g.globalValue)}
-                  </span>
+                  <span className={styles.feedValue}>{ped(g.globalValue)}</span>
                   {g.dateTime && (
                     <span className={styles.feedTime}>
                       {timeAgo(g.dateTime)}

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui";
 import styles from "./SiteHero.module.css";
@@ -10,6 +13,8 @@ interface SiteHeroProps {
   subtitle?: string;
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
+  /** Array of video paths for the background. Cycles with fade-to-black transitions. */
+  videos?: string[];
 }
 
 /**
@@ -35,9 +40,83 @@ export function SiteHero({
   subtitle,
   primaryCta,
   secondaryCta,
+  videos = [],
 }: SiteHeroProps) {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [visible, setVisible] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const transitioningRef = useRef(false);
+
+  const hasVideos = videos.length > 0;
+
+  /* Fade to black → advance (or restart) → fade back in */
+  const triggerTransition = useCallback(() => {
+    if (transitioningRef.current) return;
+    transitioningRef.current = true;
+    setVisible(false);
+    timerRef.current = setTimeout(() => {
+      if (videos.length > 1) {
+        setActiveIdx((prev) => (prev + 1) % videos.length);
+      } else {
+        const vid = videoRef.current;
+        if (vid) {
+          vid.currentTime = 0;
+          vid.play().catch(() => {});
+        }
+        transitioningRef.current = false;
+        setTimeout(() => setVisible(true), 100);
+      }
+    }, 800);
+  }, [videos.length]);
+
+  /* Use timeupdate to detect near-end — more reliable than onEnded for WebM */
+  const handleTimeUpdate = useCallback(() => {
+    const vid = videoRef.current;
+    if (!vid || transitioningRef.current) return;
+    const remaining = vid.duration - vid.currentTime;
+    if (isFinite(remaining) && remaining < 1.0) {
+      triggerTransition();
+    }
+  }, [triggerTransition]);
+
+  /* When idx changes, load + play the new clip and fade back in */
+  useEffect(() => {
+    if (!hasVideos) return;
+    transitioningRef.current = false;
+    const vid = videoRef.current;
+    if (!vid) return;
+    vid.load();
+    vid.play().catch(() => {});
+    const t = setTimeout(() => setVisible(true), 100);
+    return () => clearTimeout(t);
+  }, [activeIdx, hasVideos]);
+
+  /* Cleanup timer on unmount */
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
   return (
     <section className={styles.hero}>
+      {/* Video background */}
+      {hasVideos && <div className={styles.videoBackdrop} aria-hidden />}
+      {hasVideos && (
+        <div
+          className={`${styles.videoBg} ${visible ? styles.videoVisible : ""}`}
+        >
+          <video
+            ref={videoRef}
+            className={styles.video}
+            src={videos[activeIdx]}
+            muted
+            playsInline
+            autoPlay
+            preload="auto"
+            onTimeUpdate={handleTimeUpdate}
+            onEnded={triggerTransition}
+          />
+        </div>
+      )}
+
       {/* Decorations */}
       <div className={styles.gridCanvas} aria-hidden />
       <div className={styles.glow} aria-hidden />
