@@ -8,6 +8,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Copy, Check, X, ShieldAlert } from "lucide-react";
+import { useTopBar } from "@/context/TopBarContext";
 import styles from "./HowlingMineMap.module.css";
 
 /* ── Types ── */
@@ -126,8 +127,33 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
 
   const [selectedPoi, setSelectedPoi] = useState<MapPoi | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
-  const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
   const selectedRef = useRef<string | null>(null);
+
+  /* ── TopBar context: expose filters as multi-select subtabs ── */
+  const {
+    activeSubTabs: activeFilters,
+    setSubTabs,
+    setSubTabMultiSelect,
+  } = useTopBar();
+
+  const categories = Array.from(new Set(pois.map((p) => p.category))).sort();
+
+  /* Push category subtabs into NavShell on mount / when categories change */
+  useEffect(() => {
+    setSubTabMultiSelect(true);
+    setSubTabs(
+      categories.map((cat) => ({
+        key: cat,
+        label: CAT_LABELS[cat] ?? cat,
+        color: "#" + new THREE.Color(getCatColor(cat)).getHexString(),
+      })),
+    );
+    return () => {
+      setSubTabs([]);
+      setSubTabMultiSelect(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categories.join(","), setSubTabs, setSubTabMultiSelect]);
 
   /* ── Copy ── */
   const copyValue = useCallback(async (label: string, value: string) => {
@@ -145,18 +171,6 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     const txt = `/wp [${selectedPoi.name}, ${formatCoord(selectedPoi.euX)}, ${formatCoord(selectedPoi.euY)}, ${formatCoord(selectedPoi.euZ)}]`;
     copyValue("all", txt);
   }, [selectedPoi, copyValue]);
-
-  /* ── Filter ── */
-  const categories = Array.from(new Set(pois.map((p) => p.category))).sort();
-
-  const toggleFilter = (cat: string) => {
-    setActiveFilters((prev) => {
-      const next = new Set(prev);
-      if (next.has(cat)) next.delete(cat);
-      else next.add(cat);
-      return next;
-    });
-  };
 
   /* ── Three.js setup ── */
   useEffect(() => {
@@ -316,22 +330,13 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     }
 
     // ─── M-Type PVP zone sphere ───
+    // Hardcoded EU center (matches ProjectDelta reference) — manually tuned
+    // to encompass all M-type asteroids without reaching ND-type clusters.
     const mPois = pois.filter((p) => p.category === "asteroid-m");
     if (mPois.length > 1) {
-      let cx = 0,
-        cy = 0,
-        cz = 0;
-      for (const m of mPois) {
-        cx += m.euX;
-        cy += m.euY;
-        cz += m.euZ;
-      }
-      cx /= mPois.length;
-      cy /= mPois.length;
-      cz /= mPois.length;
-      const pvpCenter = euToThree(cx, cy, cz, center, scale);
+      const pvpCenter = euToThree(78200, 76900, -1550, center, scale);
 
-      // Find max distance from center for radius
+      // Find max distance from center to any M-type asteroid
       let maxDist = 0;
       for (const m of mPois) {
         const p = euToThree(m.euX, m.euY, m.euZ, center, scale);
@@ -339,11 +344,14 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
         if (d > maxDist) maxDist = d;
       }
 
-      const zoneGeo = new THREE.SphereGeometry(maxDist + 0.3, 32, 32);
+      // Tight padding — just enough to visually wrap the outermost M-type
+      const pvpRadius = maxDist + 0.05;
+
+      const zoneGeo = new THREE.SphereGeometry(pvpRadius, 32, 32);
       const zoneMat = new THREE.MeshBasicMaterial({
-        color: 0xef4444,
+        color: 0xff0000,
         transparent: true,
-        opacity: 0.04,
+        opacity: 0.06,
         side: THREE.DoubleSide,
         depthWrite: false,
       });
@@ -352,9 +360,9 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
       scene.add(zoneMesh);
 
       // Zone wireframe
-      const wireGeo = new THREE.SphereGeometry(maxDist + 0.3, 16, 16);
+      const wireGeo = new THREE.SphereGeometry(pvpRadius, 16, 16);
       const wireMat = new THREE.MeshBasicMaterial({
-        color: 0xef4444,
+        color: 0xff0000,
         transparent: true,
         opacity: 0.08,
         wireframe: true,
@@ -526,27 +534,6 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     <div className={styles.mapContainer}>
       {/* 3D canvas mount point */}
       <div ref={containerRef} className={styles.canvasWrap} />
-
-      {/* ── Filter chips ── */}
-      {categories.length > 1 && (
-        <div className={styles.filterBar}>
-          {categories.map((cat) => {
-            const active = activeFilters.size === 0 || activeFilters.has(cat);
-            const color =
-              "#" + new THREE.Color(getCatColor(cat)).getHexString();
-            return (
-              <button
-                key={cat}
-                className={`${styles.filterChip} ${active ? styles.filterChipActive : ""}`}
-                onClick={() => toggleFilter(cat)}
-                style={active ? { borderColor: color, color } : undefined}
-              >
-                {CAT_LABELS[cat] ?? cat}
-              </button>
-            );
-          })}
-        </div>
-      )}
 
       {/* ── Legend ── */}
       <div className={styles.legend}>

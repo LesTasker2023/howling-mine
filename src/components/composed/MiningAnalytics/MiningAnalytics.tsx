@@ -283,7 +283,9 @@ export function MiningAnalytics({
     activeSubTab,
     setActiveSubTab,
   } = useTopBar();
-  const [data, setData] = useState<SpaceMiningStats>(() => decodeStats(initialData));
+  const [data, setData] = useState<SpaceMiningStats>(() =>
+    decodeStats(initialData),
+  );
   const [period, setPeriod] = useState(initialPeriod);
   const [isPending, startTransition] = useTransition();
   const [loading, setLoading] = useState(false);

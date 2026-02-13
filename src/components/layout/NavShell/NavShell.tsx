@@ -64,6 +64,9 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
     subTabs,
     activeSubTab,
     setActiveSubTab,
+    activeSubTabs,
+    subTabMultiSelect,
+    toggleSubTab,
   } = useTopBar();
 
   // Auth placeholder — will be replaced when auth provider is wired
@@ -126,7 +129,14 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
       >
         {/* Logo */}
         <Link href="/" className={styles.logo} data-expanded={expanded}>
-          <span className={styles.logoShort}>{siteNameShort}</span>
+          <Image
+            src="/images/hm-logo.webp"
+            alt=""
+            width={24}
+            height={20}
+            className={styles.logoIcon}
+            priority
+          />
           <span className={styles.logoLabel}>{siteName}</span>
         </Link>
 
@@ -253,13 +263,24 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
       {subTabs.length > 0 && (
         <div className={styles.subbar}>
           <div className={styles.subTabs}>
-            {subTabs.map((tab) =>
-              tab.href ? (
+            {subTabs.map((tab) => {
+              /* Multi-select: active when set is empty (all) or key is in set */
+              const isActive = subTabMultiSelect
+                ? activeSubTabs.size === 0 || activeSubTabs.has(tab.key)
+                : activeSubTab === tab.key;
+
+              const accentStyle =
+                subTabMultiSelect && isActive && tab.color
+                  ? { borderBottomColor: tab.color, color: tab.color }
+                  : undefined;
+
+              return tab.href ? (
                 <Link
                   key={tab.key}
                   href={tab.href}
                   className={styles.subTab}
-                  data-active={activeSubTab === tab.key}
+                  data-active={isActive}
+                  style={accentStyle}
                 >
                   {tab.label}
                 </Link>
@@ -267,14 +288,19 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
                 <button
                   key={tab.key}
                   className={styles.subTab}
-                  data-active={activeSubTab === tab.key}
-                  onClick={() => setActiveSubTab(tab.key)}
+                  data-active={isActive}
+                  style={accentStyle}
+                  onClick={() =>
+                    subTabMultiSelect
+                      ? toggleSubTab(tab.key)
+                      : setActiveSubTab(tab.key)
+                  }
                   type="button"
                 >
                   {tab.label}
                 </button>
-              ),
-            )}
+              );
+            })}
           </div>
         </div>
       )}

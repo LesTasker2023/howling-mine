@@ -23,7 +23,11 @@ export const metadata: Metadata = {
     "resources",
   ],
   icons: {
-    icon: "/icon.webp",
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icon.webp", sizes: "192x192", type: "image/webp" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
 };
 

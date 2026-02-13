@@ -10,7 +10,11 @@ export default function Home() {
         subtitle="Deep-space mining intelligence. Real-time loot tracking, economy analytics, and survival guides for Entropia Universe."
         primaryCta={{ label: "Explore Guides", href: "/guides" }}
         secondaryCta={{ label: "Latest News", href: "/news" }}
-        videos={["/videos/hero-1.webm", "/videos/hero-2.webm", "/videos/hero-3.webm"]}
+        videos={[
+          "/videos/hero-1.webm",
+          "/videos/hero-2.webm",
+          "/videos/hero-3.webm",
+        ]}
       />
     </div>
   );

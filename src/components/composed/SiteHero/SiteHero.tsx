@@ -118,7 +118,6 @@ export function SiteHero({
       )}
 
       {/* Decorations */}
-      <div className={styles.gridCanvas} aria-hidden />
       <div className={styles.glow} aria-hidden />
       <div className={styles.scanLine} aria-hidden />
       <div className={styles.cornerTL} aria-hidden />
@@ -160,7 +159,9 @@ export function SiteHero({
       </div>
 
       {hasVideos && (
-        <span className={styles.footageDisclaimer}>Not actual game footage</span>
+        <span className={styles.footageDisclaimer}>
+          Not actual game footage
+        </span>
       )}
 
       <div className={styles.bottomLine} aria-hidden />
