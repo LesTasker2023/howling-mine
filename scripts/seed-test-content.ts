@@ -334,33 +334,114 @@ const testPage = {
 };
 
 /* ────────────────────────────────────────────────── */
+/*  News Post                                         */
+/* ────────────────────────────────────────────────── */
+const newsPost: Record<string, any> = {
+  _id: "post-howling-mine-v1-launch",
+  _type: "post",
+  title: "The Howling Mine v1.0 — Now Live",
+  slug: { _type: "slug", current: "howling-mine-v1-launch" },
+  excerpt:
+    "After months of development and community testing, The Howling Mine is finally here. Real-time mining analytics, markup-adjusted profit tracking, and more.",
+  publishedAt: new Date().toISOString(),
+  featured: true,
+  categories: [{ _type: "reference", _ref: "cat-mining" }],
+  body: [
+    heading("We're Live 🎉"),
+    block([
+      span(
+        "After months of late-night coding sessions, spreadsheet wars, and far too many mining runs on Calypso, we're excited to announce that ",
+      ),
+      span("The Howling Mine v1.0", ["strong"]),
+      span(" is officially live."),
+    ]),
+
+    heading("What Is The Howling Mine?"),
+    block([
+      span("The Howling Mine is a "),
+      span("free, open-source mining companion", ["strong"]),
+      span(
+        " for Entropia Universe. It tracks your mining runs in real time, calculates markup-adjusted profits, and helps you make smarter decisions about where and how to mine.",
+      ),
+    ]),
+
+    heading("Key Features"),
+    bullet("Real-time claim detection and run tracking"),
+    bullet("Markup-adjusted profit/loss calculations"),
+    bullet("Resource database with current market values"),
+    bullet("Historical analytics — track performance across runs"),
+    bullet("Customizable HUD with dark/light theme support"),
+    bullet("Zero cost, zero ads, zero data selling"),
+
+    callout(
+      "info",
+      "The Howling Mine works entirely client-side. Your data stays on your machine unless you explicitly choose to share it with the community dataset.",
+    ),
+
+    heading("What's Next?"),
+    block([span("This is just the beginning. Here's what's on the roadmap:")]),
+    bullet("Crafting integration — track component costs and markup"),
+    bullet("Community mining heatmaps — anonymized, opt-in"),
+    bullet("Mobile-friendly dashboard for checking runs on the go"),
+    bullet("Enhanced resource guides with finder/depth recommendations"),
+
+    callout(
+      "tip",
+      "Got feature requests or found a bug? Head over to our GitHub and open an issue — or better yet, submit a PR!",
+    ),
+
+    heading("Thank You"),
+    block([
+      span("None of this would be possible without the "),
+      span("Entropia Universe mining community", ["em"]),
+      span(
+        ". Your feedback during the beta shaped every feature in this release. Special thanks to everyone who submitted bug reports, tested edge cases, and shared their mining data.",
+      ),
+    ]),
+
+    block([span("See you underground. ⛏️")]),
+  ],
+};
+
+/* ────────────────────────────────────────────────── */
 /*  Push everything                                   */
 /* ────────────────────────────────────────────────── */
 async function seed() {
   /* ── Upload placeholder images ── */
   console.log("📤 Uploading images...");
-  const [heroImg, hudImg, claimImg, aboutImg, featuresImg] = await Promise.all([
-    uploadImageFromUrl(
-      "https://picsum.photos/seed/mining-hero/1200/675",
-      "mining-hero.jpg",
-    ),
-    uploadImageFromUrl(
-      "https://picsum.photos/seed/mining-hud/1200/675",
-      "mining-hud.jpg",
-    ),
-    uploadImageFromUrl(
-      "https://picsum.photos/seed/mining-claims/1200/675",
-      "mining-claims.jpg",
-    ),
-    uploadImageFromUrl(
-      "https://picsum.photos/seed/about-hero/1200/675",
-      "about-hero.jpg",
-    ),
-    uploadImageFromUrl(
-      "https://picsum.photos/seed/features/1200/675",
-      "features-dashboard.jpg",
-    ),
-  ]);
+  const [heroImg, hudImg, claimImg, aboutImg, featuresImg, newsImg] =
+    await Promise.all([
+      uploadImageFromUrl(
+        "https://picsum.photos/seed/mining-hero/1200/675",
+        "mining-hero.jpg",
+      ),
+      uploadImageFromUrl(
+        "https://picsum.photos/seed/mining-hud/1200/675",
+        "mining-hud.jpg",
+      ),
+      uploadImageFromUrl(
+        "https://picsum.photos/seed/mining-claims/1200/675",
+        "mining-claims.jpg",
+      ),
+      uploadImageFromUrl(
+        "https://picsum.photos/seed/about-hero/1200/675",
+        "about-hero.jpg",
+      ),
+      uploadImageFromUrl(
+        "https://picsum.photos/seed/features/1200/675",
+        "features-dashboard.jpg",
+      ),
+      uploadImageFromUrl(
+        "https://picsum.photos/seed/news-launch/1200/675",
+        "news-launch.jpg",
+      ),
+    ]);
+
+  /* ── Set news post cover image ── */
+  newsPost.coverImage = {
+    _type: "image",
+    asset: { _type: "reference", _ref: newsImg },
+  };
 
   /* ── Inject images into guide body ── */
   // After "Welcome, Miner" heading (index 0–1) → insert hero image at index 2
@@ -440,11 +521,13 @@ async function seed() {
   tx.createOrReplace(huntingCategory);
   tx.createOrReplace(testGuide);
   tx.createOrReplace(testPage);
+  tx.createOrReplace(newsPost);
 
   const result = await tx.commit();
   console.log("✅ Seeded test content — transaction:", result.transactionId);
   console.log("   📄 Page:  /about");
   console.log("   📘 Guide: /guides/mining-101");
+  console.log("   📰 News:  /news/howling-mine-v1-launch");
   console.log("   🏷️  Categories: Mining, Hunting");
 }
 

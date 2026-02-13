@@ -1,11 +1,9 @@
-import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/live";
 import { POSTS_QUERY } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
-
-export const revalidate = 60; // ISR — re-fetch every 60s
 
 interface Post {
   _id: string;
@@ -22,7 +20,8 @@ interface Post {
 export default async function NewsPage() {
   let posts: Post[] = [];
   try {
-    posts = await client.fetch(POSTS_QUERY);
+    const { data } = await sanityFetch({ query: POSTS_QUERY });
+    posts = data ?? [];
   } catch {
     /* Sanity not configured yet */
   }
@@ -43,7 +42,7 @@ export default async function NewsPage() {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Blog</h1>
+      <h1 className={styles.title}>News</h1>
       <div className={styles.grid}>
         {posts.map((post) => (
           <Link

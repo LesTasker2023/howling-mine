@@ -1,0 +1,25 @@
+/* ─── Stats Row Section ─── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-12) var(--space-8);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+/* Responsive stacking */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+}

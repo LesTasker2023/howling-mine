@@ -1,0 +1,54 @@
+/* ─── CTA Section ─── */
+.section {
+  padding: var(--space-8);
+}
+
+.section[data-variant="danger"] {
+  --color-primary-rgb: var(--status-danger-rgb);
+  --color-primary: var(--status-danger);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+  min-width: 280px;
+}
+
+.body {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 520px;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-4);
+  flex-shrink: 0;
+}
+
+.link {
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .inner {
+    flex-direction: column;
+    text-align: center;
+    align-items: stretch;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

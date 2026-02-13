@@ -1,7 +1,6 @@
 .article {
-  max-width: 48rem;
-  margin: 0 auto;
-  padding: 3rem 1.5rem;
+  width: 100%;
+  min-height: 100%;
 }
 
 .title {

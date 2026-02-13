@@ -1,0 +1,115 @@
+/* ─── Hero Section ─── */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 420px;
+  padding: var(--space-16) var(--space-8);
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.hero--center {
+  text-align: center;
+}
+
+.hero--left {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+/* Background image */
+.bgImage {
+  object-fit: cover;
+  z-index: 0;
+  filter: brightness(0.35) saturate(0.7);
+}
+
+/* Dark overlay for contrast */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 8, 0.6) 0%,
+    rgba(10, 10, 8, 0.85) 100%
+  );
+  pointer-events: none;
+}
+
+.hero:not([data-has-bg]) .overlay {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(var(--color-primary-rgb), 0.03) 100%
+  );
+}
+
+/* Content sits above image + overlay */
+.content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 720px;
+}
+
+.hero--center .content {
+  align-items: center;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, var(--text-4xl));
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  line-height: 1.15;
+  text-shadow: 0 0 40px rgba(var(--color-primary-rgb), 0.2);
+}
+
+/* Decorative bracket accents */
+.heading::before {
+  content: "[ ";
+  color: var(--color-primary);
+  opacity: 0.6;
+}
+
+.heading::after {
+  content: " ]";
+  color: var(--color-primary);
+  opacity: 0.6;
+}
+
+.subheading {
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 560px;
+}
+
+.ctaLink {
+  text-decoration: none;
+  margin-top: var(--space-2);
+}
+
+/* Subtle bottom scan-line effect */
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--color-primary-rgb), 0.4) 50%,
+    transparent 100%
+  );
+  z-index: 3;
+}

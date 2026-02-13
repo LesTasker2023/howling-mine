@@ -401,6 +401,13 @@
   min-height: 0;
   overflow-x: hidden;
   position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Push footer to the bottom when content is short */
+.content > :first-child {
+  flex: 1;
 }
 
 /* -- Mobile -- */

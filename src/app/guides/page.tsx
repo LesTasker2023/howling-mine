@@ -1,11 +1,9 @@
-import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/live";
 import { GUIDES_QUERY } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
-
-export const revalidate = 60;
 
 interface Guide {
   _id: string;
@@ -26,7 +24,8 @@ const DIFFICULTY_COLOR: Record<string, string> = {
 export default async function GuidesPage() {
   let guides: Guide[] = [];
   try {
-    guides = await client.fetch(GUIDES_QUERY);
+    const { data } = await sanityFetch({ query: GUIDES_QUERY });
+    guides = data ?? [];
   } catch {
     /* Sanity not configured yet */
   }

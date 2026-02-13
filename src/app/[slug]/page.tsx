@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/live";
 import { PAGE_BY_SLUG_QUERY, PAGE_SLUGS_QUERY } from "@/sanity/queries";
-import { PortableTextBody } from "@/components/ui/PortableTextBody/PortableTextBody";
+import { SectionRenderer } from "@/components/composed";
 import styles from "./page.module.css";
 
 /* ── Known app routes that must NOT be caught by this dynamic segment ── */
@@ -26,7 +27,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (RESERVED_SLUGS.has(slug)) return {};
 
   try {
-    const page = await client.fetch(PAGE_BY_SLUG_QUERY, { slug });
+    const { data: page } = await sanityFetch({
+      query: PAGE_BY_SLUG_QUERY,
+      params: { slug },
+      stega: false,
+      perspective: "published",
+    });
     if (!page) return {};
     return {
       title: page.title,
@@ -37,8 +43,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export const revalidate = 60;
-
 export default async function CmsPage({ params }: Props) {
   const { slug } = await params;
 
@@ -47,13 +51,15 @@ export default async function CmsPage({ params }: Props) {
   if (RESERVED_SLUGS.has(slug)) notFound();
 
   try {
-    const page = await client.fetch(PAGE_BY_SLUG_QUERY, { slug });
+    const { data: page } = await sanityFetch({
+      query: PAGE_BY_SLUG_QUERY,
+      params: { slug },
+    });
     if (!page) notFound();
 
     return (
       <article className={styles.article}>
-        <h1 className={styles.title}>{page.title}</h1>
-        <PortableTextBody value={page.body} />
+        <SectionRenderer sections={page.sections ?? []} />
       </article>
     );
   } catch {

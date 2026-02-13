@@ -5,12 +5,23 @@ import { pageType } from "./documents/page";
 import { guideType } from "./documents/guide";
 import { authorType } from "./documents/author";
 import { categoryType } from "./documents/category";
+import { siteSettingsType } from "./documents/siteSettings";
 
 // Portable Text block types
 import { richTextType } from "./objects/richText";
 import { codeBlockType } from "./objects/codeBlock";
 import { calloutType } from "./objects/callout";
 import { imageWithAltType } from "./objects/imageWithAlt";
+
+// Page Builder section types
+import {
+  heroSectionType,
+  statsRowSectionType,
+  featureGridSectionType,
+  ctaSectionType,
+  richTextSectionType,
+  imageGallerySectionType,
+} from "./objects/sections";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -20,10 +31,18 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     guideType,
     authorType,
     categoryType,
+    siteSettingsType,
     // Objects (reusable block types)
     richTextType,
     codeBlockType,
     calloutType,
     imageWithAltType,
+    // Page Builder sections
+    heroSectionType,
+    statsRowSectionType,
+    featureGridSectionType,
+    ctaSectionType,
+    richTextSectionType,
+    imageGallerySectionType,
   ],
 };

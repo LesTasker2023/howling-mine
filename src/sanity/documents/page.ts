@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineField, defineType, defineArrayMember } from "sanity";
 
 export const pageType = defineType({
   name: "page",
@@ -27,9 +27,19 @@ export const pageType = defineType({
       description: "SEO description for this page.",
     }),
     defineField({
-      name: "body",
-      title: "Body",
-      type: "richText",
+      name: "sections",
+      title: "Page Sections",
+      type: "array",
+      description:
+        "Build the page by adding sections. Each section maps to a custom component.",
+      of: [
+        defineArrayMember({ type: "heroSection" }),
+        defineArrayMember({ type: "statsRowSection" }),
+        defineArrayMember({ type: "featureGridSection" }),
+        defineArrayMember({ type: "ctaSection" }),
+        defineArrayMember({ type: "richTextSection" }),
+        defineArrayMember({ type: "imageGallerySection" }),
+      ],
     }),
   ],
   preview: {

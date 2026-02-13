@@ -1,17 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
-  Swords,
-  Shield,
-  Hammer,
-  Gem,
-  BookOpen,
-  Globe,
-  Map,
   Settings,
   LogIn,
   LogOut,
@@ -19,10 +12,15 @@ import {
   X,
   ChevronRight,
   ChevronLeft,
+  Newspaper,
+  BookOpen,
 } from "lucide-react";
+import { dynamicIcon } from "@/lib/dynamicIcon";
 import { Drawer } from "@/components/ui/Drawer";
 import { ThemeSettings } from "@/components/ui/ThemeSettings";
+import { Footer } from "@/components/layout/Footer";
 import { useTopBar } from "@/context/TopBarContext";
+import type { SiteSettings } from "@/types/siteSettings";
 import styles from "./NavShell.module.css";
 
 interface NavItem {
@@ -31,11 +29,18 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
-const NAV_TOP: NavItem[] = [];
+/* Fallback nav when CMS hasn't been configured yet */
+const DEFAULT_NAV: NavItem[] = [
+  { label: "News", href: "/news", icon: <Newspaper size={20} /> },
+  { label: "Guides", href: "/guides", icon: <BookOpen size={20} /> },
+];
 
-const NAV_BOTTOM: NavItem[] = [];
+interface NavShellProps {
+  children: React.ReactNode;
+  settings?: SiteSettings;
+}
 
-export function NavShell({ children }: { children: React.ReactNode }) {
+export function NavShell({ children, settings = {} }: NavShellProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -62,6 +67,18 @@ export function NavShell({ children }: { children: React.ReactNode }) {
   // Auth placeholder — will be replaced when auth provider is wired
   const isLoggedIn = false;
 
+  /* Derive nav items from CMS settings (or use hardcoded defaults) */
+  const navItems = useMemo<NavItem[]>(() => {
+    if (!settings.mainNav?.length) return DEFAULT_NAV;
+    return settings.mainNav.map((link) => {
+      const Icon = link.icon ? dynamicIcon(link.icon) : dynamicIcon("box");
+      return { label: link.label, href: link.href, icon: <Icon size={20} /> };
+    });
+  }, [settings.mainNav]);
+
+  const siteName = settings.siteName ?? "Howling Mine";
+  const siteNameShort = settings.siteNameShort ?? "HM";
+
   const handleAuth = () => {
     if (isLoggedIn) {
       // Logout — wire to auth provider
@@ -75,6 +92,14 @@ export function NavShell({ children }: { children: React.ReactNode }) {
   if (isStudio) {
     return <>{children}</>;
   }
+
+  // Derive page title from pathname for the always-visible first tab
+  const pageTitle = (() => {
+    if (pathname === "/") return "Welcome";
+    // Take the first segment, capitalize it
+    const seg = pathname.split("/").filter(Boolean)[0];
+    return seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, " ");
+  })();
 
   return (
     <div
@@ -99,14 +124,14 @@ export function NavShell({ children }: { children: React.ReactNode }) {
       >
         {/* Logo */}
         <Link href="/" className={styles.logo} data-expanded={expanded}>
-          <span className={styles.logoShort}>HM</span>
-          <span className={styles.logoLabel}>Howling Mine</span>
+          <span className={styles.logoShort}>{siteNameShort}</span>
+          <span className={styles.logoLabel}>{siteName}</span>
         </Link>
 
         {/* Icon nav */}
         <nav className={styles.nav}>
           <div className={styles.navGroup}>
-            {NAV_TOP.map((item) => {
+            {navItems.map((item) => {
               const isActive =
                 pathname === item.href || pathname.startsWith(item.href + "/");
               return (
@@ -126,25 +151,6 @@ export function NavShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className={styles.navSpacer} />
-          <div className={styles.navGroup}>
-            {NAV_BOTTOM.map((item) => {
-              const isActive =
-                pathname === item.href || pathname.startsWith(item.href + "/");
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={styles.navItem}
-                  data-active={isActive}
-                  title={!expanded ? item.label : undefined}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {item.icon}
-                  <span className={styles.navLabel}>{item.label}</span>
-                </Link>
-              );
-            })}
-          </div>
         </nav>
 
         {/* Footer */}
@@ -183,33 +189,32 @@ export function NavShell({ children }: { children: React.ReactNode }) {
       {/* Top bar  tabs centered */}
       <header className={styles.topbar}>
         <div className={styles.tabs}>
-          {tabs.length > 0 ? (
-            tabs.map((tab) =>
-              tab.href ? (
-                <Link
-                  key={tab.key}
-                  href={tab.href}
-                  className={styles.tab}
-                  data-active={activeTab === tab.key}
-                >
-                  {tab.label}
-                </Link>
-              ) : (
-                <button
-                  key={tab.key}
-                  className={styles.tab}
-                  data-active={activeTab === tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  type="button"
-                >
-                  {tab.label}
-                </button>
-              ),
-            )
-          ) : (
-            <span className={styles.tab} data-active="true">
-              Welcome
-            </span>
+          {/* Page title — always first */}
+          <span className={styles.tab} data-active={tabs.length === 0}>
+            {pageTitle}
+          </span>
+          {/* Extra context tabs from the page */}
+          {tabs.map((tab) =>
+            tab.href ? (
+              <Link
+                key={tab.key}
+                href={tab.href}
+                className={styles.tab}
+                data-active={activeTab === tab.key}
+              >
+                {tab.label}
+              </Link>
+            ) : (
+              <button
+                key={tab.key}
+                className={styles.tab}
+                data-active={activeTab === tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                type="button"
+              >
+                {tab.label}
+              </button>
+            ),
           )}
         </div>
       </header>
@@ -245,7 +250,14 @@ export function NavShell({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Content */}
-      <main className={styles.content}>{children}</main>
+      <main className={styles.content}>
+        {children}
+        <Footer
+          text={settings.footerText}
+          links={settings.footerLinks}
+          socials={settings.socialLinks}
+        />
+      </main>
 
       {/* Settings drawer */}
       <Drawer

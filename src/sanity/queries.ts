@@ -41,7 +41,33 @@ export const PAGE_BY_SLUG_QUERY = groq`
     title,
     slug,
     description,
-    body
+    sections[] {
+      _type,
+      _key,
+      // heroSection
+      heading,
+      subheading,
+      backgroundImage,
+      cta,
+      align,
+      // statsRowSection
+      stats[] { label, value, trendDirection, trendValue, subtitle },
+      accent,
+      // featureGridSection
+      features[] { title, description, icon, image, href },
+      columns,
+      // ctaSection
+      body,
+      primaryAction,
+      secondaryAction,
+      variant,
+      // richTextSection
+      "richBody": body,
+      maxWidth,
+      // imageGallerySection
+      images[] { image, alt, caption },
+      layout
+    }
   }
 `;
 
@@ -80,4 +106,22 @@ export const GUIDE_BY_SLUG_QUERY = groq`
 
 export const GUIDE_SLUGS_QUERY = groq`
   *[_type == "guide" && defined(slug.current)].slug.current
+`;
+
+/* ─── Site Settings (singleton) ─── */
+export const SITE_SETTINGS_QUERY = groq`
+  *[_type == "siteSettings"][0] {
+    siteName,
+    siteNameShort,
+    tagline,
+    logo,
+    favicon,
+    mainNav[] { label, href, icon },
+    footerText,
+    footerLinks[] { label, href },
+    socialLinks[] { platform, url },
+    seoTitle,
+    seoDescription,
+    ogImage
+  }
 `;

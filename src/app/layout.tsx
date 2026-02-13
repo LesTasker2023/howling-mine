@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import { NavShell } from "@/components/layout";
+import { draftMode } from "next/headers";
+import { VisualEditing } from "next-sanity/visual-editing";
+import { NavShellServer } from "@/components/layout";
 import { TopBarProvider } from "@/context/TopBarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { SanityLive } from "@/sanity/live";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -24,7 +27,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -34,9 +37,11 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <ThemeProvider>
           <TopBarProvider>
-            <NavShell>{children}</NavShell>
+            <NavShellServer>{children}</NavShellServer>
           </TopBarProvider>
         </ThemeProvider>
+        <SanityLive />
+        {(await draftMode()).isEnabled && <VisualEditing />}
       </body>
     </html>
   );

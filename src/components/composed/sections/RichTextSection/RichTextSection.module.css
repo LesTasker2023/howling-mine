@@ -1,0 +1,22 @@
+/* ─── Rich Text Section ─── */
+.section {
+  padding: var(--space-12) var(--space-8);
+}
+
+.section--narrow {
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.section--medium {
+  max-width: 64rem;
+  margin-inline: auto;
+}
+
+.section--full {
+  max-width: none;
+}
+
+.body {
+  margin-top: var(--space-6);
+}
