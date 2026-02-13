@@ -154,6 +154,7 @@
 /* Gauge row — 3 gauges in a shared panel, filling equally */
 .gaugeRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: stretch;
   gap: var(--space-2);
   padding: var(--space-3);
@@ -161,5 +162,21 @@
 
 .gaugeRow > * {
   flex: 1;
-  min-width: 0;
+  min-width: 120px;
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .page {
+    padding: var(--space-6) var(--space-3);
+  }
+
+  .fullWidth {
+    margin-left: calc(-1 * var(--space-3));
+    margin-right: calc(-1 * var(--space-3));
+  }
+
+  .col {
+    min-width: 140px;
+  }
 }

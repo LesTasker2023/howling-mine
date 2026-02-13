@@ -90,12 +90,25 @@ export function SiteHero({
     if (!vid) return;
     vid.load();
     vid.play().catch(() => {});
-    const t = setTimeout(() => setVisible(true), 100);
-    return () => clearTimeout(t);
+    setTimeout(() => setVisible(true), 0);
   }, [activeIdx, hasVideos]);
 
   /* Cleanup timer on unmount */
   useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  /* Preload the next video in the sequence so transitions are instant */
+  useEffect(() => {
+    if (videos.length < 2) return;
+    const nextIdx = (activeIdx + 1) % videos.length;
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "video";
+    link.href = videos[nextIdx];
+    document.head.appendChild(link);
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, [activeIdx, videos]);
 
   return (
     <motion.section

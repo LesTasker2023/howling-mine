@@ -20,32 +20,34 @@ function FieldTable({
   fields: { name: string; type: string; required?: boolean; desc: string }[];
 }) {
   return (
-    <table className={styles.table}>
-      <thead>
-        <tr>
-          <th>Field</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        {fields.map((f) => (
-          <tr key={f.name}>
-            <td>
-              <span className={styles.fieldName}>{f.name}</span>
-              {f.required && (
-                <>
-                  {" "}
-                  <span className={styles.required}>required</span>
-                </>
-              )}
-            </td>
-            <td>{f.type}</td>
-            <td>{f.desc}</td>
+    <div className={styles.tableWrap}>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Description</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {fields.map((f) => (
+            <tr key={f.name}>
+              <td>
+                <span className={styles.fieldName}>{f.name}</span>
+                {f.required && (
+                  <>
+                    {" "}
+                    <span className={styles.required}>required</span>
+                  </>
+                )}
+              </td>
+              <td>{f.type}</td>
+              <td>{f.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

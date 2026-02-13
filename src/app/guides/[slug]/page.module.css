@@ -4,8 +4,11 @@
 
 .article {
   padding: var(--space-8);
-  max-width: 1440px;
+  max-width: 52rem;
+  width: 100%;
   margin: 0 auto;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .header {
@@ -71,12 +74,14 @@
 
 .title {
   font-family: var(--font-mono);
-  font-size: var(--text-3xl);
+  font-size: clamp(1.4rem, 5vw, var(--text-3xl));
   font-weight: 700;
   color: var(--text-bright);
   letter-spacing: 0.02em;
   line-height: 1.2;
   text-transform: uppercase;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .title::before {
@@ -107,4 +112,15 @@
 
 .body {
   margin-top: var(--space-6);
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .article {
+    padding: var(--space-4);
+  }
+
+  .cover {
+    margin-bottom: var(--space-4);
+  }
 }

@@ -11,8 +11,8 @@ export default function Home() {
         primaryCta={{ label: "Explore Guides", href: "/guides" }}
         secondaryCta={{ label: "Latest News", href: "/news" }}
         videos={[
-          "/videos/hero-1.webm",
           "/videos/hero-2.webm",
+          "/videos/hero-1.webm",
           "/videos/hero-3.webm",
         ]}
       />

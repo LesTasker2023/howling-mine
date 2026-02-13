@@ -81,3 +81,15 @@
   color: var(--text-secondary);
   line-height: 1.6;
 }
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .section {
+    padding: var(--space-8) var(--space-4);
+  }
+
+  .section::before {
+    left: var(--space-4);
+    right: var(--space-4);
+  }
+}

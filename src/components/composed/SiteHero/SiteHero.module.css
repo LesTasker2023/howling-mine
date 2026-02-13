@@ -31,6 +31,7 @@
 
 .videoBg.videoVisible {
   opacity: 1;
+  transition: none;
 }
 
 .video {

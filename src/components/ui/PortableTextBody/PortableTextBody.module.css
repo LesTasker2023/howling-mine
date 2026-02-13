@@ -3,10 +3,13 @@
    ============================================================================ */
 
 .body {
-  max-width: 1440px;
+  max-width: 52rem;
+  width: 100%;
   font-size: var(--text-base);
   line-height: 1.75;
   color: var(--text-primary);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ── Headings ── */
@@ -225,4 +228,29 @@
 
 .callout p {
   margin: 0;
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .h2 {
+    font-size: var(--text-xl);
+    margin-top: var(--space-6);
+  }
+
+  .h3 {
+    font-size: var(--text-lg);
+    margin-top: var(--space-5);
+  }
+
+  .blockquote {
+    padding: var(--space-3);
+  }
+
+  .callout {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .figure {
+    margin: var(--space-4) 0;
+  }
 }

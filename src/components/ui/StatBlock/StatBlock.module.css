@@ -19,7 +19,7 @@
 
 .stat__value {
   font-family: var(--font-mono);
-  font-size: var(--text-3xl);
+  font-size: clamp(1.3rem, 4vw, var(--text-3xl));
   font-weight: 700;
   line-height: 1;
   color: var(--text-bright);
@@ -59,7 +59,7 @@
 }
 
 .stat--lg .stat__value {
-  font-size: var(--text-stat);
+  font-size: clamp(1.8rem, 5vw, var(--text-stat));
 }
 
 /* Accent color */
