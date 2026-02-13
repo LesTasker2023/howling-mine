@@ -34,6 +34,7 @@ export const pageType = defineType({
         "Build the page by adding sections. Each section maps to a custom component.",
       of: [
         defineArrayMember({ type: "heroSection" }),
+        defineArrayMember({ type: "pageHeroSection" }),
         defineArrayMember({ type: "statsRowSection" }),
         defineArrayMember({ type: "featureGridSection" }),
         defineArrayMember({ type: "ctaSection" }),

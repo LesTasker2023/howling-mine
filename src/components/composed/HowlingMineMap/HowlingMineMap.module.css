@@ -1,0 +1,269 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   HowlingMineMap — 3D Three.js interactive map
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mapContainer {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - var(--topbar-height) - 48px);
+  min-height: 500px;
+  background: #050508;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+/* ── Three.js canvas wrapper ── */
+.canvasWrap {
+  width: 100%;
+  height: 100%;
+}
+
+.canvasWrap canvas {
+  display: block;
+  outline: none;
+}
+
+/* ── Detail panel overlay ── */
+.detailPanel {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  width: 280px;
+  background: rgba(5, 5, 8, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-default);
+  clip-path: var(--notch-clip);
+  padding: var(--space-5);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  animation: panelSlide 0.25s var(--ease-out) both;
+}
+
+@keyframes panelSlide {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.detailHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.detailName {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-bright);
+  letter-spacing: 0.04em;
+}
+
+.detailClose {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--space-1);
+  display: flex;
+  transition: color var(--duration-fast);
+}
+
+.detailClose:hover {
+  color: var(--text-primary);
+}
+
+.detailCategory {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.detailDesc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.pvpBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--status-danger);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Coordinate row ── */
+.coordRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: rgba(var(--color-primary-rgb), 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.coordLabel {
+  color: var(--text-muted);
+  min-width: 16px;
+}
+
+.coordValue {
+  flex: 1;
+  color: var(--text-accent);
+}
+
+.copyBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: color var(--duration-fast);
+}
+
+.copyBtn:hover {
+  color: var(--text-accent);
+}
+
+.copyAllBtn {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: rgba(var(--color-primary-rgb), 0.1);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.copyAllBtn:hover {
+  background: rgba(var(--color-primary-rgb), 0.18);
+  border-color: var(--border-strong);
+}
+
+.copied {
+  color: var(--status-success) !important;
+}
+
+/* ── Legend ── */
+.legend {
+  position: absolute;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  background: rgba(5, 5, 8, 0.82);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  z-index: 10;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* ── Filter bar ── */
+.filterBar {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  z-index: 10;
+}
+
+.filterChip {
+  padding: var(--space-1) var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: rgba(5, 5, 8, 0.82);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.filterChip:hover {
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+.filterChipActive {
+  border-color: var(--border-strong);
+  color: var(--text-accent);
+  background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .mapContainer {
+    height: calc(100vh - var(--topbar-height) - 32px);
+    min-height: 400px;
+  }
+
+  .detailPanel {
+    top: auto;
+    bottom: 56px;
+    right: var(--space-2);
+    left: var(--space-2);
+    width: auto;
+  }
+
+  .legend {
+    display: none;
+  }
+
+  .filterBar {
+    left: var(--space-2);
+    right: var(--space-2);
+    justify-content: center;
+  }
+}

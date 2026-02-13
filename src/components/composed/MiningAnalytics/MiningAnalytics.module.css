@@ -1,0 +1,503 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   MiningAnalytics — Dashboard layout styles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dashboard {
+  width: 100%;
+  padding: var(--space-4) var(--space-4) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ── Content ── */
+.content {
+  animation: fadeIn 0.3s ease-out;
+  transition: opacity 0.2s ease;
+}
+
+.contentLoading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tabContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ── Stat grids ── */
+.statsGrid6 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-3);
+}
+
+.statsGrid3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-3);
+}
+
+.statsGrid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-3);
+}
+
+/* ── Consolidated stat rows inside a Panel ── */
+.statRows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.statDivider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: var(--space-1) 0;
+}
+
+/* ── Records inline (inside Panel 2) ── */
+.recordsInline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-2) 0;
+}
+
+.biggestHit {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.biggestHitInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.recordStats {
+  display: flex;
+  gap: var(--space-6);
+  flex: 1;
+  justify-content: space-around;
+}
+
+/* ── Performance row (percentiles + gauges) ── */
+.perfRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-6);
+  align-items: center;
+  padding: var(--space-2) 0;
+}
+
+.perfLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.percentiles {
+  min-width: 200px;
+}
+
+.percGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.percItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.percHighlight {
+  background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+.percKey {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+
+.percVal {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-accent);
+  font-weight: 600;
+}
+
+/* ── Records grid (kept for other tabs) ── */
+.recordsGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.recordCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.recordIcon {
+  color: var(--text-accent);
+  filter: drop-shadow(0 0 8px var(--color-primary));
+}
+
+.recordLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.recordValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--text-accent);
+  letter-spacing: 0.02em;
+}
+
+.recordSub {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* ── Gauge row ── */
+.gaugeRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+/* ── Split row (2 columns) ── */
+.splitRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+/* ── Quick list items ── */
+.quickListItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-1);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.quickListItem:last-child {
+  border-bottom: none;
+}
+
+.rank {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  min-width: 24px;
+}
+
+.quickName {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.quickValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-accent);
+  font-weight: 600;
+}
+
+/* ── PED value styling ── */
+.pedValue {
+  font-family: var(--font-mono);
+  color: var(--text-accent);
+  font-weight: 600;
+}
+
+/* ── Feed ── */
+.feedFilters {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.feedFilterBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  background: none;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.feedFilterBtn:hover {
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+.feedFilterActive {
+  border-color: var(--border-strong);
+  color: var(--text-accent);
+  background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+.feedList {
+  display: flex;
+  flex-direction: column;
+}
+
+.feedItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-1);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background var(--duration-fast);
+}
+
+.feedItem:last-child {
+  border-bottom: none;
+}
+
+.feedItem:hover {
+  background: rgba(var(--color-primary-rgb), 0.04);
+}
+
+.feedIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.feedHofIcon {
+  color: #eab308;
+  filter: drop-shadow(0 0 6px #eab308);
+}
+
+.feedGemIcon {
+  color: #a855f7;
+}
+
+.feedInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.feedMiner {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.feedAsteroid {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.feedRight {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.feedValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-accent);
+  font-weight: 700;
+  display: block;
+}
+
+.feedTime {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  padding: var(--space-6);
+}
+
+/* ── Time Analysis — chart pair layout ── */
+.peakRow {
+  display: flex;
+  gap: var(--space-6);
+  margin-bottom: var(--space-4);
+}
+
+.chartPair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.chartPairItem {
+  min-width: 0;
+}
+
+/* ── Asteroids — pie + top list layout ── */
+.asteroidSummary {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.asteroidPie {
+  min-width: 0;
+}
+
+.asteroidTopList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.quickSub {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-left: auto;
+  padding-left: var(--space-2);
+  white-space: nowrap;
+}
+
+/* ── Feed — header with inline filters ── */
+.feedHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.feedHeader > :first-child {
+  margin-bottom: 0;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: var(--space-2) var(--space-2) var(--space-6);
+  }
+
+  .statRow {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .recordsInline {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .recordStats {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .perfRow {
+    grid-template-columns: 1fr;
+  }
+
+  .recordsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .splitRow {
+    grid-template-columns: 1fr;
+  }
+
+  .gaugeRow {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .statsGrid6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .peakRow {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .chartPair {
+    grid-template-columns: 1fr;
+  }
+
+  .asteroidSummary {
+    grid-template-columns: 1fr;
+  }
+
+  .feedHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -14,6 +14,8 @@ import {
   ChevronLeft,
   Newspaper,
   BookOpen,
+  Map,
+  BarChart3,
 } from "lucide-react";
 import { dynamicIcon } from "@/lib/dynamicIcon";
 import { Drawer } from "@/components/ui/Drawer";
@@ -151,6 +153,32 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
           </div>
 
           <div className={styles.navSpacer} />
+
+          {/* Bottom nav group */}
+          <div className={styles.navGroup}>
+            <Link
+              href="/map"
+              className={styles.navItem}
+              data-active={pathname === "/map" || pathname.startsWith("/map/")}
+              title={!expanded ? "Map" : undefined}
+              onClick={() => setMobileOpen(false)}
+            >
+              <Map size={20} />
+              <span className={styles.navLabel}>Map</span>
+            </Link>
+            <Link
+              href="/stats"
+              className={styles.navItem}
+              data-active={
+                pathname === "/stats" || pathname.startsWith("/stats/")
+              }
+              title={!expanded ? "Stats" : undefined}
+              onClick={() => setMobileOpen(false)}
+            >
+              <BarChart3 size={20} />
+              <span className={styles.navLabel}>Stats</span>
+            </Link>
+          </div>
         </nav>
 
         {/* Footer */}
@@ -189,10 +217,12 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
       {/* Top bar  tabs centered */}
       <header className={styles.topbar}>
         <div className={styles.tabs}>
-          {/* Page title — always first */}
-          <span className={styles.tab} data-active={tabs.length === 0}>
-            {pageTitle}
-          </span>
+          {/* Page title — only when no context tabs are registered */}
+          {tabs.length === 0 && (
+            <span className={styles.tab} data-active={true}>
+              {pageTitle}
+            </span>
+          )}
           {/* Extra context tabs from the page */}
           {tabs.map((tab) =>
             tab.href ? (

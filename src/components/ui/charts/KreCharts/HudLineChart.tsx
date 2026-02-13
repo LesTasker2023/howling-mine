@@ -11,7 +11,6 @@ import {
   Legend,
 } from "recharts";
 import { useHudTheme } from "./useHudTheme";
-import { Panel } from "@/components/ui/Panel";
 import styles from "./charts.module.css";
 
 /* ── Types ── */
@@ -20,6 +19,8 @@ export interface LineSeries {
   dataKey: string;
   label: string;
   color?: string;
+  /** Assign to a separate Y axis (e.g. "left" or "right"). When set, enables dual-axis mode. */
+  yAxisId?: string;
 }
 
 export interface HudLineChartProps {
@@ -42,8 +43,9 @@ export function HudLineChart({
   height = 280,
 }: HudLineChartProps) {
   const { PALETTE, AXIS, GRID, TOOLTIP_STYLE } = useHudTheme();
+  const dualAxis = series.some((s) => s.yAxisId);
   return (
-    <Panel size="flush" noAnimation>
+    <div className={styles.chartWrap}>
       <div className={styles.chartInner}>
         {title && <div className={styles.chartTitle}>{title}</div>}
         <ResponsiveContainer width="100%" height={height}>
@@ -82,7 +84,31 @@ export function HudLineChart({
             </defs>
             <CartesianGrid {...GRID} vertical={false} />
             <XAxis dataKey="name" {...AXIS} />
-            <YAxis {...AXIS} width={40} />
+
+            {dualAxis ? (
+              <>
+                {Array.from(new Set(series.map((s) => s.yAxisId))).map(
+                  (id, idx) => {
+                    const s = series.find((s) => s.yAxisId === id);
+                    const c = s?.color ?? PALETTE[idx % PALETTE.length];
+                    return (
+                      <YAxis
+                        key={id}
+                        yAxisId={id}
+                        orientation={idx === 0 ? "left" : "right"}
+                        {...AXIS}
+                        width={40}
+                        stroke={c}
+                        tick={{ ...AXIS.tick, fill: c }}
+                      />
+                    );
+                  },
+                )}
+              </>
+            ) : (
+              <YAxis {...AXIS} width={40} />
+            )}
+
             <Tooltip {...TOOLTIP_STYLE} />
             <Legend
               iconType="plainline"
@@ -112,12 +138,13 @@ export function HudLineChart({
                   }}
                   filter={`url(#lineGlow-${s.dataKey})`}
                   animationDuration={800}
+                  yAxisId={dualAxis ? s.yAxisId : undefined}
                 />
               );
             })}
           </LineChart>
         </ResponsiveContainer>
       </div>
-    </Panel>
+    </div>
   );
 }

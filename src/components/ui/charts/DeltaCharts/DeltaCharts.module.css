@@ -23,6 +23,17 @@
   align-self: flex-start;
 }
 
+/* ── Wrapper replaces Panel — subtle themed border ── */
+.dialWrap {
+  border: 1px solid rgba(var(--color-primary-rgb, 234 179 8), 0.15);
+  border-radius: var(--radius-md, 8px);
+  background: rgba(var(--color-primary-rgb, 234 179 8), 0.02);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
 /* ── Compact dial layout (label + value above, gauge below) ── */
 .dialCompact {
   display: flex;
@@ -46,7 +57,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted);
+  color: var(--color-primary);
 }
 
 .dialLabelValue {
@@ -73,6 +84,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  aspect-ratio: 1 / 0.62;
 }
 
 .tickRing {

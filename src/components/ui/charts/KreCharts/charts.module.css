@@ -1,6 +1,13 @@
 /* ── HUD Chart shared styles ── */
 
-/* Inner wrapper inside Panel — provides padding + recharts overrides */
+/* Outer wrapper — subtle themed border, no Panel nesting */
+.chartWrap {
+  border: 1px solid rgba(var(--color-primary-rgb, 234 179 8), 0.15);
+  border-radius: var(--radius-md, 8px);
+  background: rgba(var(--color-primary-rgb, 234 179 8), 0.02);
+}
+
+/* Inner wrapper — provides padding + recharts overrides */
 .chartInner {
   padding: var(--space-5);
   position: relative;

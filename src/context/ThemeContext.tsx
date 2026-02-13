@@ -25,6 +25,7 @@ export interface ThemeConfig {
   preset: string | null; // preset name or null for custom
   bgLightness: number; // 0-100  — how bright backgrounds are (default 0 dark / 95 light)
   bgTint: number; // 0-100  — how much accent hue bleeds into backgrounds
+  mutedLightness: number; // 0-100 — brightness of muted/secondary text (default 33)
 }
 
 export interface ThemeColors {
@@ -42,6 +43,7 @@ interface ThemeContextValue {
   setPreset: (name: string) => void;
   setBgLightness: (v: number) => void;
   setBgTint: (v: number) => void;
+  setMutedLightness: (v: number) => void;
 }
 
 const DEFAULT_CONFIG: ThemeConfig = {
@@ -50,6 +52,7 @@ const DEFAULT_CONFIG: ThemeConfig = {
   preset: "gold",
   bgLightness: 4,
   bgTint: 10,
+  mutedLightness: 33,
 };
 
 const STORAGE_KEY = "hm-theme";
@@ -84,6 +87,7 @@ const ThemeContext = createContext<ThemeContextValue>({
   setPreset: () => {},
   setBgLightness: () => {},
   setBgTint: () => {},
+  setMutedLightness: () => {},
 });
 
 /* ── HSL → RGB conversion ── */
@@ -104,7 +108,7 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
 /* ── Apply theme to <html> via CSS custom properties ── */
 function applyTheme(config: ThemeConfig) {
   const root = document.documentElement;
-  const { mode, hue, bgLightness, bgTint } = config;
+  const { mode, hue, bgLightness, bgTint, mutedLightness } = config;
 
   // Primary & accent from hue
   const [pr, pg, pb] = hslToRgb(hue, 90, mode === "dark" ? 45 : 42);
@@ -143,7 +147,11 @@ function applyTheme(config: ThemeConfig) {
     // ── Light text ──
     root.style.setProperty("--text-primary", "#1a1a1a");
     root.style.setProperty("--text-secondary", "#57534e");
-    root.style.setProperty("--text-muted", "#a8a29e");
+    {
+      const mL = 40 + ((100 - mutedLightness) / 100) * 35; // inverted: higher slider = darker muted in light mode (40-75%)
+      const [mr, mg, mb] = hslToRgb(hue, 8, mL);
+      root.style.setProperty("--text-muted", `rgb(${mr}, ${mg}, ${mb})`);
+    }
     root.style.setProperty("--text-bright", "#0a0a08");
     root.style.setProperty("--text-on-accent", "#ffffff");
   } else {
@@ -163,7 +171,11 @@ function applyTheme(config: ThemeConfig) {
     // ── Dark text ──
     root.style.setProperty("--text-primary", "#e2e8f0");
     root.style.setProperty("--text-secondary", "#a8a29e");
-    root.style.setProperty("--text-muted", "#57534e");
+    {
+      const mL = 20 + (mutedLightness / 100) * 50; // 20-70% lightness
+      const [mr, mg, mb] = hslToRgb(hue, 8, mL);
+      root.style.setProperty("--text-muted", `rgb(${mr}, ${mg}, ${mb})`);
+    }
     root.style.setProperty("--text-bright", "#fafaf9");
     root.style.setProperty("--text-on-accent", "#0a0a08");
   }
@@ -265,6 +277,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setConfig((prev) => ({ ...prev, bgTint }));
   }, []);
 
+  const setMutedLightness = useCallback((mutedLightness: number) => {
+    setConfig((prev) => ({ ...prev, mutedLightness }));
+  }, []);
+
   return (
     <ThemeContext.Provider
       value={{
@@ -275,6 +291,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         setPreset,
         setBgLightness,
         setBgTint,
+        setMutedLightness,
       }}
     >
       {children}

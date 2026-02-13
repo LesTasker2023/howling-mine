@@ -1,6 +1,7 @@
 "use client";
 
 import { HeroSection } from "./HeroSection";
+import { PageHero } from "./PageHero";
 import { StatsRowSection } from "./StatsRowSection";
 import { FeatureGridSection } from "./FeatureGridSection";
 import { CtaSection } from "./CtaSection";
@@ -15,6 +16,7 @@ import { ImageGallerySection } from "./ImageGallerySection";
  */
 const SECTION_MAP: Record<string, React.ComponentType<any>> = {
   heroSection: HeroSection,
+  pageHeroSection: PageHero,
   statsRowSection: StatsRowSection,
   featureGridSection: FeatureGridSection,
   ctaSection: CtaSection,

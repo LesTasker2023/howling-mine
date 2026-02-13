@@ -3,7 +3,6 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import type { PieLabelRenderProps } from "recharts";
 import { useHudTheme } from "./useHudTheme";
-import { Panel } from "@/components/ui/Panel";
 import styles from "./charts.module.css";
 
 /* ── Types ── */
@@ -70,7 +69,7 @@ export function HudPieChart({
 }: HudPieChartProps) {
   const { PALETTE, TOOLTIP_STYLE } = useHudTheme();
   return (
-    <Panel size="flush" noAnimation>
+    <div className={styles.chartWrap}>
       <div className={styles.chartInner}>
         {title && <div className={styles.chartTitle}>{title}</div>}
         <div style={{ display: "flex", alignItems: "center" }}>
@@ -158,6 +157,6 @@ export function HudPieChart({
           )}
         </div>
       </div>
-    </Panel>
+    </div>
   );
 }

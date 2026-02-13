@@ -14,8 +14,15 @@ const PRESET_INFO: { name: string; label: string; swatch: string }[] = [
 ];
 
 export function ThemeSettings() {
-  const { config, setMode, setHue, setPreset, setBgLightness, setBgTint } =
-    useTheme();
+  const {
+    config,
+    setMode,
+    setHue,
+    setPreset,
+    setBgLightness,
+    setBgTint,
+    setMutedLightness,
+  } = useTheme();
 
   return (
     <div className={styles.container}>
@@ -93,6 +100,28 @@ export function ThemeSettings() {
           <span className={styles.previewLabel}>
             hsl({config.hue}, 90%, 45%)
           </span>
+        </div>
+      </section>
+
+      {/* ── Muted text brightness ── */}
+      <section className={styles.section}>
+        <h3 className={styles.sectionTitle}>Label Brightness</h3>
+        <label className={styles.sliderLabel}>
+          <span>Muted Text</span>
+          <span className={styles.sliderVal}>{config.mutedLightness}%</span>
+        </label>
+        <div className={styles.sliderRow}>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={config.mutedLightness}
+            onChange={(e) => setMutedLightness(Number(e.target.value))}
+            className={styles.mutedSlider}
+          />
+        </div>
+        <div className={styles.mutedPreview}>
+          <span className={styles.mutedPreviewSample}>Sample Label Text</span>
         </div>
       </section>
 

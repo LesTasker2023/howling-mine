@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useThemeColors } from "@/context/ThemeContext";
-import { Panel } from "@/components/ui/Panel";
 import { polarXY } from "../hud-primitives";
 import styles from "../DeltaCharts.module.css";
 
@@ -169,7 +168,7 @@ export function DialGauge({
     <div className={styles.dialCompact}>
       {label && <span className={styles.dialLabelText}>{label}</span>}
 
-      <div className={styles.gaugeWrap} style={{ width: size, height: vbH }}>
+      <div className={styles.gaugeWrap}>
         <svg
           className={styles.tickRing}
           viewBox={`0 0 ${size} ${vbH}`}
@@ -247,9 +246,5 @@ export function DialGauge({
 
   if (bare) return inner;
 
-  return (
-    <Panel size="flush" noAnimation>
-      {inner}
-    </Panel>
-  );
+  return inner;
 }

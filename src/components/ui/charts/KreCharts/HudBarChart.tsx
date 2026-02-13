@@ -11,7 +11,6 @@ import {
   Legend,
 } from "recharts";
 import { useHudTheme } from "./useHudTheme";
-import { Panel } from "@/components/ui/Panel";
 import styles from "./charts.module.css";
 
 /* ── Types ── */
@@ -78,7 +77,7 @@ export function HudBarChart({
 }: HudBarChartProps) {
   const { PALETTE, AXIS, GRID, TOOLTIP_STYLE } = useHudTheme();
   return (
-    <Panel size="flush" noAnimation>
+    <div className={styles.chartWrap}>
       <div className={styles.chartInner}>
         {title && <div className={styles.chartTitle}>{title}</div>}
         <ResponsiveContainer width="100%" height={height}>
@@ -115,6 +114,6 @@ export function HudBarChart({
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </Panel>
+    </div>
   );
 }

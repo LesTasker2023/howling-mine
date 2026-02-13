@@ -1,0 +1,11 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--topbar-height));
+}
+
+@media (max-width: 768px) {
+  .page {
+    height: calc(100vh - var(--topbar-height));
+  }
+}

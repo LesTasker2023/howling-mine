@@ -6,6 +6,7 @@ import { guideType } from "./documents/guide";
 import { authorType } from "./documents/author";
 import { categoryType } from "./documents/category";
 import { siteSettingsType } from "./documents/siteSettings";
+import { mapPoiType } from "./documents/mapPoi";
 
 // Portable Text block types
 import { richTextType } from "./objects/richText";
@@ -16,6 +17,7 @@ import { imageWithAltType } from "./objects/imageWithAlt";
 // Page Builder section types
 import {
   heroSectionType,
+  pageHeroSectionType,
   statsRowSectionType,
   featureGridSectionType,
   ctaSectionType,
@@ -32,6 +34,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     authorType,
     categoryType,
     siteSettingsType,
+    mapPoiType,
     // Objects (reusable block types)
     richTextType,
     codeBlockType,
@@ -39,6 +42,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     imageWithAltType,
     // Page Builder sections
     heroSectionType,
+    pageHeroSectionType,
     statsRowSectionType,
     featureGridSectionType,
     ctaSectionType,

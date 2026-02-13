@@ -44,10 +44,11 @@ export const PAGE_BY_SLUG_QUERY = groq`
     sections[] {
       _type,
       _key,
-      // heroSection
+      // heroSection + pageHeroSection
       heading,
       subheading,
       backgroundImage,
+      breadcrumb,
       cta,
       align,
       // statsRowSection
@@ -108,7 +109,21 @@ export const GUIDE_SLUGS_QUERY = groq`
   *[_type == "guide" && defined(slug.current)].slug.current
 `;
 
-/* ─── Site Settings (singleton) ─── */
+/* ─── Map POIs ─── */
+export const MAP_POIS_QUERY = groq`
+  *[_type == "mapPoi" && visible == true] | order(category asc, name asc) {
+    _id,
+    name,
+    category,
+    euX,
+    euY,
+    euZ,
+    icon,
+    description,
+    pvpLootable
+  }
+`;
+
 export const SITE_SETTINGS_QUERY = groq`
   *[_type == "siteSettings"][0] {
     siteName,

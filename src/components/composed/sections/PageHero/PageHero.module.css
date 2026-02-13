@@ -1,0 +1,147 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   PageHero — Compact sci-fi hero for CMS inner pages
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 200px;
+  padding: var(--space-12) var(--space-8);
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.hero--center {
+  justify-content: center;
+  text-align: center;
+}
+
+.hero--left {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+/* ── Background image ── */
+.bgImage {
+  object-fit: cover;
+  z-index: 0;
+  filter: brightness(0.3) saturate(0.6);
+}
+
+/* ── Overlays ── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 8, 0.5) 0%,
+    rgba(10, 10, 8, 0.85) 100%
+  );
+  pointer-events: none;
+}
+
+.hero:not([data-has-bg]) .overlay {
+  background: none;
+}
+
+/* Grid texture — subtle, only shows on dark bg */
+.gridTexture {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.06;
+  background-image:
+    linear-gradient(rgba(var(--color-primary-rgb), 0.4) 1px, transparent 1px),
+    linear-gradient(
+      90deg,
+      rgba(var(--color-primary-rgb), 0.4) 1px,
+      transparent 1px
+    );
+  background-size: 40px 40px;
+  mask-image: linear-gradient(180deg, black 0%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, black 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* ── Content ── */
+.content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 640px;
+  width: 100%;
+}
+
+.hero--center .content {
+  align-items: center;
+}
+
+/* ── Breadcrumb label ── */
+.breadcrumb {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  opacity: 0.7;
+}
+
+/* ── Title ── */
+.heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, var(--text-3xl));
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  line-height: 1.15;
+}
+
+/* Decorative bracket accents */
+.heading::before {
+  content: "[ ";
+  color: var(--color-primary);
+  opacity: 0.5;
+}
+
+.heading::after {
+  content: " ]";
+  color: var(--color-primary);
+  opacity: 0.5;
+}
+
+/* ── Subtitle ── */
+.subheading {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+/* ── Bottom accent ── */
+.bottomAccent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--color-primary-rgb), 0.4) 50%,
+    transparent 100%
+  );
+  z-index: 3;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .hero {
+    padding: var(--space-8) var(--space-4);
+    min-height: 160px;
+  }
+}
