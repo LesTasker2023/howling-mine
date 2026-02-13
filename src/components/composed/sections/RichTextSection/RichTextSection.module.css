@@ -23,11 +23,11 @@
 }
 
 .section--narrow {
-  max-width: 48rem;
+  max-width: 1440px;
 }
 
 .section--medium {
-  max-width: 64rem;
+  max-width: 1440px;
 }
 
 .section--full {

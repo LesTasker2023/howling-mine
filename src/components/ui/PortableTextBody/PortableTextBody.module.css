@@ -3,7 +3,7 @@
    ============================================================================ */
 
 .body {
-  max-width: 52rem;
+  max-width: 1440px;
   width: 100%;
   font-size: var(--text-base);
   line-height: 1.75;
