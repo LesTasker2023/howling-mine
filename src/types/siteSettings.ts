@@ -26,6 +26,7 @@ export interface SiteSettings {
   footerText?: string;
   footerLinks?: FooterLink[];
   socialLinks?: SocialLink[];
+  heroOverlayOpacity?: number;
   seoTitle?: string;
   seoDescription?: string;
   ogImage?: any;

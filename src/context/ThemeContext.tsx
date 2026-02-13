@@ -64,16 +64,11 @@ function rgbToHex(r: number, g: number, b: number): string {
 function computeColors(config: ThemeConfig): ThemeColors {
   const { mode, hue } = config;
   const [pr, pg, pb] = hslToRgb(hue, 90, mode === "dark" ? 45 : 42);
-  const [ar, ag, ab] = hslToRgb(
-    (hue + 10) % 360,
-    85,
-    mode === "dark" ? 50 : 45,
-  );
   return {
     primary: rgbToHex(pr, pg, pb),
     primaryRgb: `${pr}, ${pg}, ${pb}`,
-    accent: rgbToHex(ar, ag, ab),
-    accentRgb: `${ar}, ${ag}, ${ab}`,
+    accent: rgbToHex(pr, pg, pb),
+    accentRgb: `${pr}, ${pg}, ${pb}`,
   };
 }
 
@@ -110,13 +105,9 @@ function applyTheme(config: ThemeConfig) {
   const root = document.documentElement;
   const { mode, hue, bgLightness, bgTint, mutedLightness } = config;
 
-  // Primary & accent from hue
+  // Primary & accent from hue (accent = primary for consistency)
   const [pr, pg, pb] = hslToRgb(hue, 90, mode === "dark" ? 45 : 42);
-  const [ar, ag, ab] = hslToRgb(
-    (hue + 10) % 360,
-    85,
-    mode === "dark" ? 50 : 45,
-  );
+  const [ar, ag, ab] = [pr, pg, pb];
 
   root.dataset.theme = mode;
   root.style.colorScheme = mode;

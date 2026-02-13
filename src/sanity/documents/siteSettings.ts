@@ -1,5 +1,8 @@
 import { defineField, defineType } from "sanity";
 import { Settings } from "lucide-react";
+import { IconPickerInput } from "@/sanity/components/IconPickerInput";
+import { NavLinkPreview } from "@/sanity/components/NavLinkPreview";
+import { SliderInput } from "@/sanity/components/SliderInput";
 
 export const siteSettingsType = defineType({
   name: "siteSettings",
@@ -54,6 +57,18 @@ export const siteSettingsType = defineType({
       group: "general",
     }),
 
+    defineField({
+      name: "heroOverlayOpacity",
+      title: "Hero Overlay Darkness",
+      type: "number",
+      group: "general",
+      description:
+        "Controls how dark the video overlay is on the homepage hero. 0 = no darkening, 100 = fully black. Default is 65.",
+      validation: (r) => r.min(0).max(100),
+      initialValue: 65,
+      components: { input: SliderInput },
+    }),
+
     /* ── Navigation ── */
     defineField({
       name: "mainNav",
@@ -84,12 +99,15 @@ export const siteSettingsType = defineType({
               name: "icon",
               title: "Icon",
               type: "string",
-              description:
-                "Lucide icon name in kebab-case (e.g. newspaper, book-open, pickaxe).",
+              description: "Choose a Lucide icon for this nav link.",
+              components: { input: IconPickerInput },
             }),
           ],
           preview: {
-            select: { title: "label", subtitle: "href" },
+            select: { title: "label", subtitle: "href", icon: "icon" },
+          },
+          components: {
+            preview: NavLinkPreview as any,
           },
         },
       ],

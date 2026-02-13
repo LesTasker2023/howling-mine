@@ -4,11 +4,11 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { Copy, Check, X, ShieldAlert } from "lucide-react";
 import { useTopBar } from "@/context/TopBarContext";
+import { AsteroidStatsCard } from "./AsteroidStatsCard";
 import styles from "./HowlingMineMap.module.css";
 
 /* ── Types ── */
@@ -57,10 +57,6 @@ const CAT_LABELS: Record<string, string> = {
 
 function getCatColor(cat: string): number {
   return CAT_COLORS[cat] ?? 0x888888;
-}
-
-function formatCoord(n: number): string {
-  return n.toLocaleString("en-US", { maximumFractionDigits: 0 });
 }
 
 /* ── EU → Three.js coordinate mapping ── */
@@ -206,7 +202,6 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
   } | null>(null);
 
   const [selectedPoi, setSelectedPoi] = useState<MapPoi | null>(null);
-  const [copiedField, setCopiedField] = useState<string | null>(null);
   const selectedRef = useRef<string | null>(null);
 
   /* ── TopBar context: expose filters as multi-select subtabs ── */
@@ -234,23 +229,6 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categories.join(","), setSubTabs, setSubTabMultiSelect]);
-
-  /* ── Copy ── */
-  const copyValue = useCallback(async (label: string, value: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      setCopiedField(label);
-      setTimeout(() => setCopiedField(null), 1500);
-    } catch {
-      /* noop */
-    }
-  }, []);
-
-  const copyAll = useCallback(() => {
-    if (!selectedPoi) return;
-    const txt = `/wp [${selectedPoi.name}, ${formatCoord(selectedPoi.euX)}, ${formatCoord(selectedPoi.euY)}, ${formatCoord(selectedPoi.euZ)}]`;
-    copyValue("all", txt);
-  }, [selectedPoi, copyValue]);
 
   /* ── Three.js setup ── */
   useEffect(() => {
@@ -741,8 +719,61 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     const poiRings = new Map<string, THREE.Mesh>();
     const labelSprites = new Map<string, THREE.Sprite>();
 
+    // Pre-compute positions and detect collisions
+    // Visual radii: station ring=0.22, station label ~0.35 above; other ring=0.13
+    function getVisualRadius(cat: string): number {
+      return cat === "station" ? 0.55 : 0.22;
+    }
+    const poiPositions: {
+      poi: MapPoi;
+      pos: THREE.Vector3;
+      original: THREE.Vector3;
+    }[] = [];
+
     for (const poi of pois) {
       const pos = euToThree(poi.euX, poi.euY, poi.euZ, center, scale);
+      poiPositions.push({ poi, pos: pos.clone(), original: pos.clone() });
+    }
+
+    // Iterative repulsion — push overlapping POIs apart
+    for (let iteration = 0; iteration < 20; iteration++) {
+      let anyMoved = false;
+      for (let i = 0; i < poiPositions.length; i++) {
+        for (let j = i + 1; j < poiPositions.length; j++) {
+          const a = poiPositions[i];
+          const b = poiPositions[j];
+          const minSep =
+            getVisualRadius(a.poi.category) + getVisualRadius(b.poi.category);
+          const dist = a.pos.distanceTo(b.pos);
+          if (dist < minSep && dist > 0.001) {
+            const overlap = (minSep - dist) / 2;
+            const dir = new THREE.Vector3()
+              .subVectors(b.pos, a.pos)
+              .normalize();
+            // Push the smaller POI more than the station
+            const aIsStation = a.poi.category === "station";
+            const bIsStation = b.poi.category === "station";
+            if (aIsStation && !bIsStation) {
+              b.pos.addScaledVector(dir, overlap * 2);
+            } else if (bIsStation && !aIsStation) {
+              a.pos.addScaledVector(dir, -overlap * 2);
+            } else {
+              a.pos.addScaledVector(dir, -overlap);
+              b.pos.addScaledVector(dir, overlap);
+            }
+            anyMoved = true;
+          } else if (dist <= 0.001) {
+            // Nearly identical positions — offset on a random axis
+            b.pos.x += minSep * 0.6;
+            b.pos.z += minSep * 0.4;
+            anyMoved = true;
+          }
+        }
+      }
+      if (!anyMoved) break;
+    }
+
+    for (const { poi, pos, original } of poiPositions) {
       const color = getCatColor(poi.category);
       const isStation = poi.category === "station";
       const radius = isStation ? 0.12 : 0.06;
@@ -801,6 +832,36 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
         pvpDot.position.y -= isStation ? 0.18 : 0.1;
         scene.add(pvpDot);
       }
+
+      // Offset indicator — thin line from displayed position to true position
+      if (pos.distanceTo(original) > 0.01) {
+        const lineGeo = new THREE.BufferGeometry().setFromPoints([
+          original,
+          pos,
+        ]);
+        const lineMat = new THREE.LineDashedMaterial({
+          color,
+          transparent: true,
+          opacity: 0.35,
+          dashSize: 0.05,
+          gapSize: 0.03,
+        });
+        const line = new THREE.Line(lineGeo, lineMat);
+        line.computeLineDistances();
+        scene.add(line);
+
+        // Small dot at true position
+        const trueDot = new THREE.Mesh(
+          new THREE.SphereGeometry(0.015, 8, 8),
+          new THREE.MeshBasicMaterial({
+            color,
+            transparent: true,
+            opacity: 0.4,
+          }),
+        );
+        trueDot.position.copy(original);
+        scene.add(trueDot);
+      }
     }
 
     // ─── M-Type PVP zone sphere ───
@@ -851,7 +912,19 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     raycaster.params.Points = { threshold: 0.1 };
     const mouse = new THREE.Vector2();
 
+    // Track drag vs click
+    let pointerDownPos = { x: 0, y: 0 };
+    const onPointerDown = (e: PointerEvent) => {
+      pointerDownPos = { x: e.clientX, y: e.clientY };
+    };
+    renderer.domElement.addEventListener("pointerdown", onPointerDown);
+
     const onClick = (e: MouseEvent) => {
+      // Ignore if the user dragged (panned/rotated)
+      const dx = e.clientX - pointerDownPos.x;
+      const dy = e.clientY - pointerDownPos.y;
+      if (dx * dx + dy * dy > 25) return;
+
       const rect = renderer.domElement.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
@@ -874,6 +947,8 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
           }
         }
       } else {
+        // Only deselect on a deliberate click on empty space
+        // (drag detection above already filters out pans)
         selectedRef.current = null;
         setSelectedPoi(null);
       }
@@ -994,6 +1069,7 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     // ─── Cleanup ───
     return () => {
       cancelAnimationFrame(animId);
+      renderer.domElement.removeEventListener("pointerdown", onPointerDown);
       renderer.domElement.removeEventListener("click", onClick);
       renderer.domElement.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("resize", onResize);
@@ -1050,73 +1126,14 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
 
       {/* ── Detail panel ── */}
       {selectedPoi && (
-        <div className={styles.detailPanel}>
-          <div className={styles.detailHeader}>
-            <span className={styles.detailName}>{selectedPoi.name}</span>
-            <button
-              className={styles.detailClose}
-              onClick={() => {
-                selectedRef.current = null;
-                setSelectedPoi(null);
-              }}
-            >
-              <X size={16} />
-            </button>
-          </div>
-
-          <span className={styles.detailCategory}>
-            {CAT_LABELS[selectedPoi.category] ?? selectedPoi.category}
-          </span>
-
-          {selectedPoi.pvpLootable && (
-            <span className={styles.pvpBadge}>
-              <ShieldAlert size={12} /> PVP Lootable
-            </span>
-          )}
-
-          {selectedPoi.description && (
-            <p className={styles.detailDesc}>{selectedPoi.description}</p>
-          )}
-
-          {(
-            [
-              ["X", selectedPoi.euX],
-              ["Y", selectedPoi.euY],
-              ["Z", selectedPoi.euZ],
-            ] as [string, number][]
-          ).map(([axis, val]) => (
-            <div key={axis} className={styles.coordRow}>
-              <span className={styles.coordLabel}>{axis}</span>
-              <span className={styles.coordValue}>{formatCoord(val)}</span>
-              <button
-                className={`${styles.copyBtn} ${copiedField === axis ? styles.copied : ""}`}
-                onClick={() => copyValue(axis, String(val))}
-                title={`Copy ${axis}`}
-              >
-                {copiedField === axis ? (
-                  <Check size={14} />
-                ) : (
-                  <Copy size={14} />
-                )}
-              </button>
-            </div>
-          ))}
-
-          <button
-            className={`${styles.copyAllBtn} ${copiedField === "all" ? styles.copied : ""}`}
-            onClick={copyAll}
-          >
-            {copiedField === "all" ? (
-              <>
-                <Check size={14} /> Copied!
-              </>
-            ) : (
-              <>
-                <Copy size={14} /> Copy Waypoint
-              </>
-            )}
-          </button>
-        </div>
+        <AsteroidStatsCard
+          key={selectedPoi._id}
+          poi={selectedPoi}
+          onClose={() => {
+            selectedRef.current = null;
+            setSelectedPoi(null);
+          }}
+        />
       )}
     </div>
   );

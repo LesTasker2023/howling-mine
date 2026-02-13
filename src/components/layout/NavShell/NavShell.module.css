@@ -21,7 +21,7 @@
 }
 
 .shell[data-has-subbar="true"] {
-  --subbar-height: 32px;
+  --subbar-height: 56px;
 }
 
 /* -- Sidebar -- */
@@ -347,7 +347,7 @@
   top: var(--topbar-height);
   left: var(--sidebar-width);
   right: 0;
-  height: 32px;
+  height: 56px;
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border-subtle);
   z-index: var(--z-sticky);
@@ -376,7 +376,7 @@
   display: flex;
   align-items: center;
   height: 100%;
-  padding: 0 var(--space-3);
+  padding: 12px var(--space-3);
   font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.08em;

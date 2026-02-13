@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useCallback } from "react";
 import { useThemeColors } from "@/context/ThemeContext";
 import { polarXY } from "../hud-primitives";
 import styles from "../DeltaCharts.module.css";
@@ -109,14 +109,69 @@ export function DialGauge({
   bare = false,
 }: DialGaugeProps) {
   const { accent, accentRgb } = useThemeColors();
-  /* ── Animate pct from previous value to new value ── */
+
+  /* ── Stable pct target ── */
   const targetPct = Math.max(0, Math.min(1, value / max));
-  // Ensure a visible minimum so the needle always shows for non-zero values
   const effectivePct = value > 0 && targetPct < 0.05 ? 0.05 : targetPct;
-  const [animPct, setAnimPct] = useState(0);
+
+  /* ── Refs for rAF-driven animation (no React re-renders) ── */
   const prevTarget = useRef(0);
   const rafRef = useRef<number>(0);
+  const needleRef = useRef<SVGLineElement>(null);
+  const pivotRef = useRef<SVGCircleElement>(null);
+  const valueRef = useRef<HTMLSpanElement>(null);
+  const segsRef = useRef<(SVGPathElement | null)[]>([]);
 
+  const cx = size / 2;
+  const cy = size * 0.52;
+  const rOuter = size * 0.44;
+  const rInner = size * 0.36;
+  const tickR = size * 0.46;
+  const needleLen = rOuter - 6;
+
+  const ticks = useMemo(() => buildDialTicks(cx, cy, tickR), [cx, cy, tickR]);
+  const filterId = `dialGlow-${label?.replace(/\s/g, "") ?? "g"}`;
+  const vbH = size * 0.62;
+  const needleColor = accent;
+
+  /* ── Helper: update DOM directly for a given pct ── */
+  const applyPct = useCallback(
+    (pct: number) => {
+      const litCount = Math.round(pct * SEG_COUNT);
+
+      // Update segments — simple fill swap, no per-element filters
+      segsRef.current.forEach((el, i) => {
+        if (!el) return;
+        if (i < litCount) {
+          el.setAttribute("fill", accent);
+          el.setAttribute("fill-opacity", "0.85");
+        } else {
+          el.setAttribute("fill", `rgba(${accentRgb}, 0.06)`);
+          el.setAttribute("fill-opacity", "1");
+        }
+      });
+
+      // Update needle
+      const deg = ARC_START + pct * ARC_SWEEP;
+      const tip = polarXY(cx, cy, needleLen, deg);
+      const tail = polarXY(cx, cy, size * 0.06, deg + 180);
+      if (needleRef.current) {
+        needleRef.current.setAttribute("x1", String(tail.x));
+        needleRef.current.setAttribute("y1", String(tail.y));
+        needleRef.current.setAttribute("x2", String(tip.x));
+        needleRef.current.setAttribute("y2", String(tip.y));
+      }
+
+      // Update value readout
+      if (valueRef.current) {
+        valueRef.current.textContent =
+          displayValue ?? String(Math.round(pct * max));
+      }
+    },
+    [accent, accentRgb, cx, cy, needleLen, size, max, displayValue],
+  );
+
+  /* ── Animate via rAF, mutating DOM directly ── */
   useEffect(() => {
     const from = prevTarget.current;
     const to = effectivePct;
@@ -129,40 +184,15 @@ export function DialGauge({
       const elapsed = now - start;
       const t = Math.min(1, elapsed / duration);
       const eased = easeOutCubic(t);
-      setAnimPct(from + (to - from) * eased);
+      applyPct(from + (to - from) * eased);
       if (t < 1) rafRef.current = requestAnimationFrame(tick);
     }
 
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [effectivePct, animMs]);
+  }, [effectivePct, animMs, applyPct]);
 
-  const pct = animPct;
-
-  const cx = size / 2;
-  const cy = size * 0.52;
-  const rOuter = size * 0.44;
-  const rInner = size * 0.36;
-  const tickR = size * 0.46;
-
-  const litCount = Math.round(pct * SEG_COUNT);
-  const needleDeg = ARC_START + pct * ARC_SWEEP;
-  const needleColor = accent;
-
-  const ticks = useMemo(() => buildDialTicks(cx, cy, tickR), [cx, cy, tickR]);
-
-  // needle endpoint
-  const needleLen = rOuter - 6;
-  const needleTip = polarXY(cx, cy, needleLen, needleDeg);
-  const needleTail = polarXY(cx, cy, size * 0.06, needleDeg + 180);
-
-  const filterId = `dialGlow-${label?.replace(/\s/g, "") ?? "g"}-${Math.round(pct * 100)}`;
-
-  // viewBox includes a bit of padding below the center for the label
-  const vbH = size * 0.62;
-
-  // Animated display value: interpolate numeric portion
-  const animatedValue = displayValue ?? String(Math.round(pct * max));
+  const pct = effectivePct;
 
   const inner = (
     <div className={styles.dialCompact}>
@@ -193,16 +223,15 @@ export function DialGauge({
           {/* Segmented arc */}
           {Array.from({ length: SEG_COUNT }, (_, i) => {
             const deg = ARC_START + i * (SEG_DEG + GAP_DEG);
-            const lit = i < litCount;
             return (
               <path
                 key={i}
+                ref={(el) => {
+                  segsRef.current[i] = el;
+                }}
                 d={semiArcSeg(cx, cy, rOuter, rInner, deg, SEG_DEG)}
-                fill={lit ? accent : `rgba(${accentRgb}, 0.06)`}
-                fillOpacity={lit ? 0.85 : 1}
-                style={
-                  lit ? { filter: `drop-shadow(0 0 3px ${accent})` } : undefined
-                }
+                fill={`rgba(${accentRgb}, 0.06)`}
+                fillOpacity={1}
               />
             );
           })}
@@ -222,10 +251,11 @@ export function DialGauge({
 
           {/* Needle */}
           <line
-            x1={needleTail.x}
-            y1={needleTail.y}
-            x2={needleTip.x}
-            y2={needleTip.y}
+            ref={needleRef}
+            x1={cx}
+            y1={cy}
+            x2={cx}
+            y2={cy}
             stroke={needleColor}
             strokeWidth={2}
             strokeLinecap="round"
@@ -238,8 +268,12 @@ export function DialGauge({
         </svg>
       </div>
 
-      <span className={styles.dialLabelValue} style={{ color: needleColor }}>
-        {animatedValue}
+      <span
+        ref={valueRef}
+        className={styles.dialLabelValue}
+        style={{ color: needleColor }}
+      >
+        {displayValue ?? "0"}
       </span>
     </div>
   );

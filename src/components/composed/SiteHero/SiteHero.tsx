@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui";
+import { fadeIn } from "@/lib/motion";
 import styles from "./SiteHero.module.css";
 
 interface SiteHeroProps {
@@ -96,7 +98,13 @@ export function SiteHero({
   useEffect(() => () => clearTimeout(timerRef.current), []);
 
   return (
-    <section className={styles.hero}>
+    <motion.section
+      className={styles.hero}
+      variants={fadeIn}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-40px" }}
+    >
       {/* Video background */}
       {hasVideos && <div className={styles.videoBackdrop} aria-hidden />}
       {hasVideos && (
@@ -165,6 +173,6 @@ export function SiteHero({
       )}
 
       <div className={styles.bottomLine} aria-hidden />
-    </section>
+    </motion.section>
   );
 }

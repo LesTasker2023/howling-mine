@@ -4,7 +4,9 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { urlFor } from "@/sanity/image";
+import { fadeIn } from "@/lib/motion";
 import styles from "./PageHero.module.css";
 
 interface PageHeroProps {
@@ -30,9 +32,13 @@ export function PageHero({
     align === "left" ? styles["hero--left"] : styles["hero--center"];
 
   return (
-    <section
+    <motion.section
       className={`${styles.hero} ${alignClass}`}
       data-has-bg={hasBg || undefined}
+      variants={fadeIn}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-40px" }}
     >
       {/* Background image */}
       {hasBg && (
@@ -66,6 +72,6 @@ export function PageHero({
 
       {/* Bottom golden accent line */}
       <div className={styles.bottomAccent} />
-    </section>
+    </motion.section>
   );
 }

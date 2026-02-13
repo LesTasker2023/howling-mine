@@ -17,6 +17,8 @@ export interface HudGaugeProps {
   size?: number;
   /** Title above the gauge */
   title?: string;
+  /** Render without Panel wrapper — caller provides the panel */
+  bare?: boolean;
 }
 
 /* ── Helpers ── */
@@ -66,6 +68,7 @@ export function HudGauge({
   label,
   size = 160,
   title,
+  bare = false,
 }: HudGaugeProps) {
   const { accent } = useThemeColors();
   const color = colorProp ?? accent;
@@ -97,93 +100,110 @@ export function HudGauge({
 
   const filterId = `segGlow-${(label ?? "g").replace(/\s/g, "")}`;
 
-  return (
-    <Panel size="flush" noAnimation>
-      <div className={styles.chartInner}>
-        {title && <div className={styles.chartTitle}>{title}</div>}
-        <div className={styles.gaugeWrap} style={{ width: size, height: size }}>
-          <svg
-            className={styles.tickRing}
-            viewBox={`0 0 ${size} ${size}`}
-            aria-label={`${clamped}% ${label ?? ""}`}
-          >
-            <defs>
-              <filter
-                id={filterId}
-                x="-40%"
-                y="-40%"
-                width="180%"
-                height="180%"
-              >
-                <feGaussianBlur
-                  stdDeviation="3"
-                  in="SourceGraphic"
-                  result="blur"
-                />
-                <feFlood floodColor={color} floodOpacity="0.6" result="color" />
-                <feComposite
-                  in="color"
-                  in2="blur"
-                  operator="in"
-                  result="glow"
-                />
-                <feMerge>
-                  <feMergeNode in="glow" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
+  const inner = (
+    <div className={styles.chartInner}>
+      {title && <div className={styles.chartTitle}>{title}</div>}
+      <div
+        className={styles.gaugeWrap}
+        style={
+          bare
+            ? { width: "100%", aspectRatio: "1" }
+            : { width: size, height: size }
+        }
+      >
+        <svg
+          className={styles.tickRing}
+          viewBox={`0 0 ${size} ${size}`}
+          aria-label={`${clamped}% ${label ?? ""}`}
+        >
+          <defs>
+            <filter id={filterId} x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur
+                stdDeviation="3"
+                in="SourceGraphic"
+                result="blur"
+              />
+              <feFlood floodColor={color} floodOpacity="0.6" result="color" />
+              <feComposite in="color" in2="blur" operator="in" result="glow" />
+              <feMerge>
+                <feMergeNode in="glow" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
 
-            {/* Outer subtle ring */}
+          {/* Outer subtle ring */}
+          <circle
+            cx={cx}
+            cy={cy}
+            r={ringR + 1}
+            fill="none"
+            stroke="rgba(148,163,184,0.1)"
+            strokeWidth={1}
+          />
+
+          {/* Tick marks */}
+          {ticks.map((t, i) => (
+            <line
+              key={i}
+              x1={t.x1}
+              y1={t.y1}
+              x2={t.x2}
+              y2={t.y2}
+              stroke={
+                t.major ? "rgba(148,163,184,0.3)" : "rgba(148,163,184,0.12)"
+              }
+              strokeWidth={t.major ? 1.5 : 0.75}
+            />
+          ))}
+
+          {/* Segments */}
+          {Array.from({ length: SEG_COUNT }, (_, i) => {
+            const startDeg = i * (SEG_DEG + GAP_DEG);
+            const lit = i < litCount;
+            return (
+              <path
+                key={i}
+                d={segPath(cx, cy, rOuter, rInner, startDeg, SEG_DEG)}
+                fill={lit ? color : "rgba(var(--color-primary-rgb), 0.06)"}
+                fillOpacity={lit ? 0.9 : 1}
+              />
+            );
+          })}
+
+          {/* Single glow ring behind lit segments */}
+          {litCount > 0 && (
             <circle
               cx={cx}
               cy={cy}
-              r={ringR + 1}
+              r={(rOuter + rInner) / 2}
               fill="none"
-              stroke="rgba(148,163,184,0.1)"
-              strokeWidth={1}
+              stroke={color}
+              strokeWidth={rOuter - rInner}
+              strokeDasharray={`${((litCount / SEG_COUNT) * 2 * Math.PI * (rOuter + rInner)) / 2} 9999`}
+              transform={`rotate(-90 ${cx} ${cy})`}
+              opacity={0.15}
+              filter={`url(#${filterId})`}
             />
+          )}
+        </svg>
 
-            {/* Tick marks */}
-            {ticks.map((t, i) => (
-              <line
-                key={i}
-                x1={t.x1}
-                y1={t.y1}
-                x2={t.x2}
-                y2={t.y2}
-                stroke={
-                  t.major ? "rgba(148,163,184,0.3)" : "rgba(148,163,184,0.12)"
-                }
-                strokeWidth={t.major ? 1.5 : 0.75}
-              />
-            ))}
-
-            {/* Segments */}
-            {Array.from({ length: SEG_COUNT }, (_, i) => {
-              const startDeg = i * (SEG_DEG + GAP_DEG);
-              const lit = i < litCount;
-              return (
-                <path
-                  key={i}
-                  d={segPath(cx, cy, rOuter, rInner, startDeg, SEG_DEG)}
-                  fill={lit ? color : "rgba(var(--color-primary-rgb), 0.06)"}
-                  fillOpacity={lit ? 0.9 : 1}
-                  filter={lit ? `url(#${filterId})` : undefined}
-                />
-              );
-            })}
-          </svg>
-
-          {/* Center text */}
-          <div className={styles.gaugeCenter}>
-            <span className={styles.gaugeValue} style={{ color }}>
-              {clamped}%
-            </span>
-            {label && <span className={styles.gaugeLabel}>{label}</span>}
-          </div>
+        {/* Center text */}
+        <div className={styles.gaugeCenter}>
+          <span className={styles.gaugeValue} style={{ color }}>
+            {clamped}%
+          </span>
+          {label && <span className={styles.gaugeLabel}>{label}</span>}
         </div>
       </div>
+    </div>
+  );
+
+  if (bare) return inner;
+
+  return (
+    <Panel size="flush" noAnimation>
+      {inner}
     </Panel>
   );
 }

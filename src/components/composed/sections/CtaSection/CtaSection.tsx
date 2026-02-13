@@ -1,7 +1,9 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Panel, Button, SectionHeader } from "@/components/ui";
 import type { PanelVariant } from "@/components/ui";
+import { fadeIn } from "@/lib/motion";
 import styles from "./CtaSection.module.css";
 
 interface CtaSectionProps {
@@ -27,7 +29,14 @@ export function CtaSection({
         : "default";
 
   return (
-    <section className={styles.section} data-variant={variant}>
+    <motion.section
+      className={styles.section}
+      data-variant={variant}
+      variants={fadeIn}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-40px" }}
+    >
       <Panel variant={panelVariant} size="lg">
         <div className={styles.inner}>
           <div className={styles.text}>
@@ -52,6 +61,6 @@ export function CtaSection({
           </div>
         </div>
       </Panel>
-    </section>
+    </motion.section>
   );
 }

@@ -131,6 +131,7 @@ export const SITE_SETTINGS_QUERY = groq`
     tagline,
     logo,
     favicon,
+    heroOverlayOpacity,
     mainNav[] { label, href, icon },
     footerText,
     footerLinks[] { label, href },

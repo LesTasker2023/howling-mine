@@ -293,7 +293,7 @@
 }
 
 .radarDot {
-  fill: #eab308;
+  fill: var(--color-primary);
   filter: drop-shadow(0 0 3px rgba(var(--color-primary-rgb), 0.6));
 }
 

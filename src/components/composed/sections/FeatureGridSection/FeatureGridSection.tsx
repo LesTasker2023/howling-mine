@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { urlFor } from "@/sanity/image";
 import { Card, SectionHeader } from "@/components/ui";
+import { fadeIn, staggerContainer, fadeUp } from "@/lib/motion";
 import { dynamicIcon } from "./iconMap";
 import styles from "./FeatureGridSection.module.css";
 
@@ -33,10 +35,23 @@ export function FeatureGridSection({
       : { gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" };
 
   return (
-    <section className={styles.section}>
+    <motion.section
+      className={styles.section}
+      variants={fadeIn}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-40px" }}
+    >
       {heading && <SectionHeader title={heading} />}
       {subheading && <p className={styles.subheading}>{subheading}</p>}
-      <div className={styles.grid} style={gridStyle}>
+      <motion.div
+        className={styles.grid}
+        style={gridStyle}
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-40px" }}
+      >
         {features.map((feature, i) => {
           const hasImage = feature.image?.asset;
           const IconComponent = feature.icon ? dynamicIcon(feature.icon) : null;
@@ -71,22 +86,23 @@ export function FeatureGridSection({
           );
 
           return (
-            <Card
-              key={i}
-              variant={feature.href ? "interactive" : "default"}
-              onClick={
-                feature.href
-                  ? () => {
-                      window.location.href = feature.href!;
-                    }
-                  : undefined
-              }
-            >
-              {inner}
-            </Card>
+            <motion.div key={i} variants={fadeUp}>
+              <Card
+                variant={feature.href ? "interactive" : "default"}
+                onClick={
+                  feature.href
+                    ? () => {
+                        window.location.href = feature.href!;
+                      }
+                    : undefined
+                }
+              >
+                {inner}
+              </Card>
+            </motion.div>
           );
         })}
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }

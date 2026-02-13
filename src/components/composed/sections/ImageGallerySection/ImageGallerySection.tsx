@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { urlFor } from "@/sanity/image";
 import { SectionHeader } from "@/components/ui";
+import { fadeIn, staggerContainer, fadeUp } from "@/lib/motion";
 import styles from "./ImageGallerySection.module.css";
 
 interface GalleryImage {
@@ -25,20 +27,30 @@ export function ImageGallerySection({
   columns = 3,
 }: ImageGallerySectionProps) {
   return (
-    <section className={styles.section}>
+    <motion.section
+      className={styles.section}
+      variants={fadeIn}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-40px" }}
+    >
       {heading && <SectionHeader title={heading} />}
-      <div
+      <motion.div
         className={`${styles.gallery} ${styles[`gallery--${layout}`]}`}
         style={
           layout === "grid"
             ? { gridTemplateColumns: `repeat(${columns}, 1fr)` }
             : undefined
         }
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-40px" }}
       >
         {images.map((item, i) => {
           if (!item.image?.asset) return null;
           return (
-            <figure key={i} className={styles.figure}>
+            <motion.figure key={i} className={styles.figure} variants={fadeUp}>
               <div className={styles.imageWrap}>
                 <Image
                   src={urlFor(item.image).width(800).auto("format").url()}
@@ -57,10 +69,10 @@ export function ImageGallerySection({
                   {item.caption}
                 </figcaption>
               )}
-            </figure>
+            </motion.figure>
           );
         })}
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }

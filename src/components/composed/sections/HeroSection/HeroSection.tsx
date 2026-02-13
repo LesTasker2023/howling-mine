@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { urlFor } from "@/sanity/image";
+import { fadeIn } from "@/lib/motion";
 import { Button } from "@/components/ui";
 import styles from "./HeroSection.module.css";
 
@@ -23,9 +25,13 @@ export function HeroSection({
   const hasBg = backgroundImage?.asset;
 
   return (
-    <section
+    <motion.section
       className={`${styles.hero} ${styles[`hero--${align}`]}`}
       data-has-bg={hasBg ? "true" : undefined}
+      variants={fadeIn}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-40px" }}
     >
       {hasBg && (
         <Image
@@ -56,6 +62,6 @@ export function HeroSection({
           </a>
         )}
       </div>
-    </section>
+    </motion.section>
   );
 }
