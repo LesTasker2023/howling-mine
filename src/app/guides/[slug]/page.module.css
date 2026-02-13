@@ -4,7 +4,7 @@
 
 .article {
   padding: var(--space-8);
-  max-width: 52rem;
+  max-width: 1440px;
   width: 100%;
   margin: 0 auto;
   overflow-wrap: break-word;
