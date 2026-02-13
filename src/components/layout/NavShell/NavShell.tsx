@@ -101,8 +101,9 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
   // Derive page title from pathname for the always-visible first tab
   const pageTitle = (() => {
     if (pathname === "/") return "Welcome";
-    // Take the first segment, capitalize it
     const seg = pathname.split("/").filter(Boolean)[0];
+    if (seg === "map") return "Sector Map";
+    // Take the first segment, capitalize it
     return seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, " ");
   })();
 
@@ -170,11 +171,11 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
               href="/map"
               className={styles.navItem}
               data-active={pathname === "/map" || pathname.startsWith("/map/")}
-              title={!expanded ? "Map" : undefined}
+              title={!expanded ? "Sector Map" : undefined}
               onClick={() => setMobileOpen(false)}
             >
               <Map size={20} />
-              <span className={styles.navLabel}>Map</span>
+              <span className={styles.navLabel}>Sector Map</span>
             </Link>
             <Link
               href="/stats"

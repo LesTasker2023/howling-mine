@@ -80,10 +80,19 @@ function euToThree(
 function createLabel(text: string, color: string, fontSize = 48): THREE.Sprite {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d")!;
-  canvas.width = 512;
-  canvas.height = 128;
 
-  ctx.font = `bold ${fontSize}px 'JetBrains Mono', 'Fira Code', monospace`;
+  // Measure text first to size canvas correctly
+  const font = `bold ${fontSize}px 'JetBrains Mono', 'Fira Code', monospace`;
+  ctx.font = font;
+  const measured = ctx.measureText(text);
+  const padding = fontSize; // breathing room for glow
+  const w = Math.ceil(measured.width + padding * 2);
+  const h = Math.ceil(fontSize * 2 + padding);
+  canvas.width = w;
+  canvas.height = h;
+
+  // Re-set font after resize (canvas reset clears it)
+  ctx.font = font;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
@@ -91,11 +100,11 @@ function createLabel(text: string, color: string, fontSize = 48): THREE.Sprite {
   ctx.shadowColor = color;
   ctx.shadowBlur = 12;
   ctx.fillStyle = color;
-  ctx.fillText(text, 256, 64);
+  ctx.fillText(text, w / 2, h / 2);
 
   // Crisp pass
   ctx.shadowBlur = 0;
-  ctx.fillText(text, 256, 64);
+  ctx.fillText(text, w / 2, h / 2);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.minFilter = THREE.LinearFilter;
@@ -105,7 +114,9 @@ function createLabel(text: string, color: string, fontSize = 48): THREE.Sprite {
     depthTest: false,
   });
   const sprite = new THREE.Sprite(material);
-  sprite.scale.set(1.6, 0.4, 1);
+  const aspect = w / h;
+  const baseScale = fontSize / 120; // normalise so 48px ≈ 0.4 height like before
+  sprite.scale.set(baseScale * aspect, baseScale, 1);
   return sprite;
 }
 
@@ -272,6 +283,7 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x050508, 1);
+    renderer.toneMapping = THREE.NoToneMapping;
     container.appendChild(renderer.domElement);
 
     // ─── Scene ───
@@ -524,6 +536,204 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     (gridHelper.material as THREE.Material).transparent = true;
     scene.add(gridHelper);
 
+    // ─── Reference planets & stations (visual orientation aids) ───
+    const textureLoader = new THREE.TextureLoader();
+
+    const refBodies: {
+      name: string;
+      euX: number;
+      euY: number;
+      euZ: number;
+      color: number;
+      radius: number;
+      isPlanet: boolean;
+      /** Path to texture image (planets with artwork). */
+      texture?: string;
+      /** Native image width (for aspect-correct scaling). */
+      imgW?: number;
+      /** Native image height (for aspect-correct scaling). */
+      imgH?: number;
+    }[] = [
+      // Major planets (with textures where available)
+      {
+        name: "Calypso",
+        euX: 58271,
+        euY: 69165,
+        euZ: -845,
+        color: 0x4fa8e8,
+        radius: 0.066,
+        isPlanet: true,
+        texture: "/images/planets/calypso.png",
+        imgW: 300,
+        imgH: 278,
+      },
+      {
+        name: "Arkadia",
+        euX: 77643,
+        euY: 59366,
+        euZ: -250,
+        color: 0x5cb85c,
+        radius: 0.067,
+        isPlanet: true,
+        texture: "/images/planets/arkadia.png",
+        imgW: 300,
+        imgH: 282,
+      },
+      {
+        name: "Cyrene",
+        euX: 60586,
+        euY: 59458,
+        euZ: -1573,
+        color: 0xd5a03a,
+        radius: 0.069,
+        isPlanet: true,
+        texture: "/images/planets/cyrene.png",
+        imgW: 393,
+        imgH: 329,
+      },
+      {
+        name: "Rocktropia",
+        euX: 70095,
+        euY: 79916,
+        euZ: -1172,
+        color: 0xc44e52,
+        radius: 0.72,
+        isPlanet: true,
+        texture: "/images/planets/rocktropia.png",
+        imgW: 300,
+        imgH: 269,
+      },
+      {
+        name: "Next Island",
+        euX: 88732,
+        euY: 69513,
+        euZ: 1755,
+        color: 0x38b2a5,
+        radius: 0.204,
+        isPlanet: true,
+        texture: "/images/planets/next-island.png",
+        imgW: 300,
+        imgH: 309,
+      },
+      {
+        name: "Toulan",
+        euX: 85139,
+        euY: 80302,
+        euZ: 1350,
+        color: 0xc28840,
+        radius: 0.64,
+        isPlanet: true,
+        texture: "/images/planets/toulan.png",
+        imgW: 300,
+        imgH: 282,
+      },
+    ];
+
+    const planetSprites: THREE.Sprite[] = [];
+    const haloSprites: THREE.Sprite[] = [];
+
+    // Push all reference bodies to the boundary — preserve direction, fixed distance
+    const BOUNDARY_RADIUS = 42;
+
+    for (const body of refBodies) {
+      // Get real direction from map center, then push to boundary
+      const rawPos = euToThree(body.euX, body.euY, body.euZ, center, scale);
+      const dir = rawPos.clone().normalize();
+      const pos = dir.multiplyScalar(BOUNDARY_RADIUS);
+
+      if (body.isPlanet) {
+        if (body.texture) {
+          // Textured planet — render as billboard sprite so artwork shows correctly
+          const tex = textureLoader.load(body.texture);
+          tex.colorSpace = THREE.SRGBColorSpace;
+          const spriteMat = new THREE.SpriteMaterial({
+            map: tex,
+            transparent: true,
+            alphaTest: 0.1,
+            depthWrite: false,
+            fog: false,
+            toneMapped: false,
+          });
+          const sprite = new THREE.Sprite(spriteMat);
+          sprite.frustumCulled = false;
+          sprite.position.copy(pos);
+          // Aspect-correct scaling — no vertical stretch
+          const sz = body.radius * 14.0;
+          const aspect = (body.imgW ?? 1) / (body.imgH ?? 1);
+          sprite.scale.set(sz * aspect, sz, 1);
+          scene.add(sprite);
+        } else {
+          // Fallback — plain translucent sphere (Toulan etc.)
+          const geo = new THREE.SphereGeometry(body.radius, 32, 32);
+          const mat = new THREE.MeshStandardMaterial({
+            color: body.color,
+            emissive: body.color,
+            emissiveIntensity: 0.9,
+            transparent: true,
+            opacity: 0.95,
+            roughness: 0.4,
+            metalness: 0.1,
+            depthWrite: false,
+            fog: false,
+          });
+          const mesh = new THREE.Mesh(geo, mat);
+          mesh.frustumCulled = false;
+          mesh.position.copy(pos);
+          scene.add(mesh);
+        }
+
+        // Atmospheric halo
+        const haloTex = createGlowTexture(
+          (body.color >> 16) & 0xff,
+          (body.color >> 8) & 0xff,
+          body.color & 0xff,
+          128,
+        );
+        const haloMat = new THREE.SpriteMaterial({
+          map: haloTex,
+          transparent: true,
+          opacity: 0.85,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          fog: false,
+        });
+        const halo = new THREE.Sprite(haloMat);
+        halo.frustumCulled = false;
+        halo.position.copy(pos);
+        halo.scale.setScalar(body.radius * 20.0);
+        scene.add(halo);
+        haloSprites.push(halo);
+      } else {
+        // Moon / minor body — smaller, simpler
+        const geo = new THREE.SphereGeometry(body.radius, 20, 20);
+        const mat = new THREE.MeshStandardMaterial({
+          color: body.color,
+          emissive: body.color,
+          emissiveIntensity: 0.9,
+          transparent: true,
+          opacity: 0.95,
+          roughness: 0.3,
+          metalness: 0.2,
+          depthWrite: false,
+          fog: false,
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.copy(pos);
+        scene.add(mesh);
+      }
+
+      // Name label — small, subtle, below the planet
+      const hexColor = "#" + new THREE.Color(body.color).getHexString();
+      const label = createLabel(body.name, hexColor, 132);
+      label.frustumCulled = false;
+      label.position.copy(pos);
+      label.position.y -= body.radius * 14.0 * 0.55 + 0.3;
+      (label.material as THREE.SpriteMaterial).opacity = 0.6;
+      (label.material as THREE.SpriteMaterial).fog = false;
+      (label.material as THREE.SpriteMaterial).toneMapped = false;
+      scene.add(label);
+    }
+
     // ─── POI meshes ───
     const poiMeshes = new Map<string, THREE.Mesh>();
     const poiRings = new Map<string, THREE.Mesh>();
@@ -743,6 +953,12 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
 
       // Bright-star shimmer
       brightMat.opacity = 0.7 + Math.sin(t * 0.6) * 0.15;
+
+      // Planet halo breathing
+      for (let i = 0; i < haloSprites.length; i++) {
+        const ps = haloSprites[i];
+        ps.material.opacity = 0.5 + Math.sin(t * 0.4 + i * 1.7) * 0.2;
+      }
 
       renderer.render(scene, camera);
     };
