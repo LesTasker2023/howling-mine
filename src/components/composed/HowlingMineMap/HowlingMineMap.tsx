@@ -1146,9 +1146,7 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
 
       {/* ── Touch hint overlay (mobile only) ── */}
       {isMobile && showHint && (
-        <div className={styles.touchHint}>
-          Pinch to zoom · Tap a POI
-        </div>
+        <div className={styles.touchHint}>Pinch to zoom · Tap a POI</div>
       )}
 
       {/* ── Legend (collapsible on mobile) ── */}
