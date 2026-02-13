@@ -159,6 +159,10 @@ export function SiteHero({
         )}
       </div>
 
+      {hasVideos && (
+        <span className={styles.footageDisclaimer}>Not actual game footage</span>
+      )}
+
       <div className={styles.bottomLine} aria-hidden />
     </section>
   );

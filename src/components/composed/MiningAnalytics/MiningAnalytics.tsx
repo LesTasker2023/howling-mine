@@ -248,6 +248,25 @@ function periodLabel(period: string): string {
 
 const RANK_COLORS = ["#eab308", "#94a3b8", "#cd7f32"];
 
+/** Decode common HTML entities the API sends (e.g. &quot; → ") */
+function decodeHtml(text: string): string {
+  return text
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&#39;/g, "'");
+}
+
+/** Walk the stats payload and decode every string leaf */
+function decodeStats(obj: SpaceMiningStats): SpaceMiningStats {
+  return JSON.parse(
+    JSON.stringify(obj, (_key, value) =>
+      typeof value === "string" ? decodeHtml(value) : value,
+    ),
+  );
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -264,7 +283,7 @@ export function MiningAnalytics({
     activeSubTab,
     setActiveSubTab,
   } = useTopBar();
-  const [data, setData] = useState<SpaceMiningStats>(initialData);
+  const [data, setData] = useState<SpaceMiningStats>(() => decodeStats(initialData));
   const [period, setPeriod] = useState(initialPeriod);
   const [isPending, startTransition] = useTransition();
   const [loading, setLoading] = useState(false);
@@ -296,7 +315,7 @@ export function MiningAnalytics({
           return res.json();
         })
         .then((json: SpaceMiningStats) => {
-          setData(json);
+          setData(decodeStats(json));
           setLoading(false);
         })
         .catch((err) => {

@@ -250,6 +250,19 @@
   z-index: 3;
 }
 
+/* ── Footage disclaimer ── */
+.footageDisclaimer {
+  position: absolute;
+  bottom: var(--space-4);
+  right: var(--space-5);
+  z-index: 4;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  color: rgba(255 255 255 / 0.25);
+  pointer-events: none;
+  user-select: none;
+}
+
 /* ── Mobile ── */
 @media (max-width: 768px) {
   .hero {
