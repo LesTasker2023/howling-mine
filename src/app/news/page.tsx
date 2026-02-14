@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { sanityFetch } from "@/sanity/live";
+import { client } from "@/sanity/client";
 import { POSTS_QUERY } from "@/sanity/queries";
 import NewsHub from "./NewsHub";
 
@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 export default async function NewsPage() {
   let posts = [];
   try {
-    const { data } = await sanityFetch({ query: POSTS_QUERY });
-    posts = data ?? [];
+    posts =
+      (await client.fetch(POSTS_QUERY, {}, { next: { revalidate: 60 } })) ?? [];
   } catch {
     /* Sanity not configured yet */
   }

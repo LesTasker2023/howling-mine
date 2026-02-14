@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { sanityFetch } from "@/sanity/live";
+import { client } from "@/sanity/client";
 import { EVENTS_QUERY } from "@/sanity/queries";
 import EventsHub from "./EventsHub";
 
@@ -12,8 +12,9 @@ export const metadata: Metadata = {
 export default async function EventsPage() {
   let events = [];
   try {
-    const { data } = await sanityFetch({ query: EVENTS_QUERY });
-    events = data ?? [];
+    events =
+      (await client.fetch(EVENTS_QUERY, {}, { next: { revalidate: 60 } })) ??
+      [];
   } catch {
     /* Sanity not configured yet */
   }

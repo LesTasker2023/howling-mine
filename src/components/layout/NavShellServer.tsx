@@ -1,4 +1,4 @@
-import { sanityFetch } from "@/sanity/live";
+import { client } from "@/sanity/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries";
 import type { SiteSettings } from "@/types/siteSettings";
 import { NavShell } from "./NavShell";
@@ -14,11 +14,12 @@ export async function NavShellServer({
 }) {
   let settings: SiteSettings = {};
   try {
-    const { data } = await sanityFetch({
-      query: SITE_SETTINGS_QUERY,
-      stega: false,
-    });
-    settings = data ?? {};
+    settings =
+      (await client.fetch(
+        SITE_SETTINGS_QUERY,
+        {},
+        { next: { revalidate: 60 } },
+      )) ?? {};
   } catch {
     // Sanity not configured yet — fall back to defaults
   }

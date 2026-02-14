@@ -11,6 +11,7 @@ export const siteSettingsType = defineType({
   icon: Settings,
   groups: [
     { name: "general", title: "General", default: true },
+    { name: "hero", title: "Hero" },
     { name: "navigation", title: "Navigation" },
     { name: "footer", title: "Footer" },
     { name: "social", title: "Social Links" },
@@ -57,11 +58,74 @@ export const siteSettingsType = defineType({
       group: "general",
     }),
 
+    /* ── Hero ── */
+    defineField({
+      name: "heroTitle",
+      title: "Hero Title",
+      type: "string",
+      group: "hero",
+      description:
+        "Main headline on the homepage hero. Wrap a word in *asterisks* to add accent + glitch effect.",
+      initialValue: "The *Howling* Mine",
+    }),
+    defineField({
+      name: "heroTagline",
+      title: "Hero Tagline",
+      type: "string",
+      group: "hero",
+      description:
+        "Subheading shown below the title with a terminal typing cursor.",
+    }),
+    defineField({
+      name: "heroPrimaryCta",
+      title: "Primary CTA",
+      type: "object",
+      group: "hero",
+      fields: [
+        defineField({ name: "label", title: "Label", type: "string" }),
+        defineField({ name: "href", title: "URL", type: "string" }),
+      ],
+    }),
+    defineField({
+      name: "heroSecondaryCta",
+      title: "Secondary CTA",
+      type: "object",
+      group: "hero",
+      fields: [
+        defineField({ name: "label", title: "Label", type: "string" }),
+        defineField({ name: "href", title: "URL", type: "string" }),
+      ],
+    }),
+    defineField({
+      name: "heroVideos",
+      title: "Hero Background Videos",
+      type: "array",
+      group: "hero",
+      description:
+        "Upload .webm or .mp4 videos for the hero background. They cycle in order with a fade-to-black transition.",
+      of: [
+        {
+          type: "file",
+          title: "Video",
+          options: { accept: "video/*" },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Description",
+              type: "string",
+              description:
+                "Brief label for this video (e.g. 'Mining asteroid field').",
+            }),
+          ],
+        },
+      ],
+      validation: (r) => r.min(1),
+    }),
     defineField({
       name: "heroOverlayOpacity",
       title: "Hero Overlay Darkness",
       type: "number",
-      group: "general",
+      group: "hero",
       description:
         "Controls how dark the video overlay is on the homepage hero. 0 = no darkening, 100 = fully black. Default is 65.",
       validation: (r) => r.min(0).max(100),

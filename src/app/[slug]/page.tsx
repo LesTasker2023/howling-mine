@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/client";
-import { sanityFetch } from "@/sanity/live";
 import { PAGE_BY_SLUG_QUERY, PAGE_SLUGS_QUERY } from "@/sanity/queries";
 import { SectionRenderer } from "@/components/composed";
 import styles from "./page.module.css";
+
+export const revalidate = 60;
 
 /* ── Known app routes that must NOT be caught by this dynamic segment ── */
 const RESERVED_SLUGS = new Set(["news", "guides", "studio"]);
@@ -27,12 +28,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (RESERVED_SLUGS.has(slug)) return {};
 
   try {
-    const { data: page } = await sanityFetch({
-      query: PAGE_BY_SLUG_QUERY,
-      params: { slug },
-      stega: false,
-      perspective: "published",
-    });
+    const page = await client.fetch(
+      PAGE_BY_SLUG_QUERY,
+      { slug },
+      { next: { revalidate: 60 } },
+    );
     if (!page) return {};
     return {
       title: page.title,
@@ -51,10 +51,11 @@ export default async function CmsPage({ params }: Props) {
   if (RESERVED_SLUGS.has(slug)) notFound();
 
   try {
-    const { data: page } = await sanityFetch({
-      query: PAGE_BY_SLUG_QUERY,
-      params: { slug },
-    });
+    const page = await client.fetch(
+      PAGE_BY_SLUG_QUERY,
+      { slug },
+      { next: { revalidate: 60 } },
+    );
     if (!page) notFound();
 
     return (

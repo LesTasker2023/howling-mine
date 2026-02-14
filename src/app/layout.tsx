@@ -7,7 +7,11 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { SanityLive } from "@/sanity/live";
 import "@/styles/globals.css";
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://thehowlingmine.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "The Howling Mine — Entropia Universe",
     template: "%s | The Howling Mine",
@@ -29,6 +33,29 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-touch-icon.png",
   },
+  openGraph: {
+    type: "website",
+    siteName: "The Howling Mine",
+    title: "The Howling Mine — Entropia Universe",
+    description:
+      "Your new-player guide and resource hub for Entropia Universe mining, crafting, and getting started.",
+    url: SITE_URL,
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "The Howling Mine",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Howling Mine — Entropia Universe",
+    description:
+      "Your new-player guide and resource hub for Entropia Universe mining, crafting, and getting started.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default async function RootLayout({
@@ -44,8 +71,12 @@ export default async function RootLayout({
             <NavShellServer>{children}</NavShellServer>
           </TopBarProvider>
         </ThemeProvider>
-        <SanityLive />
-        {(await draftMode()).isEnabled && <VisualEditing />}
+        {(await draftMode()).isEnabled && (
+          <>
+            <SanityLive />
+            <VisualEditing />
+          </>
+        )}
       </body>
     </html>
   );

@@ -8,5 +8,5 @@ export const { sanityFetch, SanityLive } = defineLive({
     apiVersion: "vX",
     stega: { studioUrl: "/studio" },
   }),
-  ...(token ? { serverToken: token, browserToken: token } : {}),
+  ...(token ? { serverToken: token } : {}),
 });

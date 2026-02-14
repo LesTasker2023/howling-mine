@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { sanityFetch } from "@/sanity/live";
+import { client } from "@/sanity/client";
 import { GUIDES_QUERY } from "@/sanity/queries";
 import GuidesHub from "./GuidesHub";
 
@@ -12,8 +12,9 @@ export const metadata: Metadata = {
 export default async function GuidesPage() {
   let guides = [];
   try {
-    const { data } = await sanityFetch({ query: GUIDES_QUERY });
-    guides = data ?? [];
+    guides =
+      (await client.fetch(GUIDES_QUERY, {}, { next: { revalidate: 60 } })) ??
+      [];
   } catch {
     /* Sanity not configured yet */
   }

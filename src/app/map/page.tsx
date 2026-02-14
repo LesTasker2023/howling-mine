@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { sanityFetch } from "@/sanity/live";
+import { client } from "@/sanity/client";
 import { MAP_POIS_QUERY } from "@/sanity/queries";
 import { HowlingMineMap } from "@/components/composed/HowlingMineMap";
 import styles from "./page.module.css";
@@ -11,13 +11,18 @@ export const metadata: Metadata = {
 };
 
 export default async function MapPage() {
-  const { data: pois } = await sanityFetch({
-    query: MAP_POIS_QUERY,
-  });
+  let pois = [];
+  try {
+    pois =
+      (await client.fetch(MAP_POIS_QUERY, {}, { next: { revalidate: 60 } })) ??
+      [];
+  } catch {
+    /* Sanity not configured yet */
+  }
 
   return (
     <div className={styles.page}>
-      <HowlingMineMap pois={pois ?? []} />
+      <HowlingMineMap pois={pois} />
     </div>
   );
 }

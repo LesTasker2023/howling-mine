@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/client";
 import { POST_BY_SLUG_QUERY, POST_SLUGS_QUERY } from "@/sanity/queries";
@@ -19,6 +20,41 @@ export async function generateStaticParams() {
     return slugs.map((slug) => ({ slug }));
   } catch {
     return [];
+  }
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  try {
+    const post = await client.fetch(POST_BY_SLUG_QUERY, { slug });
+    if (!post) return {};
+    return {
+      title: post.title,
+      description: post.excerpt ?? undefined,
+      openGraph: {
+        title: post.title,
+        description: post.excerpt ?? undefined,
+        type: "article",
+        ...(post.publishedAt ? { publishedTime: post.publishedAt } : {}),
+        ...(post.coverImage
+          ? {
+              images: [
+                {
+                  url: urlFor(post.coverImage)
+                    .width(1200)
+                    .height(630)
+                    .auto("format")
+                    .url(),
+                  width: 1200,
+                  height: 630,
+                },
+              ],
+            }
+          : {}),
+      },
+    };
+  } catch {
+    return {};
   }
 }
 

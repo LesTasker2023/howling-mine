@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "CMS Guide — The Howling Mine",
-  description:
-    "A walkthrough of everything configurable through the Sanity CMS.",
+  title: "Design System — The Howling Mine",
   robots: { index: false, follow: false },
 };
 
-export default function CmsGuideLayout({
+export default function DesignSystemLayout({
   children,
 }: {
   children: React.ReactNode;
