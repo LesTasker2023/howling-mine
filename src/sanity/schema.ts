@@ -7,6 +7,7 @@ import { authorType } from "./documents/author";
 import { categoryType } from "./documents/category";
 import { siteSettingsType } from "./documents/siteSettings";
 import { mapPoiType } from "./documents/mapPoi";
+import { eventType } from "./documents/event";
 
 // Portable Text block types
 import { richTextType } from "./objects/richText";
@@ -35,6 +36,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     categoryType,
     siteSettingsType,
     mapPoiType,
+    eventType,
     // Objects (reusable block types)
     richTextType,
     codeBlockType,

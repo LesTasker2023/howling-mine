@@ -31,6 +31,11 @@ const mainDocuments = defineDocuments([
     route: "/guides/:slug",
     filter: `_type == "guide" && slug.current == $slug`,
   },
+  {
+    // Events: /events/:slug  →  event { slug.current == :slug }
+    route: "/events/:slug",
+    filter: `_type == "event" && slug.current == $slug`,
+  },
 ]);
 
 /* ── Location resolvers ───────────────────────────────────────────────── */
@@ -83,11 +88,27 @@ const guideLocations: DocumentLocationResolverObject = {
 
 /* ── Combined export ──────────────────────────────────────────────────── */
 
+const eventLocations: DocumentLocationResolverObject = {
+  select: { title: "title", slug: "slug.current" },
+  resolve: (doc) =>
+    doc
+      ? {
+          locations: [
+            {
+              title: (doc.title as string) || "Untitled event",
+              href: `/events/${doc.slug as string}`,
+            },
+          ],
+        }
+      : undefined,
+};
+
 export const resolve = {
   mainDocuments,
   locations: {
     page: pageLocations,
     post: postLocations,
     guide: guideLocations,
+    event: eventLocations,
   },
 };

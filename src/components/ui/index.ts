@@ -41,3 +41,6 @@ export { Drawer } from "./Drawer";
 export type { DrawerWidth, DrawerSide, DrawerProps } from "./Drawer";
 export { Tooltip } from "./Tooltip";
 export type { TooltipPlacement, TooltipProps } from "./Tooltip";
+
+// Specialized
+export { EventCalendar } from "./EventCalendar";

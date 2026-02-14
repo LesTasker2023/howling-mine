@@ -109,6 +109,42 @@ export const GUIDE_SLUGS_QUERY = groq`
   *[_type == "guide" && defined(slug.current)].slug.current
 `;
 
+/* ─── Events ─── */
+export const EVENTS_QUERY = groq`
+  *[_type == "event"] | order(startDate asc) {
+    _id,
+    title,
+    slug,
+    excerpt,
+    startDate,
+    endDate,
+    location,
+    eventType,
+    featured,
+    coverImage
+  }
+`;
+
+export const EVENT_BY_SLUG_QUERY = groq`
+  *[_type == "event" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    excerpt,
+    startDate,
+    endDate,
+    location,
+    eventType,
+    featured,
+    coverImage,
+    body
+  }
+`;
+
+export const EVENT_SLUGS_QUERY = groq`
+  *[_type == "event" && defined(slug.current)].slug.current
+`;
+
 /* ─── Map POIs ─── */
 export const MAP_POIS_QUERY = groq`
   *[_type == "mapPoi" && visible == true] | order(category asc, name asc) {

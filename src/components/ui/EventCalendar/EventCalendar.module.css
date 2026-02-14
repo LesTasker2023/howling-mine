@@ -1,0 +1,231 @@
+/* ============================================================================
+   EventCalendar — Sci-fi / HUD-style month calendar
+   ============================================================================ */
+
+.calendar {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  overflow: hidden;
+  font-family: var(--font-mono);
+  user-select: none;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.monthLabel {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.monthName {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-primary);
+}
+
+.yearLabel {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.navBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.navBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(var(--color-primary-rgb), 0.05);
+}
+
+/* ── Scan line decoration ── */
+.scanLine {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--color-primary-rgb), 0.25) 20%,
+    rgba(var(--color-primary-rgb), 0.5) 50%,
+    rgba(var(--color-primary-rgb), 0.25) 80%,
+    transparent 100%
+  );
+}
+
+/* ── Day headers ── */
+.dayHeaders {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: var(--space-2) var(--space-2) 0;
+}
+
+.dayHeader {
+  text-align: center;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  padding: var(--space-1) 0;
+  text-transform: uppercase;
+}
+
+/* ── Calendar grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  padding: var(--space-2);
+}
+
+.cellEmpty {
+  aspect-ratio: 1;
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  aspect-ratio: 1;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  padding: 2px;
+}
+
+.cell:hover {
+  border-color: rgba(var(--color-primary-rgb), 0.2);
+  background: rgba(var(--color-primary-rgb), 0.04);
+}
+
+.cellDay {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* Today */
+.cellToday {
+  border-color: rgba(var(--color-primary-rgb), 0.3);
+  background: rgba(var(--color-primary-rgb), 0.06);
+}
+
+.cellToday .cellDay {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* Selected */
+.cellSelected {
+  border-color: var(--color-primary);
+  background: rgba(var(--color-primary-rgb), 0.1);
+  box-shadow: 0 0 12px rgba(var(--color-primary-rgb), 0.15);
+}
+
+.cellSelected .cellDay {
+  color: var(--color-primary);
+}
+
+/* Has event */
+.cellHasEvent {
+  border-color: rgba(var(--color-primary-rgb), 0.15);
+}
+
+.cellHasEvent .cellDay {
+  color: var(--text-primary);
+}
+
+/* Featured event day */
+.cellFeatured {
+  border-color: rgba(var(--color-primary-rgb), 0.3);
+}
+
+/* ── Event dots ── */
+.cellDots {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  opacity: 0.5;
+}
+
+.dotFeatured {
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(var(--color-primary-rgb), 0.6);
+}
+
+/* ── Footer ── */
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.footerDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 0 6px rgba(var(--color-primary-rgb), 0.5);
+  animation: calPulse 2s ease-in-out infinite;
+}
+
+@keyframes calPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .dayHeader {
+    font-size: 0.45rem;
+  }
+
+  .cellDay {
+    font-size: 0.6rem;
+  }
+}

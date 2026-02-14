@@ -14,8 +14,10 @@ import {
   ChevronLeft,
   Newspaper,
   BookOpen,
+  CalendarDays,
   Map,
   BarChart3,
+  UserPlus,
 } from "lucide-react";
 import { dynamicIcon } from "@/lib/dynamicIcon";
 import { Drawer } from "@/components/ui/Drawer";
@@ -35,6 +37,8 @@ interface NavItem {
 const DEFAULT_NAV: NavItem[] = [
   { label: "News", href: "/news", icon: <Newspaper size={20} /> },
   { label: "Guides", href: "/guides", icon: <BookOpen size={20} /> },
+  { label: "Events", href: "/events", icon: <CalendarDays size={20} /> },
+  { label: "Join", href: "/join", icon: <UserPlus size={20} /> },
 ];
 
 interface NavShellProps {
