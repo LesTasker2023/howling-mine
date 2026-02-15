@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { urlFor } from "@/sanity/image";
+import { usePlaceholderImage } from "@/context/PlaceholderImageContext";
 import { SearchInput, Select, Badge } from "@/components/ui";
 import { staggerContainer, fadeUp } from "@/lib/motion";
 import type { BadgeVariant } from "@/components/ui/Badge/Badge";
@@ -38,6 +39,7 @@ const DIFF_META: Record<string, { label: string; variant: string }> = {
    GuidesHub — client-side filterable / sortable guide listing
    ═══════════════════════════════════════════════════════════════════════════ */
 export default function GuidesHub({ guides }: { guides: Guide[] }) {
+  const placeholder = usePlaceholderImage();
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
@@ -212,6 +214,20 @@ export default function GuidesHub({ guides }: { guides: Guide[] }) {
                   <div className={styles.cardImageWrap}>
                     <Image
                       src={urlFor(guide.coverImage)
+                        .width(600)
+                        .height(340)
+                        .auto("format")
+                        .url()}
+                      alt={guide.title}
+                      width={600}
+                      height={340}
+                      className={styles.cardImage}
+                    />
+                  </div>
+                ) : placeholder?.asset ? (
+                  <div className={styles.cardImageWrap}>
+                    <Image
+                      src={urlFor(placeholder)
                         .width(600)
                         .height(340)
                         .auto("format")

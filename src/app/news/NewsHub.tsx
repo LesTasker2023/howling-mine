@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { urlFor } from "@/sanity/image";
+import { usePlaceholderImage } from "@/context/PlaceholderImageContext";
 import { SearchInput, Select, Badge } from "@/components/ui";
 import { staggerContainer, fadeUp } from "@/lib/motion";
 import { Newspaper, Star } from "lucide-react";
@@ -40,6 +41,7 @@ function formatDate(dateStr: string) {
    NewsHub — client-side filterable / sortable news listing
    ═══════════════════════════════════════════════════════════════════════════ */
 export default function NewsHub({ posts }: { posts: Post[] }) {
+  const placeholder = usePlaceholderImage();
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [sort, setSort] = useState<SortOption>("newest");
@@ -182,14 +184,22 @@ export default function NewsHub({ posts }: { posts: Post[] }) {
           href={`/news/${featuredPost.slug.current}`}
           className={styles.featuredCard}
         >
-          {featuredPost.coverImage && (
+          {(featuredPost.coverImage || placeholder?.asset) && (
             <div className={styles.featuredImageWrap}>
               <Image
-                src={urlFor(featuredPost.coverImage)
-                  .width(1200)
-                  .height(500)
-                  .auto("format")
-                  .url()}
+                src={
+                  featuredPost.coverImage
+                    ? urlFor(featuredPost.coverImage)
+                        .width(1200)
+                        .height(500)
+                        .auto("format")
+                        .url()
+                    : urlFor(placeholder!)
+                        .width(1200)
+                        .height(500)
+                        .auto("format")
+                        .url()
+                }
                 alt={featuredPost.title}
                 width={1200}
                 height={500}
@@ -245,6 +255,25 @@ export default function NewsHub({ posts }: { posts: Post[] }) {
                   <div className={styles.cardImageWrap}>
                     <Image
                       src={urlFor(post.coverImage)
+                        .width(600)
+                        .height(340)
+                        .auto("format")
+                        .url()}
+                      alt={post.title}
+                      width={600}
+                      height={340}
+                      className={styles.cardImage}
+                    />
+                    {post.featured && (
+                      <span className={styles.starBadge}>
+                        <Star size={12} />
+                      </span>
+                    )}
+                  </div>
+                ) : placeholder?.asset ? (
+                  <div className={styles.cardImageWrap}>
+                    <Image
+                      src={urlFor(placeholder)
                         .width(600)
                         .height(340)
                         .auto("format")

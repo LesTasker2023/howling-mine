@@ -1,4 +1,4 @@
-import { SiteHero } from "@/components/composed";
+import { SiteHero, HeroSequence } from "@/components/composed";
 import { getClient } from "@/sanity/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries";
 import styles from "./page.module.css";
@@ -8,6 +8,58 @@ const FALLBACK_VIDEOS = [
   "/videos/hero-2.webm",
   "/videos/hero-1.webm",
   "/videos/hero-3.webm",
+];
+
+/* ── Temp fallback walkthrough steps (delete once CMS is populated) ── */
+const FALLBACK_WALKTHROUGH = [
+  {
+    title: "Create Account",
+    subtitle: "Sign up at entropia.com and download the client",
+    href: "https://www.entropia.com",
+    placeholderSrc: "/images/planets/calypso.png",
+  },
+  {
+    title: "Create Avatar",
+    subtitle: "Choose your look and enter the universe",
+    href: "/guides/getting-started",
+    placeholderSrc: "/images/planets/calypso.png",
+  },
+  {
+    title: "Finish Tutorial",
+    subtitle: "Complete the introductory missions on Calypso",
+    href: "/guides/getting-started",
+    placeholderSrc: "/images/planets/calypso.png",
+  },
+  {
+    title: "Join The Society",
+    subtitle: "Find us in-game and apply to join",
+    href: "/join",
+    placeholderSrc: "/images/planets/rocktropia.png",
+  },
+  {
+    title: "Choose a Path",
+    subtitle: "Mining, hunting, crafting — pick your profession",
+    href: "/guides",
+    placeholderSrc: "/images/planets/arkadia.png",
+  },
+  {
+    title: "Gear Up",
+    subtitle: "Get your starter equipment and learn the basics",
+    href: "/guides/mining-101",
+    placeholderSrc: "/images/planets/cyrene.png",
+  },
+  {
+    title: "Find a Claim",
+    subtitle: "Head out into the field and drop your first probe",
+    href: "/guides/mining-101",
+    placeholderSrc: "/images/planets/next-island.png",
+  },
+  {
+    title: "Start Mining",
+    subtitle: "Extract resources and begin your journey",
+    href: "/map",
+    placeholderSrc: "/images/planets/toulan.png",
+  },
 ];
 
 export default async function Home() {
@@ -24,23 +76,35 @@ export default async function Home() {
 
   return (
     <div className={styles.page}>
-      <SiteHero
-        title={settings?.heroTitle ?? "The *Howling* Mine"}
-        tagline={
-          settings?.heroTagline ??
-          "Guides, news, and resources for the Entropia Universe mining community."
+      <HeroSequence
+        walkthroughSteps={
+          settings?.heroWalkthrough?.length
+            ? settings.heroWalkthrough
+            : FALLBACK_WALKTHROUGH
         }
-        primaryCta={
-          settings?.heroPrimaryCta ?? {
-            label: "Explore Guides",
-            href: "/guides",
+        placeholderImage={settings?.placeholderImage}
+      >
+        <SiteHero
+          title={settings?.heroTitle ?? "The *Howling* Mine"}
+          tagline={
+            settings?.heroTagline ??
+            "Guides, news, and resources for the Entropia Universe mining community."
           }
-        }
-        secondaryCta={
-          settings?.heroSecondaryCta ?? { label: "Latest News", href: "/news" }
-        }
-        videos={videos}
-      />
+          primaryCta={
+            settings?.heroPrimaryCta ?? {
+              label: "Explore Guides",
+              href: "/guides",
+            }
+          }
+          secondaryCta={
+            settings?.heroSecondaryCta ?? {
+              label: "Latest News",
+              href: "/news",
+            }
+          }
+          videos={videos}
+        />
+      </HeroSequence>
     </div>
   );
 }

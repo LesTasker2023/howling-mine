@@ -1,6 +1,7 @@
 import { client } from "@/sanity/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries";
 import type { SiteSettings } from "@/types/siteSettings";
+import { PlaceholderImageProvider } from "@/context/PlaceholderImageContext";
 import { NavShell } from "./NavShell";
 
 /**
@@ -24,5 +25,11 @@ export async function NavShellServer({
     // Sanity not configured yet — fall back to defaults
   }
 
-  return <NavShell settings={settings}>{children}</NavShell>;
+  return (
+    <NavShell settings={settings}>
+      <PlaceholderImageProvider image={settings.placeholderImage ?? null}>
+        {children}
+      </PlaceholderImageProvider>
+    </NavShell>
+  );
 }

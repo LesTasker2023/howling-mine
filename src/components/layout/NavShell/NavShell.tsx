@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import { dynamicIcon } from "@/lib/dynamicIcon";
 import { Drawer } from "@/components/ui/Drawer";
-import { ThemeSettings } from "@/components/ui/ThemeSettings";
 import { Footer } from "@/components/layout/Footer";
 import { useTopBar } from "@/context/TopBarContext";
 import type { SiteSettings } from "@/types/siteSettings";
@@ -78,11 +77,14 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
 
   /* Derive nav items from CMS settings (or use hardcoded defaults) */
   const navItems = useMemo<NavItem[]>(() => {
+    const HIDDEN = ["/cms-guide", "/design-system"];
     if (!settings.mainNav?.length) return DEFAULT_NAV;
-    return settings.mainNav.map((link) => {
-      const Icon = link.icon ? dynamicIcon(link.icon) : dynamicIcon("box");
-      return { label: link.label, href: link.href, icon: <Icon size={20} /> };
-    });
+    return settings.mainNav
+      .filter((link) => !HIDDEN.includes(link.href))
+      .map((link) => {
+        const Icon = link.icon ? dynamicIcon(link.icon) : dynamicIcon("box");
+        return { label: link.label, href: link.href, icon: <Icon size={20} /> };
+      });
   }, [settings.mainNav]);
 
   const siteName = settings.siteName ?? "Howling Mine";
@@ -138,7 +140,12 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
         data-expanded={expanded}
       >
         {/* Logo */}
-        <Link href="/" className={styles.logo} data-expanded={expanded}>
+        <Link
+          href="/"
+          className={styles.logo}
+          data-expanded={expanded}
+          onClick={() => window.dispatchEvent(new CustomEvent("hero:reset"))}
+        >
           <Image
             src="/images/hm-logo.webp"
             alt=""
@@ -333,7 +340,18 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
         side="right"
         width="md"
       >
-        <ThemeSettings />
+        <p
+          style={{
+            color: "rgba(var(--color-primary-rgb), 0.4)",
+            fontFamily: "var(--font-mono)",
+            fontSize: "0.8rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            padding: "1rem 0",
+          }}
+        >
+          User settings coming soon.
+        </p>
       </Drawer>
     </div>
   );

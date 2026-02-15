@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { client } from "@/sanity/client";
 import { POST_BY_SLUG_QUERY, POST_SLUGS_QUERY } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
+import { getPlaceholderImage } from "@/sanity/getPlaceholderImage";
 import { PortableTextBody } from "@/components/ui/PortableTextBody";
 import Image from "next/image";
 import Link from "next/link";
@@ -68,6 +69,8 @@ export default async function PostPage({ params }: Props) {
   }
   if (!post) notFound();
 
+  const coverImage = post.coverImage ?? (await getPlaceholderImage());
+
   return (
     <article className={styles.article}>
       <header className={styles.header}>
@@ -98,13 +101,9 @@ export default async function PostPage({ params }: Props) {
         </div>
       </header>
 
-      {post.coverImage && (
+      {coverImage && (
         <Image
-          src={urlFor(post.coverImage)
-            .width(1200)
-            .height(630)
-            .auto("format")
-            .url()}
+          src={urlFor(coverImage).width(1200).height(630).auto("format").url()}
           alt={post.title}
           width={1200}
           height={630}

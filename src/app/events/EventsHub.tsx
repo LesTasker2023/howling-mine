@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { urlFor } from "@/sanity/image";
+import { usePlaceholderImage } from "@/context/PlaceholderImageContext";
 import { SearchInput, Select, Badge } from "@/components/ui";
 import { EventCalendar } from "@/components/ui/EventCalendar";
 import { staggerContainer, fadeUp } from "@/lib/motion";
@@ -115,6 +116,7 @@ const EVENT_TYPE_META: Record<
    EventsHub — client-side filterable event listing with calendar view
    ═══════════════════════════════════════════════════════════════════════════ */
 export default function EventsHub({ events }: { events: GameEvent[] }) {
+  const placeholder = usePlaceholderImage();
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [timeFilter, setTimeFilter] = useState<TimeFilter>("upcoming");
@@ -366,6 +368,25 @@ export default function EventsHub({ events }: { events: GameEvent[] }) {
                       <div className={styles.cardImageWrap}>
                         <Image
                           src={urlFor(event.coverImage)
+                            .width(600)
+                            .height(340)
+                            .auto("format")
+                            .url()}
+                          alt={event.title}
+                          width={600}
+                          height={340}
+                          className={styles.cardImage}
+                        />
+                        {status === "live" && (
+                          <span className={styles.liveBadge}>
+                            <span className={styles.liveDot} /> LIVE
+                          </span>
+                        )}
+                      </div>
+                    ) : placeholder?.asset ? (
+                      <div className={styles.cardImageWrap}>
+                        <Image
+                          src={urlFor(placeholder)
                             .width(600)
                             .height(340)
                             .auto("format")

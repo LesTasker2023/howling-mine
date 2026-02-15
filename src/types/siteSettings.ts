@@ -22,6 +22,7 @@ export interface SiteSettings {
   tagline?: string;
   logo?: any; // Sanity image reference
   favicon?: any;
+  placeholderImage?: any; // Site-wide fallback image
   mainNav?: NavLink[];
   footerText?: string;
   footerLinks?: FooterLink[];

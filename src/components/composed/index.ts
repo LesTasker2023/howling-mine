@@ -11,6 +11,9 @@ export { ImageGallerySection } from "./sections/ImageGallerySection";
 // Standalone hero (homepage)
 export { SiteHero } from "./SiteHero";
 
+// Cinematic scroll sequence (homepage wrapper)
+export { HeroSequence } from "./HeroSequence";
+
 // Map
 export { HowlingMineMap } from "./HowlingMineMap";
 export type { MapPoi } from "./HowlingMineMap";

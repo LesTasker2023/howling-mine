@@ -57,6 +57,15 @@ export const siteSettingsType = defineType({
       type: "image",
       group: "general",
     }),
+    defineField({
+      name: "placeholderImage",
+      title: "Placeholder Image",
+      type: "image",
+      group: "general",
+      options: { hotspot: true },
+      description:
+        "Default placeholder image used for cards and thumbnails when no specific image is set.",
+    }),
 
     /* ── Hero ── */
     defineField({
@@ -131,6 +140,58 @@ export const siteSettingsType = defineType({
       validation: (r) => r.min(0).max(100),
       initialValue: 65,
       components: { input: SliderInput },
+    }),
+    defineField({
+      name: "heroWalkthrough",
+      title: "Walkthrough Steps",
+      type: "array",
+      group: "hero",
+      description:
+        "Up to 8 step cards shown after the boot sequence. They display in a 4×2 snake-path grid: 1→2→3→4, then 8←7←6←5.",
+      validation: (r) => r.max(8),
+      of: [
+        {
+          type: "object",
+          name: "walkthroughStep",
+          title: "Step",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (r) => r.required(),
+            }),
+            defineField({
+              name: "subtitle",
+              title: "Subtitle",
+              type: "string",
+            }),
+            defineField({
+              name: "href",
+              title: "Link URL",
+              type: "string",
+              description: "Page to open when this card is clicked.",
+            }),
+            defineField({
+              name: "image",
+              title: "Image",
+              type: "image",
+              options: { hotspot: true },
+              description: "Image shown on the card (uploaded to Sanity).",
+            }),
+            defineField({
+              name: "placeholderSrc",
+              title: "Placeholder Image URL",
+              type: "string",
+              description:
+                "Fallback image path if no uploaded image (e.g. /images/planets/calypso.png). Used for local/static assets.",
+            }),
+          ],
+          preview: {
+            select: { title: "title", subtitle: "subtitle", media: "image" },
+          },
+        },
+      ],
     }),
 
     /* ── Navigation ── */
