@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { urlFor } from "@/sanity/image";
+import { usePlaceholderImage } from "@/context/PlaceholderImageContext";
 import styles from "./HeroSequence.module.css";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -385,7 +386,7 @@ function StepGrid({
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 duration: 0.4,
-                delay: slot * 0.1,
+                delay: dataIdx * 0.1,
                 ease: EASE_OUT,
               }}
             >
@@ -457,12 +458,15 @@ function StepCardContent({
   stepNum: number;
   placeholderImage?: HeroSequenceProps["placeholderImage"];
 }) {
+  const ctxPlaceholder = usePlaceholderImage();
+  const fallback = placeholderImage ?? ctxPlaceholder;
+
   const imgSrc = step.image?.asset
     ? urlFor(step.image).width(400).height(200).auto("format").url()
     : step.placeholderSrc
       ? step.placeholderSrc
-      : placeholderImage?.asset
-        ? urlFor(placeholderImage).width(400).height(200).auto("format").url()
+      : fallback?.asset
+        ? urlFor(fallback).width(400).height(200).auto("format").url()
         : null;
 
   const imgAlt = step.image?.alt || step.title;

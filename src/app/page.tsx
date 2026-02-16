@@ -16,49 +16,41 @@ const FALLBACK_WALKTHROUGH = [
     title: "Create Account",
     subtitle: "Sign up at entropia.com and download the client",
     href: "https://www.entropia.com",
-    placeholderSrc: "/images/planets/calypso.png",
   },
   {
     title: "Create Avatar",
     subtitle: "Choose your look and enter the universe",
     href: "/guides/getting-started",
-    placeholderSrc: "/images/planets/calypso.png",
   },
   {
     title: "Finish Tutorial",
     subtitle: "Complete the introductory missions on Calypso",
     href: "/guides/getting-started",
-    placeholderSrc: "/images/planets/calypso.png",
   },
   {
     title: "Join The Society",
     subtitle: "Find us in-game and apply to join",
     href: "/join",
-    placeholderSrc: "/images/planets/rocktropia.png",
   },
   {
     title: "Choose a Path",
     subtitle: "Mining, hunting, crafting — pick your profession",
     href: "/guides",
-    placeholderSrc: "/images/planets/arkadia.png",
   },
   {
     title: "Gear Up",
     subtitle: "Get your starter equipment and learn the basics",
     href: "/guides/mining-101",
-    placeholderSrc: "/images/planets/cyrene.png",
   },
   {
     title: "Find a Claim",
     subtitle: "Head out into the field and drop your first probe",
     href: "/guides/mining-101",
-    placeholderSrc: "/images/planets/next-island.png",
   },
   {
     title: "Start Mining",
     subtitle: "Extract resources and begin your journey",
     href: "/map",
-    placeholderSrc: "/images/planets/toulan.png",
   },
 ];
 

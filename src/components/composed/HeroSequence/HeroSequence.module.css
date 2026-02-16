@@ -251,7 +251,7 @@
    ═══════════════════════════════════════════════════════════ */
 .startBtn {
   position: absolute;
-  right: clamp(3rem, 8vw, 10rem);
+  right: clamp(10rem, 20vw, 22rem);
   top: 50%;
   transform: translateY(-50%);
   z-index: 9;
@@ -858,10 +858,11 @@ a.stepCardLink:hover .stepCardImage img {
 .stepArrow {
   position: absolute;
   font-size: clamp(1.2rem, 2vw, 2rem);
-  color: rgba(var(--color-primary-rgb), 0.25);
+  color: var(--color-primary);
+  text-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.6);
   pointer-events: none;
   z-index: 2;
-  font-weight: 300;
+  font-weight: 700;
   line-height: 1;
 }
 
