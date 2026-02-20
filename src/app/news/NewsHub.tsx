@@ -242,11 +242,11 @@ export default function NewsHub({ posts }: { posts: Post[] }) {
       {/* ── Post Grid ── */}
       {regularPosts.length > 0 ? (
         <motion.div
+          key={`${categoryFilter}-${sort}-${search}`}
           className={styles.grid}
           variants={staggerContainer}
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-40px" }}
+          animate="show"
         >
           {regularPosts.map((post) => (
             <motion.div key={post._id} variants={fadeUp}>

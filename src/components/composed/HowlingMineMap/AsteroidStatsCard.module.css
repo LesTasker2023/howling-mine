@@ -144,7 +144,7 @@
   align-items: center;
   gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
-  background: rgba(var(--color-primary-rgb), 0.05);
+  background: rgba(var(--white-rgb), 0.04);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   font-family: var(--font-mono);

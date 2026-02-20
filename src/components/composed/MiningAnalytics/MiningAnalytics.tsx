@@ -1,9 +1,9 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   MiningAnalytics — 5-tab analytics dashboard
+﻿/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   MiningAnalytics â€” 5-tab analytics dashboard
    Fetches live data from ProjectDelta's space mining stats API.
    Uses: Panel, StatBlock, SectionHeader, Badge, SegmentedBar,
          DataTable, HudBarChart, HudLineChart, HudPieChart, DialGauge
-   ═══════════════════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 "use client";
 
 import {
@@ -32,9 +32,9 @@ import {
 } from "@/components/ui/charts";
 import styles from "./MiningAnalytics.module.css";
 
-/* ══════════════════════════════════════════════════════════════════════════
-   API TYPES — matches ProjectDelta /api/mining-stats/[period] response
-   ══════════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   API TYPES â€” matches ProjectDelta /api/mining-stats/[period] response
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 export interface TimeSeriesEntry {
   timestamp: string;
@@ -186,7 +186,7 @@ export interface MiningAnalyticsProps {
   initialPeriod: string;
 }
 
-/* ── Periods ── */
+/* â”€â”€ Periods â”€â”€ */
 
 const PERIODS = [
   { key: "1h", label: "1H" },
@@ -198,7 +198,7 @@ const PERIODS = [
   { key: "30d", label: "30D" },
 ];
 
-/* ── Tabs ── */
+/* â”€â”€ Tabs â”€â”€ */
 
 type Tab = "overview" | "time" | "miners" | "asteroids" | "feed";
 
@@ -210,7 +210,7 @@ const TABS: { key: Tab; label: string }[] = [
   { key: "feed", label: "Live Feed" },
 ];
 
-/* ── Helpers ── */
+/* â”€â”€ Helpers â”€â”€ */
 
 function ped(n: number): string {
   return n.toLocaleString("en-US", { maximumFractionDigits: 0 }) + " PED";
@@ -248,7 +248,7 @@ function periodLabel(period: string): string {
 
 const RANK_COLORS = ["#eab308", "#94a3b8", "#cd7f32"];
 
-/** Decode common HTML entities the API sends (e.g. &quot; → ") */
+/** Decode common HTML entities the API sends (e.g. &quot; â†’ ") */
 function decodeHtml(text: string): string {
   return text
     .replace(/&quot;/g, '"')
@@ -267,9 +267,9 @@ function decodeStats(obj: SpaceMiningStats): SpaceMiningStats {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    MAIN COMPONENT
-   ═══════════════════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 export function MiningAnalytics({
   initialData,
@@ -304,7 +304,7 @@ export function MiningAnalytics({
     };
   }, [setTabs, setSubTabs, setActiveTab, setActiveSubTab, initialPeriod]);
 
-  /* Map activeSubTab → period fetching */
+  /* Map activeSubTab â†’ period fetching */
   useEffect(() => {
     if (!activeSubTab || activeSubTab === period) return;
     setPeriod(activeSubTab);
@@ -332,7 +332,7 @@ export function MiningAnalytics({
 
   return (
     <div className={styles.dashboard}>
-      {/* ── Content ── */}
+      {/* â”€â”€ Content â”€â”€ */}
       <div
         className={`${styles.content} ${isLoading ? styles.contentLoading : ""}`}
       >
@@ -346,9 +346,9 @@ export function MiningAnalytics({
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    OVERVIEW TAB
-   ═══════════════════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 function OverviewTab({ data }: { data: SpaceMiningStats }) {
   const { stats, records, percentiles, topMiners, topAsteroids } = data;
@@ -357,7 +357,7 @@ function OverviewTab({ data }: { data: SpaceMiningStats }) {
 
   return (
     <div className={styles.tabContent}>
-      {/* ═══ PANEL 1 — Key Metrics ═══ */}
+      {/* â•â•â• PANEL 1 â€” Key Metrics â•â•â• */}
       <Panel size="md">
         <SectionHeader title="Key Metrics" accent />
         <div className={styles.statRows}>
@@ -395,7 +395,7 @@ function OverviewTab({ data }: { data: SpaceMiningStats }) {
         </div>
       </Panel>
 
-      {/* ═══ PANEL 2 — Records & Performance ═══ */}
+      {/* â•â•â• PANEL 2 â€” Records & Performance â•â•â• */}
       <Panel size="md">
         <SectionHeader title="Records & Performance" accent />
 
@@ -410,7 +410,7 @@ function OverviewTab({ data }: { data: SpaceMiningStats }) {
                   {ped(records.highest.value)}
                 </span>
                 <span className={styles.recordSub}>
-                  {records.highest.avatar} — {records.highest.asteroid}
+                  {records.highest.avatar} â€” {records.highest.asteroid}
                 </span>
               </div>
             </div>
@@ -506,7 +506,7 @@ function OverviewTab({ data }: { data: SpaceMiningStats }) {
         </div>
       </Panel>
 
-      {/* ═══ PANEL 3 — Activity & Leaderboards ═══ */}
+      {/* â•â•â• PANEL 3 â€” Activity & Leaderboards â•â•â• */}
       <Panel size="md">
         <SectionHeader title="Activity & Leaderboards" accent />
 
@@ -549,7 +549,7 @@ function OverviewTab({ data }: { data: SpaceMiningStats }) {
                 <div key={m.avatar} className={styles.quickListItem}>
                   <span
                     className={styles.rank}
-                    style={{ color: RANK_COLORS[i] ?? "#a8a29e" }}
+                    style={{ color: RANK_COLORS[i] ?? "#a1a1a1" }}
                   >
                     #{i + 1}
                   </span>
@@ -569,7 +569,7 @@ function OverviewTab({ data }: { data: SpaceMiningStats }) {
                 <div key={a.asteroidName} className={styles.quickListItem}>
                   <span
                     className={styles.rank}
-                    style={{ color: RANK_COLORS[i] ?? "#a8a29e" }}
+                    style={{ color: RANK_COLORS[i] ?? "#a1a1a1" }}
                   >
                     #{i + 1}
                   </span>
@@ -587,9 +587,9 @@ function OverviewTab({ data }: { data: SpaceMiningStats }) {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   TIME ANALYSIS TAB — 2 panels
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   TIME ANALYSIS TAB â€” 2 panels
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 function TimeTab({ data }: { data: SpaceMiningStats }) {
   const hourlyChartData = useMemo(
@@ -644,7 +644,7 @@ function TimeTab({ data }: { data: SpaceMiningStats }) {
 
   return (
     <div className={styles.tabContent}>
-      {/* ═══ PANEL 1 — Peak Times & Distribution ═══ */}
+      {/* â•â•â• PANEL 1 â€” Peak Times & Distribution â•â•â• */}
       <Panel size="md">
         <SectionHeader title="When to Mine" accent />
 
@@ -655,7 +655,7 @@ function TimeTab({ data }: { data: SpaceMiningStats }) {
               <StatBlock
                 label="Best Hour (UTC)"
                 value={`${String(bestHour.hour).padStart(2, "0")}:00`}
-                sub={`${bestHour.count} globals · ${pedShort(bestHour.totalPED)} PED`}
+                sub={`${bestHour.count} globals Â· ${pedShort(bestHour.totalPED)} PED`}
                 accent
               />
             )}
@@ -663,7 +663,7 @@ function TimeTab({ data }: { data: SpaceMiningStats }) {
               <StatBlock
                 label="Best Day"
                 value={bestDay.dayName}
-                sub={`${bestDay.count} globals · ${pedShort(bestDay.totalPED)} PED`}
+                sub={`${bestDay.count} globals Â· ${pedShort(bestDay.totalPED)} PED`}
                 accent
               />
             )}
@@ -701,7 +701,7 @@ function TimeTab({ data }: { data: SpaceMiningStats }) {
         )}
       </Panel>
 
-      {/* ═══ PANEL 2 — Value Distribution & Timeline ═══ */}
+      {/* â•â•â• PANEL 2 â€” Value Distribution & Timeline â•â•â• */}
       <Panel size="md">
         <SectionHeader title="Activity Breakdown" accent />
 
@@ -733,9 +733,9 @@ function TimeTab({ data }: { data: SpaceMiningStats }) {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   MINERS TAB — 2 panels
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   MINERS TAB â€” 2 panels
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 function MinersTab({ data }: { data: SpaceMiningStats }) {
   const miners = useMemo(() => data.topMiners ?? [], [data.topMiners]);
@@ -752,7 +752,7 @@ function MinersTab({ data }: { data: SpaceMiningStats }) {
           return (
             <span
               className={styles.rank}
-              style={{ color: RANK_COLORS[idx] ?? "#a8a29e" }}
+              style={{ color: RANK_COLORS[idx] ?? "#a1a1a1" }}
             >
               {idx + 1}
             </span>
@@ -796,7 +796,7 @@ function MinersTab({ data }: { data: SpaceMiningStats }) {
 
   return (
     <div className={styles.tabContent}>
-      {/* ═══ PANEL 1 — Summary & Share ═══ */}
+      {/* â•â•â• PANEL 1 â€” Summary & Share â•â•â• */}
       <Panel size="md">
         <SectionHeader title={`Active Miners (${miners.length})`} accent />
 
@@ -805,7 +805,7 @@ function MinersTab({ data }: { data: SpaceMiningStats }) {
             <StatBlock label="Total Miners" value={data.stats.uniqueMiners} />
             <StatBlock
               label="Top Earner"
-              value={miners[0]?.avatar ?? "—"}
+              value={miners[0]?.avatar ?? "â€”"}
               sub={miners[0] ? ped(miners[0].totalPED) : undefined}
             />
             <StatBlock
@@ -837,7 +837,7 @@ function MinersTab({ data }: { data: SpaceMiningStats }) {
         )}
       </Panel>
 
-      {/* ═══ PANEL 2 — Leaderboard Table ═══ */}
+      {/* â•â•â• PANEL 2 â€” Leaderboard Table â•â•â• */}
       {miners.length > 0 && (
         <Panel size="md">
           <SectionHeader title="Leaderboard" accent />
@@ -854,9 +854,9 @@ function MinersTab({ data }: { data: SpaceMiningStats }) {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   ASTEROIDS TAB — 2 panels
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   ASTEROIDS TAB â€” 2 panels
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 function AsteroidsTab({ data }: { data: SpaceMiningStats }) {
   const asteroids = useMemo(() => data.topAsteroids ?? [], [data.topAsteroids]);
@@ -886,7 +886,7 @@ function AsteroidsTab({ data }: { data: SpaceMiningStats }) {
           return (
             <span
               className={styles.rank}
-              style={{ color: RANK_COLORS[idx] ?? "#a8a29e" }}
+              style={{ color: RANK_COLORS[idx] ?? "#a1a1a1" }}
             >
               {idx + 1}
             </span>
@@ -926,12 +926,12 @@ function AsteroidsTab({ data }: { data: SpaceMiningStats }) {
 
   return (
     <div className={styles.tabContent}>
-      {/* ═══ PANEL 1 — Breakdown by Type + Top Performers ═══ */}
+      {/* â•â•â• PANEL 1 â€” Breakdown by Type + Top Performers â•â•â• */}
       <Panel size="md">
         <SectionHeader title={`Asteroid Types (${asteroids.length})`} accent />
 
         <div className={styles.asteroidSummary}>
-          {/* Pie chart — grouped by type prefix, no legend (too many items) */}
+          {/* Pie chart â€” grouped by type prefix, no legend (too many items) */}
           {typePieData.length > 0 && (
             <div className={styles.asteroidPie}>
               <HudPieChart
@@ -952,7 +952,7 @@ function AsteroidsTab({ data }: { data: SpaceMiningStats }) {
               <div key={a.asteroidName} className={styles.quickListItem}>
                 <span
                   className={styles.rank}
-                  style={{ color: RANK_COLORS[i] ?? "#a8a29e" }}
+                  style={{ color: RANK_COLORS[i] ?? "#a1a1a1" }}
                 >
                   #{i + 1}
                 </span>
@@ -961,7 +961,7 @@ function AsteroidsTab({ data }: { data: SpaceMiningStats }) {
                   {pedShort(a.totalPED)}
                 </span>
                 <span className={styles.quickSub}>
-                  {a.globalCount}g · {a.uniqueMiners}m
+                  {a.globalCount}g Â· {a.uniqueMiners}m
                 </span>
               </div>
             ))}
@@ -969,7 +969,7 @@ function AsteroidsTab({ data }: { data: SpaceMiningStats }) {
         </div>
       </Panel>
 
-      {/* ═══ PANEL 2 — Full Leaderboard Table ═══ */}
+      {/* â•â•â• PANEL 2 â€” Full Leaderboard Table â•â•â• */}
       {asteroids.length > 0 && (
         <Panel size="md">
           <SectionHeader title="All Asteroids" accent />
@@ -986,9 +986,9 @@ function AsteroidsTab({ data }: { data: SpaceMiningStats }) {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   LIVE FEED TAB — 1 panel
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   LIVE FEED TAB â€” 1 panel
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 function FeedTab({ data }: { data: SpaceMiningStats }) {
   const [filter, setFilter] = useState<"all" | "hof">("all");

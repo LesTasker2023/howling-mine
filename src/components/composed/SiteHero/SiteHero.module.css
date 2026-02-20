@@ -11,7 +11,7 @@
   max-height: calc(100vh - var(--topbar-height, 48px));
   padding: var(--space-8) clamp(var(--space-6), 8vw, 120px);
   overflow: hidden;
-  background: #000;
+  background: var(--bg-base);
 }
 
 /* ── Video background ── */
@@ -19,7 +19,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: #000;
+  background: var(--bg-base);
 }
 
 .videoBg {
@@ -81,8 +81,8 @@
     0deg,
     transparent 0px,
     transparent 2px,
-    rgba(0, 0, 0, 0.08) 2px,
-    rgba(0, 0, 0, 0.08) 4px
+    rgba(var(--black-rgb), 0.08) 2px,
+    rgba(var(--black-rgb), 0.08) 4px
   );
 }
 
@@ -95,7 +95,7 @@
   background: radial-gradient(
     ellipse 80% 80% at 50% 50%,
     transparent 40%,
-    rgba(0, 0, 0, 0.7) 100%
+    rgba(var(--black-rgb), 0.7) 100%
   );
 }
 
@@ -199,7 +199,7 @@
   border: 1px solid rgba(var(--color-primary-rgb), 0.1);
   border-radius: 2px;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(var(--black-rgb), 0.3);
 }
 
 .mapGrid {
@@ -367,13 +367,13 @@
 }
 
 .threatHigh {
-  background: #dc2626;
+  background: var(--status-danger-dark);
   opacity: 0.7;
 }
 
 .threatVal {
   font-size: 0.5rem;
-  color: #dc2626;
+  color: var(--status-danger-dark);
   opacity: 0.7;
   letter-spacing: 0.1em;
 }
@@ -420,7 +420,7 @@
 
 .tacStatVal {
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--white-rgb), 0.5);
   font-weight: 500;
 }
 
@@ -465,7 +465,7 @@
 }
 
 .tacStatusValue {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--white-rgb), 0.5);
   font-size: 0.55rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -544,7 +544,7 @@
   line-height: 0.95;
   text-shadow:
     0 0 80px rgba(var(--color-primary-rgb), 0.12),
-    0 4px 30px rgba(0, 0, 0, 0.5);
+    0 4px 30px rgba(var(--black-rgb), 0.5);
 }
 
 /* ── Title accent word ── */
@@ -643,7 +643,7 @@
   font-size: 0.6rem;
   font-family: var(--font-mono);
   letter-spacing: 0.06em;
-  color: rgba(255 255 255 / 0.2);
+  color: rgba(var(--white-rgb), 0.2);
   pointer-events: none;
   user-select: none;
 }

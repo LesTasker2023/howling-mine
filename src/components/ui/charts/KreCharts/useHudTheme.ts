@@ -28,7 +28,7 @@ export function useHudTheme() {
 
     const AXIS = {
       tick: {
-        fill: "#a8a29e",
+        fill: "#a1a1a1",
         fontSize: 11,
         fontFamily: "'JetBrains Mono', monospace",
       },
@@ -43,7 +43,7 @@ export function useHudTheme() {
 
     const TOOLTIP_STYLE = {
       contentStyle: {
-        background: "rgba(18, 18, 12, 0.95)",
+        background: "rgba(18, 18, 18, 0.95)",
         border: `1px solid rgba(${primaryRgb}, 0.25)`,
         borderRadius: 4,
         fontFamily: "'JetBrains Mono', monospace",

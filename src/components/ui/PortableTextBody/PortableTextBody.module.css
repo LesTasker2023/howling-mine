@@ -99,8 +99,8 @@
 .inlineCode {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  background: rgba(var(--color-primary-rgb), 0.08);
-  border: 1px solid rgba(var(--color-primary-rgb), 0.12);
+  background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.1);
   border-radius: var(--radius-sm);
   padding: 1px 5px;
 }
@@ -109,7 +109,7 @@
 .blockquote {
   margin: var(--space-6) 0;
   padding: var(--space-4) var(--space-5);
-  background: rgba(var(--color-primary-rgb), 0.04);
+  background: rgba(var(--white-rgb), 0.03);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   color: var(--text-secondary);
@@ -148,7 +148,7 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   padding: var(--space-2) var(--space-4);
-  background: rgba(var(--color-primary-rgb), 0.06);
+  background: rgba(var(--white-rgb), 0.04);
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-muted);
   letter-spacing: 0.02em;
@@ -170,8 +170,8 @@
   position: relative;
   margin: var(--space-6) 0;
   padding: var(--space-4) var(--space-5);
-  background: rgba(var(--color-primary-rgb), 0.04);
-  border: 1px solid rgba(var(--color-primary-rgb), 0.2);
+  background: rgba(var(--white-rgb), 0.03);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   border-radius: var(--radius-md);
   color: var(--text-primary);
 }

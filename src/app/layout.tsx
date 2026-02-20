@@ -58,13 +58,19 @@ export const metadata: Metadata = {
   },
 };
 
+// Blocking script to apply cached theme CSS vars before first paint (eliminates FOUC)
+const THEME_INIT_SCRIPT = `(function(){try{var c=JSON.parse(localStorage.getItem("hm-theme-css"));if(c){var s=document.documentElement.style;for(var k in c){if(k==="data-theme"){document.documentElement.dataset.theme=c[k];document.documentElement.style.colorScheme=c[k]}else{s.setProperty(k,c[k])}}}}catch(e){}})()`;
+
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body suppressHydrationWarning>
         <ThemeProvider>
           <TopBarProvider>

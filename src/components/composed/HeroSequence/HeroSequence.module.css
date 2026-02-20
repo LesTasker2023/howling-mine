@@ -1,25 +1,25 @@
-/* ═══════════════════════════════════════════════════════════
-   HeroSequence — click-triggered cinematic intro
-   ═══════════════════════════════════════════════════════════ */
+﻿/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   HeroSequence â€” click-triggered cinematic intro
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ── Container: single viewport, NO scroll tricks ── */
+/* â”€â”€ Container: single viewport, NO scroll tricks â”€â”€ */
 .heroContainer {
   position: relative;
   width: 100%;
   height: calc(100vh - var(--topbar-height, 48px));
   overflow: hidden;
-  background: #000;
+  background: var(--bg-base);
 }
 
-/* ── Solid black background layer ── */
+/* â”€â”€ Solid black background layer â”€â”€ */
 .blackBg {
   position: absolute;
   inset: 0;
-  background: var(--bg-base, #0a0a08);
+  background: var(--bg-base, #0a0a0a);
   z-index: 0;
 }
 
-/* ═══════════ FRAME 0: CMS HERO LAYER ═══════════ */
+/* â•â•â•â•â•â•â•â•â•â•â• FRAME 0: CMS HERO LAYER â•â•â•â•â•â•â•â•â•â•â• */
 .heroLayer {
   position: absolute;
   inset: 0;
@@ -41,7 +41,7 @@
   pointer-events: none;
 }
 
-/* ═══════════ BLACKOUT → STAR-FIELD OVERLAY ═══════════ */
+/* â•â•â•â•â•â•â•â•â•â•â• BLACKOUT â†’ STAR-FIELD OVERLAY â•â•â•â•â•â•â•â•â•â•â• */
 .blackout {
   position: absolute;
   inset: 0;
@@ -50,7 +50,7 @@
   opacity: 0;
   transition: opacity 0.4s ease;
   will-change: opacity;
-  background: var(--bg-base, #0a0a08);
+  background: var(--bg-base, #0a0a0a);
 }
 
 /* Stars live on ::before so the black bg always fills the screen */
@@ -87,7 +87,7 @@
   transform: scale(1);
 }
 
-/* ═══════════ WARP SPEED STREAKS ═══════════ */
+/* â•â•â•â•â•â•â•â•â•â•â• WARP SPEED STREAKS â•â•â•â•â•â•â•â•â•â•â• */
 .warpStreaks {
   position: absolute;
   inset: -50%;
@@ -97,7 +97,7 @@
   pointer-events: none;
   opacity: 0;
   background:
-    /* Cluster 1 — sparse wide gaps */
+    /* Cluster 1 â€” sparse wide gaps */
     repeating-conic-gradient(
       from 0deg at 50% 50%,
       transparent 0deg,
@@ -105,7 +105,7 @@
       transparent 0.5deg,
       transparent 7.3deg
     ),
-    /* Cluster 2 — offset, different spacing */
+    /* Cluster 2 â€” offset, different spacing */
     repeating-conic-gradient(
         from 13deg at 50% 50%,
         transparent 0deg,
@@ -113,7 +113,7 @@
         transparent 0.4deg,
         transparent 11.7deg
       ),
-    /* Cluster 3 — tight grouping, faint */
+    /* Cluster 3 â€” tight grouping, faint */
     repeating-conic-gradient(
         from 47deg at 50% 50%,
         transparent 0deg,
@@ -121,7 +121,7 @@
         transparent 0.55deg,
         transparent 4.9deg
       ),
-    /* Cluster 4 — very sparse, slightly brighter */
+    /* Cluster 4 â€” very sparse, slightly brighter */
     repeating-conic-gradient(
         from 82deg at 50% 50%,
         transparent 0deg,
@@ -163,7 +163,7 @@
     transform 0.1s ease;
 }
 
-/* ═══════════ PERSISTENT HUD LAYER ═══════════ */
+/* â•â•â•â•â•â•â•â•â•â•â• PERSISTENT HUD LAYER â•â•â•â•â•â•â•â•â•â•â• */
 .hudLayer {
   position: absolute;
   inset: 0;
@@ -246,9 +246,9 @@
   );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   START BUTTON — Design System
-   ═══════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   START BUTTON â€” Design System
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .startBtn {
   position: absolute;
   right: clamp(10rem, 20vw, 22rem);
@@ -321,7 +321,7 @@
   border-color: rgba(var(--color-primary-rgb), 0.5);
 }
 
-/* ═══════════ BOOT SEQUENCE ═══════════ */
+/* â•â•â•â•â•â•â•â•â•â•â• BOOT SEQUENCE â•â•â•â•â•â•â•â•â•â•â• */
 .bootContainer {
   position: absolute;
   inset: 0;
@@ -359,7 +359,7 @@
 .bootLine {
   font-family: var(--font-mono, "JetBrains Mono", monospace);
   font-size: clamp(0.7rem, 1.1vw, 0.9rem);
-  color: rgba(234, 179, 8, 0.7);
+  color: rgba(var(--color-primary-rgb), 0.7);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   display: flex;
@@ -379,23 +379,23 @@
 }
 
 .bootLineDone {
-  color: rgba(234, 179, 8, 0.45);
+  color: rgba(var(--color-primary-rgb), 0.45);
 }
 
 .bootCheck {
-  color: rgba(234, 179, 8, 0.6);
+  color: rgba(var(--color-primary-rgb), 0.6);
   margin-left: 0.25rem;
 }
 
 .bootPrompt {
-  color: rgba(234, 179, 8, 0.35);
+  color: rgba(var(--color-primary-rgb), 0.35);
   user-select: none;
 }
 
 .bootSub {
   font-family: var(--font-mono, "JetBrains Mono", monospace);
   font-size: clamp(0.55rem, 0.9vw, 0.75rem);
-  color: rgba(234, 179, 8, 0.35);
+  color: rgba(var(--color-primary-rgb), 0.35);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   display: flex;
@@ -419,13 +419,13 @@
 }
 
 .bootSubIndent {
-  color: rgba(234, 179, 8, 0.2);
+  color: rgba(var(--color-primary-rgb), 0.2);
   user-select: none;
 }
 
 .bootLinePrompt {
   margin-top: 1.2rem;
-  color: rgba(234, 179, 8, 1);
+  color: rgba(var(--color-primary-rgb), 1);
 }
 
 .bootLinePrompt.bootLineVisible {
@@ -433,11 +433,11 @@
 }
 
 /* Centered full-screen prompt overlay */
-/* (prompt removed — auto-transitions to step grid) */
+/* (prompt removed â€” auto-transitions to step grid) */
 
-/* ═══════════ BOOT VISUALS ═══════════ */
+/* â•â•â•â•â•â•â•â•â•â•â• BOOT VISUALS â•â•â•â•â•â•â•â•â•â•â• */
 
-/* Zoom wrapper — all visuals zoom toward the target lock */
+/* Zoom wrapper â€” all visuals zoom toward the target lock */
 .bootZoomWrap {
   position: absolute;
   inset: 0;
@@ -461,22 +461,22 @@
   overflow: hidden;
 }
 
-/* Mining grid — left-to-right reveal */
+/* Mining grid â€” left-to-right reveal */
 .miningGrid {
   position: absolute;
   inset: -40%;
   background:
     repeating-linear-gradient(
       90deg,
-      rgba(234, 179, 8, 0.07) 0px,
-      rgba(234, 179, 8, 0.07) 1px,
+      rgba(var(--color-primary-rgb), 0.07) 0px,
+      rgba(var(--color-primary-rgb), 0.07) 1px,
       transparent 1px,
       transparent 80px
     ),
     repeating-linear-gradient(
       0deg,
-      rgba(234, 179, 8, 0.07) 0px,
-      rgba(234, 179, 8, 0.07) 1px,
+      rgba(var(--color-primary-rgb), 0.07) 0px,
+      rgba(var(--color-primary-rgb), 0.07) 1px,
       transparent 1px,
       transparent 80px
     );
@@ -490,17 +490,17 @@
   }
 }
 
-/* Scanline sweep — top to bottom */
+/* Scanline sweep â€” top to bottom */
 .scanline {
   position: absolute;
   left: 0;
   right: 0;
   height: 2px;
   top: -2px;
-  background: rgba(234, 179, 8, 0.7);
+  background: rgba(var(--color-primary-rgb), 0.7);
   box-shadow:
-    0 0 15px 3px rgba(234, 179, 8, 0.3),
-    0 0 40px 8px rgba(234, 179, 8, 0.12);
+    0 0 15px 3px rgba(var(--color-primary-rgb), 0.3),
+    0 0 40px 8px rgba(var(--color-primary-rgb), 0.12);
   animation: scanDown 2s linear forwards;
 }
 
@@ -511,7 +511,11 @@
   right: 0;
   bottom: 0;
   height: 60px;
-  background: linear-gradient(to top, transparent, rgba(234, 179, 8, 0.06));
+  background: linear-gradient(
+    to top,
+    transparent,
+    rgba(var(--color-primary-rgb), 0.06)
+  );
   pointer-events: none;
 }
 
@@ -524,7 +528,7 @@
   }
 }
 
-/* POI markers — revealed by scanline */
+/* POI markers â€” revealed by scanline */
 .poi {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -538,10 +542,10 @@
 .poiDot {
   width: 8px;
   height: 8px;
-  background: rgba(234, 179, 8, 0.5);
-  border: 1px solid rgba(234, 179, 8, 0.7);
+  background: rgba(var(--color-primary-rgb), 0.5);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.7);
   transform: rotate(45deg);
-  box-shadow: 0 0 6px rgba(234, 179, 8, 0.25);
+  box-shadow: 0 0 6px rgba(var(--color-primary-rgb), 0.25);
   flex-shrink: 0;
   position: relative;
 }
@@ -551,7 +555,7 @@
   content: "";
   position: absolute;
   inset: -4px;
-  border: 1px solid rgba(234, 179, 8, 0.6);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.6);
   transform: rotate(0deg);
   border-radius: 0;
   animation: radarBlip 1.2s ease-out forwards;
@@ -562,21 +566,21 @@
   font-family: var(--font-mono, "JetBrains Mono", monospace);
   font-size: 0.55rem;
   letter-spacing: 0.12em;
-  color: rgba(234, 179, 8, 0.45);
+  color: rgba(var(--color-primary-rgb), 0.45);
   white-space: nowrap;
   text-transform: uppercase;
 }
 
-/* Targeted POI — highlighted */
+/* Targeted POI â€” highlighted */
 .poiTarget .poiDot {
-  background: rgba(234, 179, 8, 1);
-  border-color: rgba(234, 179, 8, 1);
-  box-shadow: 0 0 16px rgba(234, 179, 8, 0.6);
+  background: rgba(var(--color-primary-rgb), 1);
+  border-color: rgba(var(--color-primary-rgb), 1);
+  box-shadow: 0 0 16px rgba(var(--color-primary-rgb), 0.6);
 }
 
 .poiTarget .poiLabel {
-  color: rgba(234, 179, 8, 1);
-  text-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
+  color: rgba(var(--color-primary-rgb), 1);
+  text-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.4);
   font-size: 0.65rem;
   font-weight: 700;
 }
@@ -595,31 +599,31 @@
   0% {
     inset: -2px;
     opacity: 1;
-    border-color: rgba(234, 179, 8, 0.8);
+    border-color: rgba(var(--color-primary-rgb), 0.8);
   }
   50% {
     inset: -14px;
     opacity: 0.5;
-    border-color: rgba(234, 179, 8, 0.4);
+    border-color: rgba(var(--color-primary-rgb), 0.4);
   }
   100% {
     inset: -22px;
     opacity: 0;
-    border-color: rgba(234, 179, 8, 0);
+    border-color: rgba(var(--color-primary-rgb), 0);
   }
 }
 
 @keyframes targetDotPulse {
   0%,
   100% {
-    box-shadow: 0 0 8px rgba(234, 179, 8, 0.3);
+    box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.3);
   }
   50% {
-    box-shadow: 0 0 22px rgba(234, 179, 8, 0.8);
+    box-shadow: 0 0 22px rgba(var(--color-primary-rgb), 0.8);
   }
 }
 
-/* Target lock — converging corner brackets */
+/* Target lock â€” converging corner brackets */
 .targetLock {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -632,7 +636,7 @@
   position: absolute;
   width: 18px;
   height: 18px;
-  border-color: rgba(234, 179, 8, 0.9);
+  border-color: rgba(var(--color-primary-rgb), 0.9);
   border-style: solid;
   border-width: 0;
 }
@@ -719,7 +723,7 @@
   left: 50%;
   width: 0;
   height: 0;
-  border: 2px solid rgba(234, 179, 8, 0.5);
+  border: 2px solid rgba(var(--color-primary-rgb), 0.5);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   animation: targetPingExpand 1s ease-out forwards;
@@ -738,9 +742,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   STEP GRID — 4×2 walkthrough cards (snake path)
-   ═══════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   STEP GRID â€” 4Ã—2 walkthrough cards (snake path)
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .stepGrid {
   position: absolute;
   inset: 0;
@@ -764,7 +768,7 @@
   border: none;
 }
 
-/* ── Card ── */
+/* â”€â”€ Card â”€â”€ */
 .stepCard {
   position: relative;
   display: flex;
@@ -797,7 +801,7 @@ a.stepCardLink:focus-visible {
   box-shadow: inset 0 0 30px rgba(var(--color-primary-rgb), 0.06);
 }
 
-/* ── Card image ── */
+/* â”€â”€ Card image â”€â”€ */
 .stepCardImage {
   width: 100%;
   aspect-ratio: 2 / 1;
@@ -817,7 +821,7 @@ a.stepCardLink:hover .stepCardImage img {
   opacity: 0.85;
 }
 
-/* ── Card body ── */
+/* â”€â”€ Card body â”€â”€ */
 .stepCardBody {
   flex: 1;
   display: flex;
@@ -854,7 +858,7 @@ a.stepCardLink:hover .stepCardImage img {
   line-height: 1.4;
 }
 
-/* ── Arrows ── */
+/* â”€â”€ Arrows â”€â”€ */
 .stepArrow {
   position: absolute;
   font-size: clamp(1.2rem, 2vw, 2rem);
@@ -884,7 +888,7 @@ a.stepCardLink:hover .stepCardImage img {
   transform: translate(-50%, calc(50% + 12px)) rotate(90deg);
 }
 
-/* ═══════════ PERSISTENT OVERLAYS ═══════════ */
+/* â•â•â•â•â•â•â•â•â•â•â• PERSISTENT OVERLAYS â•â•â•â•â•â•â•â•â•â•â• */
 .noiseOverlay {
   position: absolute;
   inset: 0;
@@ -905,8 +909,8 @@ a.stepCardLink:hover .stepCardImage img {
     to bottom,
     transparent,
     transparent 2px,
-    rgba(0, 0, 0, 0.06) 2px,
-    rgba(0, 0, 0, 0.06) 4px
+    rgba(var(--black-rgb), 0.06) 2px,
+    rgba(var(--black-rgb), 0.06) 4px
   );
   opacity: 0.5;
 }
@@ -919,11 +923,53 @@ a.stepCardLink:hover .stepCardImage img {
   background: radial-gradient(
     ellipse at center,
     transparent 40%,
-    rgba(0, 0, 0, 0.6) 100%
+    rgba(var(--black-rgb), 0.6) 100%
   );
 }
 
-/* ═══════════ RESPONSIVE ═══════════ */
+/* â”€â”€ Skip button â”€â”€ */
+.skipBtn {
+  position: absolute;
+  bottom: clamp(1.5rem, 4vh, 3rem);
+  right: clamp(1.5rem, 4vw, 3rem);
+  z-index: 11;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: var(--space-2, 0.5rem) var(--space-4, 1rem);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: rgba(var(--color-primary-rgb), 0.5);
+  background: transparent;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.15);
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--duration-fast, 0.15s) ease,
+    border-color var(--duration-fast, 0.15s) ease;
+}
+
+.skipBtn:hover {
+  color: var(--color-primary);
+  border-color: rgba(var(--color-primary-rgb), 0.4);
+}
+
+.skipKey {
+  display: inline-block;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.25);
+  border-radius: 2px;
+  font-size: 0.6rem;
+  color: rgba(var(--color-primary-rgb), 0.6);
+  line-height: 1;
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â• RESPONSIVE â•â•â•â•â•â•â•â•â•â•â• */
 @media (max-width: 768px) {
   .startBtn {
     right: auto;
@@ -996,7 +1042,7 @@ a.stepCardLink:hover .stepCardImage img {
   }
 }
 
-/* ═══════════ REDUCED MOTION ═══════════ */
+/* â•â•â•â•â•â•â•â•â•â•â• REDUCED MOTION â•â•â•â•â•â•â•â•â•â•â• */
 @media (prefers-reduced-motion: reduce) {
   .bootVisuals {
     transition: none;

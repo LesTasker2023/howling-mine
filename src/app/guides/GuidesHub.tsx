@@ -198,11 +198,11 @@ export default function GuidesHub({ guides }: { guides: Guide[] }) {
       {/* ── Guide Grid ── */}
       {filtered.length > 0 ? (
         <motion.div
+          key={`${categoryFilter}-${difficultyFilter}-${sort}-${search}`}
           className={styles.grid}
           variants={staggerContainer}
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-40px" }}
+          animate="show"
         >
           {filtered.map((guide) => (
             <motion.div key={guide._id} variants={fadeUp}>

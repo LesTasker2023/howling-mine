@@ -30,7 +30,7 @@
   font-size: 0.6rem;
   padding: 1px 6px;
   border-radius: var(--radius-sm);
-  background: rgba(var(--color-primary-rgb), 0.15);
+  background: rgba(var(--white-rgb), 0.1);
   color: var(--color-primary);
   letter-spacing: 0.04em;
 }
@@ -64,7 +64,7 @@
 }
 
 .modeBtn[data-active="true"] {
-  background: rgba(var(--color-primary-rgb), 0.12);
+  background: rgba(var(--white-rgb), 0.08);
   border-color: var(--color-primary);
   color: var(--color-primary);
 }
@@ -96,7 +96,7 @@
 
 .swatch[data-active="true"] {
   border-color: var(--swatch-color);
-  background: rgba(var(--color-primary-rgb), 0.08);
+  background: rgba(var(--white-rgb), 0.06);
 }
 
 .swatchDot {
@@ -227,7 +227,11 @@
   appearance: none;
   height: 6px;
   border-radius: 3px;
-  background: linear-gradient(to right, #1a1a1a, var(--text-secondary));
+  background: linear-gradient(
+    to right,
+    var(--bg-elevated),
+    var(--text-secondary)
+  );
   outline: none;
   cursor: pointer;
 }

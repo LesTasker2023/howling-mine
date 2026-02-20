@@ -23,15 +23,17 @@
 
 /* Bracket decorators */
 .label::before {
-  content: "[ ";
+  content: "[";
   color: var(--color-primary);
   opacity: 0.6;
+  margin-right: 0.35em;
 }
 
 .label::after {
-  content: " ]";
+  content: "]";
   color: var(--color-primary);
   opacity: 0.6;
+  margin-left: 0.35em;
 }
 
 /* Size variants */

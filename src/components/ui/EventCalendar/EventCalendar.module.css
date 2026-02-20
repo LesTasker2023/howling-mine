@@ -58,7 +58,7 @@
 .navBtn:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
-  background: rgba(var(--color-primary-rgb), 0.05);
+  background: var(--bg-hover);
 }
 
 /* ── Scan line decoration ── */
@@ -119,8 +119,8 @@
 }
 
 .cell:hover {
-  border-color: rgba(var(--color-primary-rgb), 0.2);
-  background: rgba(var(--color-primary-rgb), 0.04);
+  border-color: var(--border-default);
+  background: rgba(var(--white-rgb), 0.04);
 }
 
 .cellDay {

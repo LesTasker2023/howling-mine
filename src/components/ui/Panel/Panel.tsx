@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { fadeIn } from "@/lib/motion";
 import styles from "./Panel.module.css";
@@ -262,6 +262,8 @@ export function Panel({
   ...props
 }: PanelProps) {
   const uid = useId();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const classes = [
     styles.panel,
@@ -289,7 +291,7 @@ export function Panel({
     >
       <div className={styles.panelBg} />
       <div className={styles.cornerTab} />
-      <CornerBrackets uid={uid} />
+      {mounted && <CornerBrackets uid={uid} />}
       <div className={styles.content}>{children}</div>
     </Tag>
   );

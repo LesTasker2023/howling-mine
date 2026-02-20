@@ -249,21 +249,21 @@
   gap: var(--space-1);
   padding: 2px 10px;
   border-radius: var(--radius-sm);
-  background: rgba(234, 179, 8, 0.9);
-  color: #000;
+  background: rgba(var(--color-primary-rgb), 0.9);
+  color: var(--text-on-accent);
   font-family: var(--font-mono);
   font-size: 0.55rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  box-shadow: 0 0 12px rgba(234, 179, 8, 0.4);
+  box-shadow: 0 0 12px rgba(var(--color-primary-rgb), 0.4);
 }
 
 .liveDot {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #000;
+  background: var(--text-on-accent);
   animation: livePulse 1.5s ease-in-out infinite;
 }
 

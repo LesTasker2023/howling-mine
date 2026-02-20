@@ -19,14 +19,14 @@
   height: calc(100vh - var(--topbar-height, 56px));
   padding: var(--space-16) var(--space-8);
   overflow: hidden;
-  background: #000;
+  background: var(--bg-base);
 }
 
 /* ── Video background ── */
 .videoBackdrop {
   position: absolute;
   inset: 0;
-  background: #000;
+  background: var(--bg-base);
   z-index: 0;
 }
 
@@ -86,8 +86,8 @@
     0deg,
     transparent,
     transparent 2px,
-    rgba(0, 0, 0, 0.08) 2px,
-    rgba(0, 0, 0, 0.08) 4px
+    rgba(var(--black-rgb), 0.08) 2px,
+    rgba(var(--black-rgb), 0.08) 4px
   );
   pointer-events: none;
   z-index: 3;
@@ -100,7 +100,7 @@
   background: radial-gradient(
     ellipse at center,
     transparent 30%,
-    rgba(0, 0, 0, 0.7) 100%
+    rgba(var(--black-rgb), 0.7) 100%
   );
   pointer-events: none;
   z-index: 3;

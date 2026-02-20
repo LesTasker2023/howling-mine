@@ -488,7 +488,7 @@ function StepCardContent({
         <span className={styles.stepNumber}>
           {String(stepNum).padStart(2, "0")}
         </span>
-        <h3 className={styles.stepTitle}>Step {stepNum}</h3>
+        <h3 className={styles.stepTitle}>{step.title || `Step ${stepNum}`}</h3>
         {step.subtitle && (
           <p className={styles.stepSubtitle}>{step.subtitle}</p>
         )}
@@ -539,8 +539,8 @@ export function HeroSequence({
     if (prevPath.current !== pathname) {
       prevPath.current = pathname;
       clearTimeout(timerRef.current);
-      setFrame(0);
-      setHudRevealed(false);
+      // setFrame(0);
+      // setHudRevealed(false);
     }
   }, [pathname]);
 
@@ -557,9 +557,17 @@ export function HeroSequence({
     };
   }, []);
 
-  /* Lock scrolling keys (space, arrows, pgup/pgdn) while sequence is active */
+  /* Skip the boot sequence — jump straight to step grid */
+  const skip = useCallback(() => {
+    if (frame < 1 || frame >= 3) return;
+    clearTimeout(timerRef.current);
+    setHudRevealed(true);
+    setFrame(3);
+  }, [frame]);
+
+  /* Lock scrolling keys & listen for Space to skip during frames 1-2 */
   useEffect(() => {
-    if (frame === 0 || frame >= 3) return; /* lock during frames 1-2 */
+    if (frame === 0 || frame >= 3) return;
     const BLOCKED = new Set([
       "Space",
       "ArrowUp",
@@ -571,12 +579,13 @@ export function HeroSequence({
       "Home",
       "End",
     ]);
-    const block = (e: KeyboardEvent) => {
+    const handleKey = (e: KeyboardEvent) => {
       if (BLOCKED.has(e.code)) e.preventDefault();
+      if (e.code === "Space") skip();
     };
-    window.addEventListener("keydown", block, { passive: false });
-    return () => window.removeEventListener("keydown", block);
-  }, [frame]);
+    window.addEventListener("keydown", handleKey, { passive: false });
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [frame, skip]);
 
   /* START button clicked — dissolve hero then show boot */
   const launch = useCallback(() => {
@@ -607,9 +616,9 @@ export function HeroSequence({
       </div>
 
       {/* ── START button (frame 0 only) ── */}
-      <AnimatePresence>
+      {/* <AnimatePresence>
         {frame === 0 && <StartButton key="start" onClick={launch} />}
-      </AnimatePresence>
+      </AnimatePresence> */}
 
       {/* ── Blackout + warp ── */}
       <div
@@ -662,6 +671,23 @@ export function HeroSequence({
             steps={walkthroughSteps}
             placeholderImage={placeholderImage}
           />
+        )}
+      </AnimatePresence>
+
+      {/* ── Skip button (visible during frames 1-2) ── */}
+      <AnimatePresence>
+        {frame >= 1 && frame < 3 && (
+          <motion.button
+            key="skip"
+            className={styles.skipBtn}
+            onClick={skip}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { delay: 1, duration: 0.4 } }}
+            exit={{ opacity: 0, transition: { duration: 0.3 } }}
+            aria-label="Skip intro sequence"
+          >
+            Press <span className={styles.skipKey}>SPACE</span> to skip
+          </motion.button>
         )}
       </AnimatePresence>
 

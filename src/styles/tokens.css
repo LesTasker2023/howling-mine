@@ -11,25 +11,28 @@
   --color-accent-rgb: 234, 179, 8;
 
   /* ── Backgrounds ── */
-  --bg-base: #0a0a08;
-  --bg-surface: #12120c;
-  --bg-panel: rgba(18, 18, 12, 0.85);
-  --bg-elevated: #1a1a10;
-  --bg-hover: rgba(var(--color-primary-rgb), 0.08);
-  --bg-active: rgba(var(--color-primary-rgb), 0.12);
+  --bg-base: #0a0a0a;
+  --bg-base-rgb: 10, 10, 10;
+  --bg-deep: #050508;
+  --bg-deep-rgb: 5, 5, 8;
+  --bg-surface: #121212;
+  --bg-panel: rgba(18, 18, 18, 0.85);
+  --bg-elevated: #1a1a1a;
+  --bg-hover: rgba(var(--white-rgb), 0.06);
+  --bg-active: rgba(var(--white-rgb), 0.1);
 
   /* ── Text ── */
   --text-primary: #e2e8f0;
-  --text-secondary: #a8a29e;
-  --text-muted: #57534e;
+  --text-secondary: #a1a1a1;
+  --text-muted: #525252;
   --text-accent: #eab308;
   --text-bright: #fafaf9;
-  --text-on-accent: #0a0a08;
+  --text-on-accent: #0a0a0a;
 
   /* ── Borders ── */
-  --border-subtle: rgba(var(--color-primary-rgb), 0.1);
-  --border-default: rgba(var(--color-primary-rgb), 0.2);
-  --border-strong: rgba(var(--color-primary-rgb), 0.35);
+  --border-subtle: rgba(var(--white-rgb), 0.08);
+  --border-default: rgba(var(--white-rgb), 0.14);
+  --border-strong: rgba(var(--white-rgb), 0.25);
   --border-accent: rgba(var(--color-accent-rgb), 0.4);
 
   /* ── Glow Effects ── */
@@ -39,6 +42,11 @@
   --glow-accent: 0 0 16px rgba(var(--color-accent-rgb), 0.3);
   --shadow-dropdown: 0 8px 24px rgba(0, 0, 0, 0.4);
 
+  /* ── Utility Colors (for alpha compositions) ── */
+  --white-rgb: 255, 255, 255;
+  --black-rgb: 0, 0, 0;
+  --overlay-backdrop: rgba(0, 0, 0, 0.5);
+
   /* ── Status Colors ── */
   --status-success: #22c55e;
   --status-success-rgb: 34, 197, 94;
@@ -46,6 +54,7 @@
   --status-warning-rgb: 234, 179, 8;
   --status-danger: #ef4444;
   --status-danger-rgb: 239, 68, 68;
+  --status-danger-dark: #dc2626;
   --status-info: #eab308;
   --status-info-rgb: 234, 179, 8;
 

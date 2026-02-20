@@ -58,18 +58,18 @@
 }
 
 .difficulty[data-level="beginner"] {
-  background: rgba(16, 185, 129, 0.12);
-  color: #10b981;
+  background: rgba(var(--status-success-rgb), 0.12);
+  color: var(--status-success);
 }
 
 .difficulty[data-level="intermediate"] {
-  background: rgba(245, 158, 11, 0.12);
-  color: #f59e0b;
+  background: rgba(var(--rarity-legendary-rgb), 0.12);
+  color: var(--rarity-legendary);
 }
 
 .difficulty[data-level="advanced"] {
-  background: rgba(239, 68, 68, 0.12);
-  color: #ef4444;
+  background: rgba(var(--status-danger-rgb), 0.12);
+  color: var(--status-danger);
 }
 
 .title {

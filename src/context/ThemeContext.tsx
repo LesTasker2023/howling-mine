@@ -51,11 +51,12 @@ const DEFAULT_CONFIG: ThemeConfig = {
   hue: 48,
   preset: "gold",
   bgLightness: 4,
-  bgTint: 10,
+  bgTint: 0,
   mutedLightness: 33,
 };
 
-const STORAGE_KEY = "hm-theme";
+const STORAGE_KEY = "hm-theme-v2";
+const CSS_CACHE_KEY = "hm-theme-css";
 
 function rgbToHex(r: number, g: number, b: number): string {
   return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
@@ -129,21 +130,22 @@ function applyTheme(config: ThemeConfig) {
     const [b2r, b2g, b2b] = hslToRgb(hue, sat, Math.min(baseL + 3, 100));
 
     root.style.setProperty("--bg-base", rgbToHex(b0r, b0g, b0b));
+    root.style.setProperty("--bg-base-rgb", `${b0r}, ${b0g}, ${b0b}`);
     root.style.setProperty("--bg-surface", rgbToHex(b1r, b1g, b1b));
     root.style.setProperty("--bg-panel", `rgba(${b2r}, ${b2g}, ${b2b}, 0.92)`);
     root.style.setProperty("--bg-elevated", rgbToHex(b2r, b2g, b2b));
-    root.style.setProperty("--bg-hover", `rgba(${pr}, ${pg}, ${pb}, 0.08)`);
-    root.style.setProperty("--bg-active", `rgba(${pr}, ${pg}, ${pb}, 0.14)`);
+    root.style.setProperty("--bg-hover", `rgba(255, 255, 255, 0.06)`);
+    root.style.setProperty("--bg-active", `rgba(255, 255, 255, 0.10)`);
 
     // ── Light text ──
     root.style.setProperty("--text-primary", "#1a1a1a");
-    root.style.setProperty("--text-secondary", "#57534e");
+    root.style.setProperty("--text-secondary", "#525252");
     {
-      const mL = 40 + ((100 - mutedLightness) / 100) * 35; // inverted: higher slider = darker muted in light mode (40-75%)
-      const [mr, mg, mb] = hslToRgb(hue, 8, mL);
+      const mL = 56 + ((100 - mutedLightness) / 100) * 24; // inverted: higher slider = darker muted in light mode (56-80%)
+      const [mr, mg, mb] = hslToRgb(hue, 0, mL);
       root.style.setProperty("--text-muted", `rgb(${mr}, ${mg}, ${mb})`);
     }
-    root.style.setProperty("--text-bright", "#0a0a08");
+    root.style.setProperty("--text-bright", "#0a0a0a");
     root.style.setProperty("--text-on-accent", "#ffffff");
   } else {
     // Dark mode: bgLightness 0-100 maps to L 2-18
@@ -153,42 +155,43 @@ function applyTheme(config: ThemeConfig) {
     const [b2r, b2g, b2b] = hslToRgb(hue, sat, baseL + 6);
 
     root.style.setProperty("--bg-base", rgbToHex(b0r, b0g, b0b));
+    root.style.setProperty("--bg-base-rgb", `${b0r}, ${b0g}, ${b0b}`);
     root.style.setProperty("--bg-surface", rgbToHex(b1r, b1g, b1b));
     root.style.setProperty("--bg-panel", `rgba(${b1r}, ${b1g}, ${b1b}, 0.85)`);
     root.style.setProperty("--bg-elevated", rgbToHex(b2r, b2g, b2b));
-    root.style.setProperty("--bg-hover", `rgba(${pr}, ${pg}, ${pb}, 0.08)`);
-    root.style.setProperty("--bg-active", `rgba(${pr}, ${pg}, ${pb}, 0.12)`);
+    root.style.setProperty("--bg-hover", `rgba(255, 255, 255, 0.06)`);
+    root.style.setProperty("--bg-active", `rgba(255, 255, 255, 0.08)`);
 
     // ── Dark text ──
     root.style.setProperty("--text-primary", "#e2e8f0");
-    root.style.setProperty("--text-secondary", "#a8a29e");
+    root.style.setProperty("--text-secondary", "#a1a1a1");
     {
-      const mL = 20 + (mutedLightness / 100) * 50; // 20-70% lightness
-      const [mr, mg, mb] = hslToRgb(hue, 8, mL);
+      const mL = 28 + (mutedLightness / 100) * 50; // 28-78% lightness (40% brighter than before)
+      const [mr, mg, mb] = hslToRgb(hue, 0, mL);
       root.style.setProperty("--text-muted", `rgb(${mr}, ${mg}, ${mb})`);
     }
     root.style.setProperty("--text-bright", "#fafaf9");
-    root.style.setProperty("--text-on-accent", "#0a0a08");
+    root.style.setProperty("--text-on-accent", "#0a0a0a");
   }
 
   // ── Borders ──
-  const bAlpha =
-    mode === "light" ? [0.12, 0.22, 0.4, 0.45] : [0.1, 0.2, 0.35, 0.4];
+  const bNeutral = mode === "light" ? [0.1, 0.18] : [0.08, 0.14];
+  const bAccent = mode === "light" ? [0.4, 0.45] : [0.35, 0.4];
   root.style.setProperty(
     "--border-subtle",
-    `rgba(${pr}, ${pg}, ${pb}, ${bAlpha[0]})`,
+    `rgba(255, 255, 255, ${bNeutral[0]})`,
   );
   root.style.setProperty(
     "--border-default",
-    `rgba(${pr}, ${pg}, ${pb}, ${bAlpha[1]})`,
+    `rgba(255, 255, 255, ${bNeutral[1]})`,
   );
   root.style.setProperty(
     "--border-strong",
-    `rgba(${pr}, ${pg}, ${pb}, ${bAlpha[2]})`,
+    `rgba(255, 255, 255, ${mode === "light" ? 0.2 : 0.25})`,
   );
   root.style.setProperty(
     "--border-accent",
-    `rgba(${ar}, ${ag}, ${ab}, ${bAlpha[3]})`,
+    `rgba(${ar}, ${ag}, ${ab}, ${bAccent[1]})`,
   );
 
   // ── Glows ──
@@ -215,6 +218,21 @@ function applyTheme(config: ThemeConfig) {
       ? "0 8px 24px rgba(0,0,0,0.12)"
       : "0 8px 24px rgba(0,0,0,0.4)",
   );
+
+  // Cache all computed CSS vars for the blocking script
+  const cssVars: Record<string, string> = {};
+  for (let i = 0; i < root.style.length; i++) {
+    const prop = root.style[i];
+    if (prop.startsWith("--")) {
+      cssVars[prop] = root.style.getPropertyValue(prop);
+    }
+  }
+  cssVars["data-theme"] = mode;
+  try {
+    localStorage.setItem(CSS_CACHE_KEY, JSON.stringify(cssVars));
+  } catch {
+    /* ignore */
+  }
 }
 
 /* ── Provider ── */

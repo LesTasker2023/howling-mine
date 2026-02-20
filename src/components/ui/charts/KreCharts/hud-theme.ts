@@ -25,10 +25,10 @@ export const HUD_DUO = {
 
 /* ── Background / surface colours matching tokens.css ── */
 export const HUD_BG = {
-  base: "#0a0a08",
-  surface: "#12120c",
-  panel: "rgba(18, 18, 12, 0.85)",
-  elevated: "#1a1a10",
+  base: "#0a0a0a",
+  surface: "#121212",
+  panel: "rgba(18, 18, 18, 0.85)",
+  elevated: "#1a1a1a",
   grid: "rgba(234, 179, 8, 0.06)",
   gridStrong: "rgba(234, 179, 8, 0.12)",
 } as const;
@@ -36,14 +36,14 @@ export const HUD_BG = {
 /* ── Text ── */
 export const HUD_TEXT = {
   primary: "#e2e8f0",
-  secondary: "#a8a29e",
-  muted: "#57534e",
+  secondary: "#a1a1a1",
+  muted: "#525252",
 } as const;
 
 /* ── Shared axis / grid style applied to Recharts props ── */
 export const HUD_AXIS = {
   tick: {
-    fill: "#a8a29e",
+    fill: "#a1a1a1",
     fontSize: 11,
     fontFamily: "'JetBrains Mono', monospace",
   },
@@ -58,7 +58,7 @@ export const HUD_GRID = {
 
 export const HUD_TOOLTIP_STYLE = {
   contentStyle: {
-    background: "rgba(18, 18, 12, 0.95)",
+    background: "rgba(18, 18, 18, 0.95)",
     border: "1px solid rgba(234, 179, 8, 0.25)",
     borderRadius: 4,
     fontFamily: "'JetBrains Mono', monospace",
