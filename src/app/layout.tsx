@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { VisualEditing } from "next-sanity/visual-editing";
+import { Analytics } from "@vercel/analytics/next";
 import { NavShellServer } from "@/components/layout";
 import { TopBarProvider } from "@/context/TopBarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -83,6 +84,7 @@ export default async function RootLayout({
             <VisualEditing />
           </>
         )}
+        <Analytics />
       </body>
     </html>
   );
