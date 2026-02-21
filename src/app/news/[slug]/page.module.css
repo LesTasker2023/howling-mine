@@ -59,13 +59,13 @@
 }
 
 .title::before {
-  content: "[ ";
+  content: "[";
   color: var(--color-primary);
   opacity: 0.5;
 }
 
 .title::after {
-  content: " ]";
+  content: "]";
   color: var(--color-primary);
   opacity: 0.5;
 }

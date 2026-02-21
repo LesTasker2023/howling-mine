@@ -135,13 +135,13 @@
 
 /* Decorative bracket accents */
 .heading::before {
-  content: "[ ";
+  content: "[";
   color: var(--color-primary);
   opacity: 0.6;
 }
 
 .heading::after {
-  content: " ]";
+  content: "]";
   color: var(--color-primary);
   opacity: 0.6;
 }

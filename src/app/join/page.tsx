@@ -1,9 +1,11 @@
 /**
- * /join — Marketing & Signup page
+ * /join — "Get Paid to Play" conversion landing page.
  *
- * Conversion-focused landing page.  Supports ?ref= query-param:
+ * SEO-heavy server component with full metadata, OpenGraph, and
+ * JSON-LD schemas (FAQPage, Organization, HowTo).
+ *
+ * Supports ?ref= query-param for referral tracking:
  *   /join?ref=streamer123
- * The ref is forwarded to the Entropia Universe account-creation URL.
  */
 
 import type { Metadata } from "next";
@@ -13,9 +15,51 @@ const SIGNUP_BASE =
   "https://account.entropiauniverse.com/create-account?ref=howlingmine";
 
 export const metadata: Metadata = {
-  title: "Join the Crew — The Howling Mine",
+  title:
+    "Get Paid to Play — Join The Howling Mine | Entropia Universe Jobs 2025",
   description:
-    "Join The Howling Mine community in Entropia Universe. Free gear, experienced mentors, and a real cash economy. No deposit required.",
+    "Earn up to $18/month playing Entropia Universe. Free weapons, free ammo, zero deposit required. Real cash withdrawals since 2003. Join The Howling Mine crew and start earning today.",
+  keywords: [
+    "earn money playing games",
+    "games that pay real money",
+    "get paid to play games",
+    "free games that pay real money",
+    "make money gaming",
+    "play to earn games",
+    "mmo that pays real money",
+    "entropia universe jobs",
+    "howling mine",
+    "entropia universe",
+    "neverdie",
+    "club neverdie",
+    "entropia job broker",
+    "real cash economy mmo",
+    "free mmo no deposit",
+    "withdraw real money mmo",
+    "entropia free to play earn",
+    "entropia mining",
+  ],
+  openGraph: {
+    title: "Get Paid to Play — Join The Howling Mine",
+    description:
+      "Earn $18/month with free weapons & ammo. Real cash economy since 2003. Zero deposit required.",
+    type: "website",
+    siteName: "The Howling Mine",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Get Paid to Play — The Howling Mine",
+    description:
+      "Earn $18/month with free weapons & ammo. Real cash economy since 2003.",
+    creator: "@JonNEVERDIE",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "/join",
+  },
 };
 
 type PageProps = {

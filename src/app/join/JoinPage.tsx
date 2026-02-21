@@ -1,23 +1,22 @@
 /**
- * JoinPage — "Join the Crew" community conversion page.
+ * JoinPage — "Get Paid to Play" conversion page.
  *
- * Strategy: Lead with adventure & community, not money. The earnings
- * are a supporting detail, not the headline. Discord is the primary
- * soft-conversion; EU account creation is the hard conversion.
+ * Strategy: Hit them in the face with the money. Lead with earnings,
+ * back it up with proof, remove every objection, close hard.
  *
  * Sections:
- *   1. Hero — adventure hook, video bg, Discord + signup CTAs
- *   2. What is The Howling Mine? — context for cold visitors
- *   3. What You Get — 3 focused cards (gear, community, earnings)
- *   4. How to Start — 4-step timeline
- *   5. FAQ — 4 questions, no defensive posturing
- *   6. Final CTA — Discord + Account, side-by-side
+ *   1.  Hero — "GET PAID TO PLAY", $18/month, video bg
+ *   2.  Stats bar — $0 / 20+ years / $18/mo / millions withdrawn
+ *   3.  Earnings Breakdown — the money ladder, no ambiguity
+ *   4.  How to Start — 4-step timeline + mid-scroll CTA
+ *   5.  Who is NEVERDIE? — credibility / social proof
+ *   6.  FAQ — 8 questions, every objection killed
+ *   7.  Final CTA — "Stop Playing for Free. Start Getting Paid."
  */
 
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 import {
   Shield,
@@ -25,25 +24,23 @@ import {
   Crosshair,
   Banknote,
   CheckCircle2,
-  Swords,
-  Users,
-  Wallet,
+  Award,
 } from "lucide-react";
-import { Button, SectionHeader, Panel, Card } from "@/components/ui";
+import { Button, SectionHeader, Panel } from "@/components/ui";
 import { staggerContainer, fadeUp, fadeIn } from "@/lib/motion";
 import styles from "./page.module.css";
 
 /* ── Constants ── */
-const DISCORD_URL = "https://discord.gg/howlingmine"; // TODO: replace with real invite
+const DISCORD_URL = "https://discord.gg/NnkPwamsDQ";
 
 /* ── Animation presets ── */
 const heroStagger: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.15, delayChildren: 0.3 } },
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } },
 };
 const heroFade: Variants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.7, ease: "easeOut" } },
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
 /* ── Video sources ── */
@@ -56,27 +53,43 @@ const HERO_VIDEOS = [
 /* ── Data ─────────────────────────────────────────────────────────────── */
 
 const TRUST = [
-  "100% free to start",
-  "20+ year-old economy",
+  "Zero startup cost",
+  "Free weapons & ammo",
   "Real USD withdrawals",
-  "Active Discord crew",
+  "20+ year track record",
 ];
 
-const FEATURES = [
+const STATS = [
+  { value: "$0", label: "Required Investment" },
+  { value: "20+", label: "Years Running" },
+  { value: "$18", label: "Monthly Earnings" },
+  { value: "Millions", label: "USD Withdrawn by Players" },
+];
+
+const EARNINGS = [
   {
-    icon: Swords,
-    title: "Free Gear to Start",
-    desc: "The Job Broker provides weapons, ammo, and daily missions — everything you need, on the house. No deposit, no credit card, no catch.",
+    label: "Daily Mission Pay",
+    value: "2 PED",
+    usd: "≈ $0.20 USD",
+    highlight: false,
   },
   {
-    icon: Users,
-    title: "A Crew That Has Your Back",
-    desc: "Experienced miners and hunters on Discord ready to show you the ropes. Group runs, mentorship, and a community that actually wants you to succeed.",
+    label: "Monthly (30 days)",
+    value: "60 PED",
+    usd: "≈ $6.00 USD",
+    highlight: false,
   },
   {
-    icon: Wallet,
-    title: "Earn Real Money",
-    desc: "The in-game currency (PED) converts to USD at a fixed 10:1 rate. Withdraw to your bank account. Players have been doing this since 2003 — it's not a gimmick.",
+    label: "With Rocktropia",
+    value: "180 PED",
+    usd: "≈ $18.00 USD/month",
+    highlight: true,
+  },
+  {
+    label: "Your Investment",
+    value: "$0",
+    usd: "Free weapons & ammo provided",
+    highlight: false,
   },
 ];
 
@@ -84,43 +97,57 @@ const STEPS = [
   {
     icon: Shield,
     title: "Create Free Account",
-    desc: "Sign up for Entropia Universe. Complete the tutorial on Setesh to learn the basics and grab starter gear.",
-    guide: "/guides/mining-101",
+    desc: "Sign up for Entropia Universe — completely free. Complete the short Setesh tutorial to learn combat, looting, and navigation.",
   },
   {
     icon: Rocket,
-    title: "Travel to Howling Mine",
-    desc: "Take the free daily shuttle from any spaceport. You'll land at Howling Mine Space Terminal \u2014 that's home base.",
-    guide: "/guides/space-navigation",
+    title: "Catch the Free Shuttle",
+    desc: "Take the FREE daily shuttle from any major spaceport. You'll land at Howling Mine Space Terminal — that's home base. No cost, no strings.",
   },
   {
     icon: Crosshair,
-    title: "Talk to the Job Broker",
-    desc: 'Find "The Employer" NPC inside the terminal. Accept a daily mission — free weapons and ammo included.',
+    title: "Grab Free Gear",
+    desc: 'Find "The Employer" NPC inside the terminal. Accept a daily mission — free weapons and ammo included. Walk in, gear up, walk out armed.',
   },
   {
     icon: Banknote,
-    title: "Hunt, Earn, Grow",
-    desc: "Complete hunts, earn PED, level up your skills. The daily job is just the start — mining, crafting, and trading open up from here.",
+    title: "Hunt & Cash Out",
+    desc: "Clear AI bots using your free gear. Earn 2 PED ($0.20 USD) daily. Withdraw to your bank account anytime. The daily job resets every 24 hours.",
   },
 ];
 
 const FAQS = [
   {
-    q: "Do I need to spend money?",
-    a: "No. You can play entirely for free. The Job Broker provides weapons and ammo at no cost. Many players never deposit a single dollar.",
+    q: "Is this really free?",
+    a: "100% free. No credit card, no hidden fees. Create your avatar, complete the tutorial, take the free shuttle. The Job Broker provides weapons and ammo at zero cost. Many players never deposit a single dollar.",
   },
   {
     q: "Can I actually withdraw real money?",
-    a: "Yes. Entropia Universe has a real cash economy running since 2003. PED converts to USD at a fixed 10:1 rate. Withdraw directly to your bank account — tens of millions have been withdrawn by players over the years.",
+    a: "Yes. Entropia Universe has processed tens of millions USD in player withdrawals since 2003. PED converts to USD at a fixed 10:1 rate. Withdraw directly to your bank account — this is not a gimmick, it's a 20+ year system.",
+  },
+  {
+    q: "What good is a job that only pays $18/month?",
+    a: "You already spend hours watching Netflix or playing games — and you pay for the privilege. At Howling Mine, we flip that model. You get paid to play. The job system supports you while you level up skills and learn the economy. In many countries, $18/month makes a real difference — and as you grow, so do the opportunities.",
+  },
+  {
+    q: "What's the catch?",
+    a: "No catch. Entropia Universe is a functioning virtual economy, not a poker table. People spend money for entertainment, to collect rare items, or to enjoy an immersive experience. Some of that value flows to builders, miners, creators — like you. Howling Mine jobs are designed to bring in new players and help them learn the ropes.",
   },
   {
     q: "How do I get to Howling Mine?",
-    a: "After completing the tutorial, take the free daily shuttle from any major spaceport. You can also use 6 Teleporter Tokens for instant travel.",
+    a: "New players start on Setesh tutorial moon. After learning the basics, take the FREE daily shuttle from any major spaceport. You can also use 6 Teleporter Tokens for instant travel. Note: 150kg weight limit for teleportation.",
   },
   {
     q: "How much time does it take?",
     a: "Daily hunts take about 30 minutes. Play as much or as little as you want — the daily job resets every 24 hours. No grind required.",
+  },
+  {
+    q: "Do I need a good PC?",
+    a: "The game runs on most modern PCs. It's a downloadable client (~40GB). If your PC was made in the last 5-6 years, you should be fine. Check the Entropia Universe site for minimum specs.",
+  },
+  {
+    q: "Can I do more than just hunt?",
+    a: "Absolutely. Mining, crafting, trading, exploring — the universe is massive. Howling Mine is home to rare M-Type asteroids with Scottium, and there are ships, resources, and opportunities far beyond the daily job. The job system is your starting point, not your ceiling.",
   },
 ];
 
@@ -226,38 +253,39 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
           animate={mounted ? "show" : "hidden"}
         >
           <motion.div className={styles.eyebrow} variants={heroFade}>
-            <span>DEEP-SPACE EMPLOYMENT PROGRAM</span>
+            <span>REAL CASH · REAL ECONOMY · SINCE 2003</span>
           </motion.div>
 
           <motion.h1 className={styles.title} variants={heroFade}>
-            JOIN THE <span className={styles.titleAccent}>CREW</span>
+            GET <span className={styles.titleAccent}>PAID</span> TO PLAY
           </motion.h1>
 
           <motion.p className={styles.tagline} variants={heroFade}>
-            A real sci-fi universe with a real economy. We give you the gear,
-            show you the ropes, and you <strong>earn real money</strong> while
-            you play.
+            Earn up to <strong>$18/month</strong> with free weapons, free ammo,
+            and a real community behind you. The in-game currency converts to{" "}
+            <strong>real dollars</strong> — withdraw to your bank account
+            whenever you want.
             <span className={styles.cursor} />
           </motion.p>
 
           <motion.div className={styles.noCreditCard} variants={heroFade}>
-            :: Free to Play — No Deposit Required
+            :: $0 Deposit — Start Right Now
           </motion.div>
 
           <motion.div className={styles.heroCtas} variants={heroFade}>
+            <a href={signupUrl} className={styles.ctaLink}>
+              <Button variant="primary" size="lg">
+                Create Free Account →
+              </Button>
+            </a>
             <a
               href={DISCORD_URL}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.ctaLink}
             >
-              <Button variant="primary" size="lg">
-                Join Discord
-              </Button>
-            </a>
-            <a href={signupUrl} className={styles.ctaLink}>
               <Button variant="secondary" size="lg">
-                Create Game Account →
+                Join Discord
               </Button>
             </a>
           </motion.div>
@@ -291,27 +319,23 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
         <div className={styles.heroBottomLine} aria-hidden />
       </section>
 
-      {/* ═══════════════════ WHAT IS THE HOWLING MINE? ═══════════════════ */}
+      {/* ═══════════════════ STATS BAR ═══════════════════ */}
       <motion.section
-        className={styles.introSection}
+        className={styles.statsBar}
         variants={fadeIn}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, margin: "-40px" }}
+        viewport={{ once: true, margin: "-20px" }}
       >
-        <div className={styles.introInner}>
-          <SectionHeader title="What Is The Howling Mine?" size="lg" />
-          <p className={styles.introText}>
-            Entropia Universe is a massive sci-fi MMO with a{" "}
-            <strong>real cash economy</strong> — running since 2003. The in-game
-            currency converts to real dollars. The Howling Mine is a player-run
-            community within that universe: we organize hunts, mining runs, and
-            help new players get started without spending a cent.
-          </p>
-        </div>
+        {STATS.map((stat) => (
+          <div key={stat.label} className={styles.stat}>
+            <div className={styles.statValue}>{stat.value}</div>
+            <div className={styles.statLabel}>{stat.label}</div>
+          </div>
+        ))}
       </motion.section>
 
-      {/* ═══════════════════ WHAT YOU GET ═══════════════════ */}
+      {/* ═══════════════════ EARNINGS BREAKDOWN ═══════════════════ */}
       <motion.section
         className={styles.section}
         variants={fadeIn}
@@ -319,31 +343,44 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
         whileInView="show"
         viewport={{ once: true, margin: "-40px" }}
       >
-        <SectionHeader title="What You Get" size="lg" />
+        <SectionHeader title="Earnings Breakdown" size="lg" />
+        <p className={styles.earningsSubtitle}>
+          The Job System pays you to play. Here&apos;s exactly what you earn —
+          no fine print.
+        </p>
 
         <motion.div
-          className={styles.featureGrid}
+          className={styles.earningsGrid}
           variants={staggerContainer}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-40px" }}
         >
-          {FEATURES.map((feat) => (
-            <motion.div key={feat.title} variants={fadeUp}>
-              <Card variant="default">
-                <div className={styles.featureInner}>
-                  <feat.icon
-                    size={28}
-                    className={styles.featureIcon}
-                    strokeWidth={1.5}
-                  />
-                  <h3 className={styles.featureTitle}>{feat.title}</h3>
-                  <p className={styles.featureDesc}>{feat.desc}</p>
-                </div>
-              </Card>
+          {EARNINGS.map((item) => (
+            <motion.div
+              key={item.label}
+              className={`${styles.earningsCard} ${item.highlight ? styles.earningsHighlight : ""}`}
+              variants={fadeUp}
+            >
+              <span className={styles.earningsLabel}>{item.label}</span>
+              <span className={styles.earningsValue}>{item.value}</span>
+              <span className={styles.earningsUsd}>{item.usd}</span>
             </motion.div>
           ))}
         </motion.div>
+
+        <p className={styles.earningsNote}>
+          * Combine Howling Mine and Rocktropia jobs for maximum earnings.
+          Withdraw directly to your bank account.
+        </p>
+
+        <div className={styles.sectionCta}>
+          <a href={signupUrl} className={styles.ctaLink}>
+            <Button variant="primary" size="lg">
+              Start Earning Free →
+            </Button>
+          </a>
+        </div>
       </motion.section>
 
       {/* ═══════════════════ HOW TO START ═══════════════════ */}
@@ -354,7 +391,10 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
         whileInView="show"
         viewport={{ once: true, margin: "-40px" }}
       >
-        <SectionHeader title="How to Start" size="lg" />
+        <SectionHeader title="From Zero to Earning" size="lg" />
+        <p className={styles.stepsSubtitle}>
+          Four steps. Under an hour. No money required.
+        </p>
 
         <motion.div
           className={styles.stepsTimeline}
@@ -386,11 +426,6 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
                     </div>
                     <h3 className={styles.stepTitle}>{step.title}</h3>
                     <p className={styles.stepDesc}>{step.desc}</p>
-                    {step.guide && (
-                      <Link href={step.guide} className={styles.stepGuideLink}>
-                        View Guide →
-                      </Link>
-                    )}
                   </div>
                 </Panel>
               </div>
@@ -407,6 +442,51 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
         </div>
       </motion.section>
 
+      {/* ═══════════════════ WHO IS NEVERDIE? ═══════════════════ */}
+      <motion.section
+        className={styles.aboutSection}
+        variants={fadeIn}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-40px" }}
+      >
+        <div className={styles.aboutOuter}>
+          <SectionHeader title="Who Is NEVERDIE?" size="lg" />
+
+          <Panel variant="accent" size="lg" noAnimation>
+            <div className={styles.aboutInner}>
+              <div className={styles.aboutIconCol}>
+                <div className={styles.aboutIcon}>
+                  <Award size={32} strokeWidth={1.5} />
+                </div>
+                <div className={styles.aboutMeta}>
+                  <span className={styles.aboutMetaTag}>Metaverse Pioneer</span>
+                  <span className={styles.aboutMetaTag}>Guinness Record</span>
+                  <span className={styles.aboutMetaTag}>Est. 2005</span>
+                </div>
+              </div>
+
+              <div className={styles.aboutContent}>
+                <p className={styles.aboutText}>
+                  <strong>Jon NEVERDIE Jacobs</strong> is a Metaverse pioneer
+                  and <strong>Guinness World Record holder</strong>. He founded{" "}
+                  <strong>Club NEVERDIE</strong> (2005),{" "}
+                  <strong>Planet Rocktropia</strong> (2010), and{" "}
+                  <strong>The Howling Mine</strong> (2025) — all inside Entropia
+                  Universe.
+                </p>
+                <p className={styles.aboutText}>
+                  After discovering rare minerals at Howling Mine that enabled
+                  interplanetary teleportation, NEVERDIE created the{" "}
+                  <strong>Job System</strong> — so new players could enter the
+                  economy and start earning from day one, completely free.
+                </p>
+              </div>
+            </div>
+          </Panel>
+        </div>
+      </motion.section>
+
       {/* ═══════════════════ FAQ ═══════════════════ */}
       <motion.section
         className={styles.section}
@@ -415,7 +495,7 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
         whileInView="show"
         viewport={{ once: true, margin: "-40px" }}
       >
-        <SectionHeader title="Questions" />
+        <SectionHeader title="Frequently Asked Questions" />
 
         <div className={styles.faqList}>
           {FAQS.map((faq) => (
@@ -438,27 +518,30 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
         <Panel variant="accent" size="lg">
           <div className={styles.finalCtaInner}>
             <div className={styles.finalCtaText}>
-              <SectionHeader title="Ready?" accent />
+              <h2 className={styles.finalCtaTitle}>
+                Stop Playing for Free.
+                <br />
+                <span className={styles.titleAccent}>Start Getting Paid.</span>
+              </h2>
               <p className={styles.finalCtaBody}>
-                Jump into Discord and say hello — the crew will take it from
-                there. Or create your game account and we&apos;ll see you at the
-                terminal.
+                No deposit. No credit card. Real money, your bank account. Join
+                thousands of players already earning in Entropia Universe.
               </p>
             </div>
             <div className={styles.finalCtaActions}>
+              <a href={signupUrl} className={styles.ctaLink}>
+                <Button variant="primary" size="lg">
+                  Create Free Account →
+                </Button>
+              </a>
               <a
                 href={DISCORD_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.ctaLink}
               >
-                <Button variant="primary" size="lg">
-                  Join Discord
-                </Button>
-              </a>
-              <a href={signupUrl} className={styles.ctaLink}>
                 <Button variant="secondary" size="lg">
-                  Create Game Account →
+                  Join Our Discord
                 </Button>
               </a>
             </div>
