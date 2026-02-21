@@ -145,10 +145,6 @@ const FAQS = [
     q: "Do I need a good PC?",
     a: "The game runs on most modern PCs. It's a downloadable client (~40GB). If your PC was made in the last 5-6 years, you should be fine. Check the Entropia Universe site for minimum specs.",
   },
-  {
-    q: "Can I do more than just hunt?",
-    a: "Absolutely. Mining, crafting, trading, exploring — the universe is massive. Howling Mine is home to rare M-Type asteroids with Scottium, and there are ships, resources, and opportunities far beyond the daily job. The job system is your starting point, not your ceiling.",
-  },
 ];
 
 /* ── Component ────────────────────────────────────────────────────────── */
@@ -237,14 +233,6 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
         <div className={`${styles.corner} ${styles.cornerBL}`} />
         <div className={`${styles.corner} ${styles.cornerBR}`} />
 
-        {/* Side readout */}
-        <div className={styles.sideReadout} aria-hidden>
-          <span>SYS:ONLINE</span>
-          <span>SEC:HOWLING</span>
-          <span>CREW:ACTIVE</span>
-          <span>SIGNAL:██▓░</span>
-        </div>
-
         {/* Content */}
         <motion.div
           className={styles.heroContent}
@@ -269,7 +257,7 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
           </motion.p>
 
           <motion.div className={styles.noCreditCard} variants={heroFade}>
-            :: $0 Deposit — Start Right Now
+            $0 Deposit — Start Right Now
           </motion.div>
 
           <motion.div className={styles.heroCtas} variants={heroFade}>
@@ -278,7 +266,7 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
                 Create Free Account →
               </Button>
             </a>
-            <a
+            {/* <a
               href={DISCORD_URL}
               target="_blank"
               rel="noopener noreferrer"
@@ -287,7 +275,7 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
               <Button variant="secondary" size="lg">
                 Join Discord
               </Button>
-            </a>
+            </a> */}
           </motion.div>
 
           <motion.div className={styles.trustRow} variants={heroFade}>
@@ -313,7 +301,7 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
           <span className={styles.coordDiv}>|</span>
           <span>Z:25</span>
           <span className={styles.coordDiv}>|</span>
-          <span>HOWLING MINE SECTOR</span>
+          <span>HOWLING MINE</span>
         </motion.div>
 
         <div className={styles.heroBottomLine} aria-hidden />
@@ -345,8 +333,7 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
       >
         <SectionHeader title="Earnings Breakdown" size="lg" />
         <p className={styles.earningsSubtitle}>
-          The Job System pays you to play. Here&apos;s exactly what you earn —
-          no fine print.
+          The Job System pays you to play. Here&apos;s exactly what you earn.
         </p>
 
         <motion.div
@@ -377,7 +364,7 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
         <div className={styles.sectionCta}>
           <a href={signupUrl} className={styles.ctaLink}>
             <Button variant="primary" size="lg">
-              Start Earning Free →
+              Start Earning →
             </Button>
           </a>
         </div>
@@ -392,9 +379,6 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
         viewport={{ once: true, margin: "-40px" }}
       >
         <SectionHeader title="From Zero to Earning" size="lg" />
-        <p className={styles.stepsSubtitle}>
-          Four steps. Under an hour. No money required.
-        </p>
 
         <motion.div
           className={styles.stepsTimeline}
@@ -436,7 +420,7 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
         <div className={styles.sectionCta}>
           <a href={signupUrl} className={styles.ctaLink}>
             <Button variant="primary" size="lg">
-              Create Free Account →
+              Get Started →
             </Button>
           </a>
         </div>
@@ -479,7 +463,7 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
                   After discovering rare minerals at Howling Mine that enabled
                   interplanetary teleportation, NEVERDIE created the{" "}
                   <strong>Job System</strong> — so new players could enter the
-                  economy and start earning from day one, completely free.
+                  economy and start earning from day one.
                 </p>
               </div>
             </div>
@@ -534,7 +518,7 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
                   Create Free Account →
                 </Button>
               </a>
-              <a
+              {/* <a
                 href={DISCORD_URL}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -543,7 +527,7 @@ export default function JoinPage({ signupUrl }: { signupUrl: string }) {
                 <Button variant="secondary" size="lg">
                   Join Our Discord
                 </Button>
-              </a>
+              </a> */}
             </div>
           </div>
         </Panel>
