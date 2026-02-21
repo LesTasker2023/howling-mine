@@ -219,18 +219,24 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
             <button
               className={styles.navItem}
               data-active={settingsOpen}
-              title={!expanded ? "Settings" : undefined}
-              onClick={() => setSettingsOpen(true)}
+              data-disabled
+              title={!expanded ? "Settings" : "Coming soon"}
+              disabled
+              aria-disabled
+              style={{ opacity: 0.35, pointerEvents: "none" }}
             >
               <Settings size={20} />
               <span className={styles.navLabel}>Settings</span>
             </button>
             <button
               className={styles.navItem}
+              data-disabled
               title={
-                !expanded ? (isLoggedIn ? "Log out" : "Log in") : undefined
+                !expanded ? (isLoggedIn ? "Log out" : "Log in") : "Coming soon"
               }
-              onClick={handleAuth}
+              disabled
+              aria-disabled
+              style={{ opacity: 0.35, pointerEvents: "none" }}
             >
               {isLoggedIn ? <LogOut size={20} /> : <LogIn size={20} />}
               <span className={styles.navLabel}>
@@ -333,11 +339,7 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
         {/* Content */}
         <main className={styles.content}>
           {children}
-          <Footer
-            text={settings.footerText}
-            links={settings.footerLinks}
-            socials={settings.socialLinks}
-          />
+          <Footer text={settings.footerText} />
         </main>
 
         {/* Settings drawer */}
