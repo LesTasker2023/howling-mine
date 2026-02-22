@@ -16,6 +16,16 @@ const structure: StructureResolver = (S) =>
   S.list()
     .title("Content")
     .items([
+      // Homepage — singleton
+      S.listItem()
+        .title("Homepage")
+        .id("homepage")
+        .child(
+          S.document()
+            .schemaType("homepage")
+            .documentId("homepage")
+            .title("Homepage"),
+        ),
       // Site Settings — singleton (always one doc)
       S.listItem()
         .title("Site Settings")
@@ -27,9 +37,9 @@ const structure: StructureResolver = (S) =>
             .title("Site Settings"),
         ),
       S.divider(),
-      // Then all other document types (excluding the singleton)
+      // Then all other document types (excluding singletons)
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() !== "siteSettings",
+        (item) => !["siteSettings", "homepage"].includes(item.getId() ?? ""),
       ),
     ]);
 

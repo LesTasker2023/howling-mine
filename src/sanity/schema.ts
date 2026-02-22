@@ -6,6 +6,7 @@ import { guideType } from "./documents/guide";
 import { authorType } from "./documents/author";
 import { categoryType } from "./documents/category";
 import { siteSettingsType } from "./documents/siteSettings";
+import { homepageType } from "./documents/homepage";
 import { mapPoiType } from "./documents/mapPoi";
 import { eventType } from "./documents/event";
 
@@ -35,6 +36,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     authorType,
     categoryType,
     siteSettingsType,
+    homepageType,
     mapPoiType,
     eventType,
     // Objects (reusable block types)

@@ -184,3 +184,46 @@ export const SITE_SETTINGS_QUERY = groq`
     ogImage
   }
 `;
+
+/* ─── Homepage ─── */
+export const HOMEPAGE_QUERY = groq`
+  *[_type == "homepage"][0] {
+    heroEyebrow,
+    heroTitle,
+    heroTagline,
+    heroDepositLine,
+    heroCta { label, href },
+    heroTrustBadges,
+    heroVideos[] { asset->{ url, mimeType, originalFilename }, alt },
+    heroCoords,
+    stats[] { _key, value, label },
+    earningsTitle,
+    earningsSubtitle,
+    earningsItems[] { _key, label, value, usd, highlight },
+    earningsNote,
+    earningsCta { label, href },
+    stepsTitle,
+    steps[] { _key, icon, title, description },
+    stepsCta { label, href },
+    aboutTitle,
+    aboutName,
+    aboutMetaTags,
+    aboutParagraphs,
+    faqTitle,
+    faqs[] { _key, question, answer },
+    finalCtaTitle,
+    finalCtaBody,
+    finalCtaButton { label, href },
+    seoTitle,
+    seoDescription,
+    seoKeywords,
+    ogTitle,
+    ogDescription,
+    ogImage,
+    twitterTitle,
+    twitterDescription,
+    twitterCreator,
+    canonicalUrl,
+    signupBaseUrl
+  }
+`;

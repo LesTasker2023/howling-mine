@@ -1,102 +1,72 @@
-import { SiteHero, HeroSequence } from "@/components/composed";
+import type { Metadata } from "next";
 import { getClient } from "@/sanity/client";
-import { SITE_SETTINGS_QUERY } from "@/sanity/queries";
-import styles from "./page.module.css";
+import { HOMEPAGE_QUERY } from "@/sanity/queries";
+import { urlFor } from "@/sanity/image";
+import HomePage from "./(home)/HomePage";
 
-/* ── Fallbacks if Sanity hasn't been configured yet ── */
-const FALLBACK_VIDEOS = [
-  "/videos/hero-2.webm",
-  "/videos/hero-1.webm",
-  "/videos/hero-3.webm",
-];
-
-/* ── Temp fallback walkthrough steps (delete once CMS is populated) ── */
-const FALLBACK_WALKTHROUGH = [
-  {
-    title: "Create Account",
-    subtitle: "Sign up at entropia.com and download the client",
-    href: "https://www.entropia.com",
-  },
-  {
-    title: "Create Avatar",
-    subtitle: "Choose your look and enter the universe",
-    href: "/guides/getting-started",
-  },
-  {
-    title: "Finish Tutorial",
-    subtitle: "Complete the introductory missions on Calypso",
-    href: "/guides/getting-started",
-  },
-  {
-    title: "Join The Society",
-    subtitle: "Find us in-game and apply to join",
-    href: "/join",
-  },
-  {
-    title: "Choose a Path",
-    subtitle: "Mining, hunting, crafting — pick your profession",
-    href: "/guides",
-  },
-  {
-    title: "Gear Up",
-    subtitle: "Get your starter equipment and learn the basics",
-    href: "/guides/mining-101",
-  },
-  {
-    title: "Find a Claim",
-    subtitle: "Head out into the field and drop your first probe",
-    href: "/guides/mining-101",
-  },
-  {
-    title: "Start Mining",
-    subtitle: "Extract resources and begin your journey",
-    href: "/map",
-  },
-];
-
-export default async function Home() {
-  const settings = await getClient(false).fetch(
-    SITE_SETTINGS_QUERY,
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await getClient(false).fetch(
+    HOMEPAGE_QUERY,
     {},
     { next: { revalidate: 60 } },
   );
 
-  /* Map Sanity file assets → plain URL strings the component expects */
-  const videos = settings?.heroVideos?.length
-    ? settings.heroVideos.map((v: { asset: { url: string } }) => v.asset.url)
-    : FALLBACK_VIDEOS;
+  if (!data) return {};
 
-  return (
-    <div className={styles.page}>
-      <HeroSequence
-        walkthroughSteps={
-          settings?.heroWalkthrough?.length
-            ? settings.heroWalkthrough
-            : FALLBACK_WALKTHROUGH
-        }
-        placeholderImage={settings?.placeholderImage}
-      >
-        <SiteHero
-          title={settings?.heroTitle ?? "The *Howling* Mine"}
-          tagline={
-            settings?.heroTagline ??
-            "Guides, news, and resources for the Entropia Universe mining community."
-          }
-          primaryCta={
-            settings?.heroPrimaryCta ?? {
-              label: "Explore Guides",
-              href: "/guides",
-            }
-          }
-          secondaryCta={
-            settings?.heroSecondaryCta ?? {
-              label: "Latest News",
-              href: "/news",
-            }
-          }
-          videos={videos}
-        />
-      </HeroSequence>
-    </div>
-  );
+  const ogImageUrl = data.ogImage
+    ? urlFor(data.ogImage).width(1200).height(630).auto("format").url()
+    : undefined;
+
+  return {
+    title: data.seoTitle ?? undefined,
+    description: data.seoDescription ?? undefined,
+    keywords: data.seoKeywords ?? undefined,
+    openGraph: {
+      title: data.ogTitle ?? data.seoTitle ?? undefined,
+      description: data.ogDescription ?? data.seoDescription ?? undefined,
+      type: "website",
+      siteName: "The Howling Mine",
+      ...(ogImageUrl && {
+        images: [{ url: ogImageUrl, width: 1200, height: 630 }],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: data.twitterTitle ?? data.ogTitle ?? data.seoTitle ?? undefined,
+      description:
+        data.twitterDescription ??
+        data.ogDescription ??
+        data.seoDescription ??
+        undefined,
+      ...(data.twitterCreator && { creator: data.twitterCreator }),
+      ...(ogImageUrl && { images: [ogImageUrl] }),
+    },
+    robots: { index: true, follow: true },
+    ...(data.canonicalUrl && { alternates: { canonical: data.canonicalUrl } }),
+  };
+}
+
+type PageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function Home({ searchParams }: PageProps) {
+  const [data, sp] = await Promise.all([
+    getClient(false).fetch(HOMEPAGE_QUERY, {}, { next: { revalidate: 60 } }),
+    searchParams,
+  ]);
+
+  // Build signup URL with ?ref= if present
+  const ref = typeof sp.ref === "string" ? sp.ref : undefined;
+  const baseSignup =
+    data?.signupBaseUrl ??
+    "https://account.entropiauniverse.com/create-account?ref=howlingmine";
+  let signupUrl = baseSignup;
+  if (ref) {
+    const url = new URL(baseSignup);
+    url.searchParams.set("ref", ref);
+    signupUrl = url.toString();
+  }
+
+  return <HomePage data={data ?? {}} signupUrl={signupUrl} />;
 }
