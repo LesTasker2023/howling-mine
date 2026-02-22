@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getClient } from "@/sanity/client";
 import { HOMEPAGE_QUERY } from "@/sanity/queries";
+import { sanityFetch } from "@/sanity/live";
 import { urlFor } from "@/sanity/image";
 import HomePage from "./(home)/HomePage";
 
@@ -51,8 +52,8 @@ type PageProps = {
 };
 
 export default async function Home({ searchParams }: PageProps) {
-  const [data, sp] = await Promise.all([
-    getClient(false).fetch(HOMEPAGE_QUERY, {}, { next: { revalidate: 60 } }),
+  const [{ data }, sp] = await Promise.all([
+    sanityFetch({ query: HOMEPAGE_QUERY }),
     searchParams,
   ]);
 

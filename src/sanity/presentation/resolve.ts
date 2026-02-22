@@ -17,6 +17,11 @@ import {
 
 const mainDocuments = defineDocuments([
   {
+    // Homepage singleton
+    route: "/",
+    filter: `_type == "homepage" && _id == "homepage"`,
+  },
+  {
     // CMS pages: /:slug  →  page { slug.current == :slug }
     route: "/:slug",
     filter: `_type == "page" && slug.current == $slug`,
@@ -103,9 +108,25 @@ const eventLocations: DocumentLocationResolverObject = {
       : undefined,
 };
 
+const homepageLocations: DocumentLocationResolverObject = {
+  select: { title: "heroTitle" },
+  resolve: (doc) =>
+    doc
+      ? {
+          locations: [
+            {
+              title: "Homepage",
+              href: "/",
+            },
+          ],
+        }
+      : undefined,
+};
+
 export const resolve = {
   mainDocuments,
   locations: {
+    homepage: homepageLocations,
     page: pageLocations,
     post: postLocations,
     guide: guideLocations,
