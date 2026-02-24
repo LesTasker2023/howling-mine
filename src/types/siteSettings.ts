@@ -22,7 +22,7 @@ export interface SiteSettings {
   tagline?: string;
   logo?: any; // Sanity image reference
   favicon?: any;
-  placeholderImage?: { asset?: { _id: string; url: string }; alt?: string };
+  placeholderImage?: { asset: { _id: string; url: string }; alt?: string };
   mainNav?: NavLink[];
   footerText?: string;
   footerLinks?: FooterLink[];
