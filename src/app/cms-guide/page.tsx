@@ -6,7 +6,8 @@ import styles from "./page.module.css";
 
 /* ─── Subtab keys ─── */
 const SUB_TABS = [
-  { key: "overview", label: "Overview" },
+  { key: "homepage", label: "Homepage" },
+  { key: "settings", label: "Settings" },
   { key: "page-builder", label: "Page Builder" },
   { key: "content", label: "Content" },
   { key: "editor", label: "Editor" },
@@ -82,13 +83,572 @@ function Options({ items }: { items: string[] }) {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   TAB 1 — OVERVIEW  (Getting Started + Site Settings)
+   TAB 1 — HOMEPAGE  (Your domain — all 8 sections of the landing page)
    ═══════════════════════════════════════════════════════════════════════════ */
 
-function OverviewTab() {
+function HomepageTab() {
   return (
     <>
-      {/* 1. Getting Started */}
+      {/* Overview */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>01 — Homepage Overview</h2>
+        <p className={styles.sectionIntro}>
+          The homepage is a <strong>single document</strong> pinned to the top
+          of the Studio sidebar. Click <strong>Homepage</strong> to open it.
+          You&apos;ll see <strong>8 tabs</strong> across the top — one for every
+          section of the landing page.
+        </p>
+
+        <Options
+          items={[
+            "🎬 Hero",
+            "📊 Stats Bar",
+            "💰 Earnings",
+            "🪜 Steps",
+            "👤 About",
+            "❓ FAQ",
+            "📢 Final CTA",
+            "🔍 SEO & Meta",
+          ]}
+        />
+
+        <Note>
+          Every section has a <strong>Show/Hide toggle</strong> at the top. Flip
+          it off to hide that section without deleting any content — flip it
+          back on whenever you&apos;re ready.
+        </Note>
+
+        <Tip>
+          All fields have sensible defaults. The page works even if a field is
+          left empty — it falls back to hardcoded values. But you should
+          populate everything for the best result.
+        </Tip>
+      </section>
+
+      {/* Hero */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>02 — Hero</h2>
+        <p className={styles.sectionIntro}>
+          The big first-impression section with video background, headline, CTA
+          buttons, and trust badges.
+        </p>
+
+        <FieldTable
+          fields={[
+            {
+              name: "Show Hero Section",
+              type: "Toggle",
+              desc: "Turn the entire hero on/off.",
+            },
+            {
+              name: "Eyebrow Text",
+              type: "Text",
+              desc: "Small uppercase text above the title (e.g. 'REAL CASH · REAL ECONOMY · SINCE 2003').",
+            },
+            {
+              name: "Title",
+              type: "Text",
+              required: true,
+              desc: "Main headline. Wrap a word in *asterisks* for accent colour → GET *PAID* TO PLAY.",
+            },
+            {
+              name: "Tagline",
+              type: "Text (multiline)",
+              desc: "Paragraph below the title. Use **double asterisks** for bold text.",
+            },
+            {
+              name: "Deposit Line",
+              type: "Text",
+              desc: "Small line below tagline (e.g. '$0 Deposit — Start Right Now').",
+            },
+            {
+              name: "Hero CTA Button",
+              type: "Label + URL",
+              desc: "Primary call-to-action button. Set the button text and where it links.",
+            },
+            {
+              name: "Hero Secondary CTA",
+              type: "Label + URL",
+              desc: "Optional second button (e.g. 'Join Discord'). Leave both fields empty to hide it.",
+            },
+            {
+              name: "Trust Badges",
+              type: "List (max 6)",
+              desc: "Short trust markers below the buttons — e.g. 'Zero startup cost', 'Free weapons & ammo'.",
+            },
+            {
+              name: "Background Videos",
+              type: "File list (max 5)",
+              desc: "Upload .webm or .mp4 videos that auto-crossfade in the background.",
+            },
+            {
+              name: "Coordinate Bar Text",
+              type: "List (max 6)",
+              desc: "Items in the HUD coordinate bar at the bottom of the hero.",
+            },
+          ]}
+        />
+
+        <div className={styles.sub}>
+          <h3 className={styles.subTitle}>Formatting Tips</h3>
+          <FieldTable
+            fields={[
+              {
+                name: "Accent text",
+                type: "Title field",
+                desc: "Wrap in single *asterisks* → GET *PAID* TO PLAY → 'PAID' turns gold.",
+              },
+              {
+                name: "Bold text",
+                type: "Tagline field",
+                desc: "Wrap in **double asterisks** → Earn up to **$18/month** → '$18/month' goes bold.",
+              },
+            ]}
+          />
+        </div>
+
+        <Tip>
+          Background videos: shorter clips (10–30 sec) loop better. Upload 2–3
+          for crossfade variety. Use .webm for smaller file sizes.
+        </Tip>
+      </section>
+
+      {/* Stats Bar */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>03 — Stats Bar</h2>
+        <p className={styles.sectionIntro}>
+          A row of big numbers shown right below the hero — key metrics that
+          build trust.
+        </p>
+
+        <FieldTable
+          fields={[
+            {
+              name: "Show Stats Bar",
+              type: "Toggle",
+              desc: "Turn the stats bar on/off.",
+            },
+            {
+              name: "Stats",
+              type: "List (max 6)",
+              desc: "Each stat has a Value (e.g. '$0') and a Label (e.g. 'Required Investment').",
+            },
+          ]}
+        />
+
+        <div className={styles.sub}>
+          <h3 className={styles.subTitle}>Each stat item</h3>
+          <FieldTable
+            fields={[
+              {
+                name: "Value",
+                type: "Text",
+                required: true,
+                desc: "The big number — e.g. '$0', '20+', '$18', 'Millions'.",
+              },
+              {
+                name: "Label",
+                type: "Text",
+                required: true,
+                desc: "What the number represents — e.g. 'Required Investment', 'Years Running'.",
+              },
+            ]}
+          />
+        </div>
+
+        <Tip>
+          4 is the sweet spot. You can go up to 6 but the bar gets crowded
+          beyond that.
+        </Tip>
+      </section>
+
+      {/* Earnings */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>04 — Earnings</h2>
+        <p className={styles.sectionIntro}>
+          The earnings breakdown section with a card grid showing exactly what
+          players earn.
+        </p>
+
+        <FieldTable
+          fields={[
+            {
+              name: "Show Earnings Section",
+              type: "Toggle",
+              desc: "Turn the earnings section on/off.",
+            },
+            {
+              name: "Section Title",
+              type: "Text",
+              desc: "Heading text (default: 'Earnings Breakdown').",
+            },
+            {
+              name: "Subtitle",
+              type: "Text",
+              desc: "One-liner below the title.",
+            },
+            {
+              name: "Earnings Cards",
+              type: "List (max 6)",
+              desc: "Each card has a Label, Value, USD Equivalent, and Highlight toggle.",
+            },
+            {
+              name: "Footnote",
+              type: "Text",
+              desc: "Small text below the cards (e.g. '* Combine Howling Mine and Rocktropia...').",
+            },
+            {
+              name: "Earnings CTA",
+              type: "Label + URL",
+              desc: "Button at the bottom — set the text and link.",
+            },
+          ]}
+        />
+
+        <div className={styles.sub}>
+          <h3 className={styles.subTitle}>Each earnings card</h3>
+          <FieldTable
+            fields={[
+              {
+                name: "Label",
+                type: "Text",
+                required: true,
+                desc: "What the card represents — e.g. 'Daily Mission Pay'.",
+              },
+              {
+                name: "Value",
+                type: "Text",
+                required: true,
+                desc: "The PED amount — e.g. '2 PED', '180 PED'.",
+              },
+              {
+                name: "USD Equivalent",
+                type: "Text",
+                desc: "Optional dollar conversion — e.g. '≈ $0.20 USD'. Leave blank to hide.",
+              },
+              {
+                name: "Highlight?",
+                type: "Toggle",
+                desc: "Turn on for the card you want to stand out (e.g. the max earning).",
+              },
+            ]}
+          />
+        </div>
+
+        <Tip>
+          Toggle <strong>Highlight</strong> on one card — the &ldquo;With
+          Rocktropia&rdquo; total is ideal. It gets a gold accent border.
+        </Tip>
+      </section>
+
+      {/* Steps */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>05 — Steps</h2>
+        <p className={styles.sectionIntro}>
+          The &ldquo;From Zero to Earning&rdquo; step-by-step timeline that
+          walks new players through the process.
+        </p>
+
+        <FieldTable
+          fields={[
+            {
+              name: "Show Steps Section",
+              type: "Toggle",
+              desc: "Turn the steps section on/off.",
+            },
+            {
+              name: "Section Title",
+              type: "Text",
+              desc: "Heading (default: 'From Zero to Earning').",
+            },
+            {
+              name: "Subtitle",
+              type: "Text",
+              desc: "Optional one-liner below the title (e.g. 'Three simple steps to start earning real money.').",
+            },
+            {
+              name: "Steps",
+              type: "List (max 8)",
+              desc: "Each step has an Icon, Title, and Description.",
+            },
+            {
+              name: "Steps CTA",
+              type: "Label + URL",
+              desc: "Button at the bottom.",
+            },
+          ]}
+        />
+
+        <div className={styles.sub}>
+          <h3 className={styles.subTitle}>Each step</h3>
+          <FieldTable
+            fields={[
+              {
+                name: "Icon",
+                type: "Icon Picker",
+                desc: "Choose from a searchable dropdown — e.g. 'shield', 'rocket', 'crosshair', 'banknote'.",
+              },
+              {
+                name: "Title",
+                type: "Text",
+                required: true,
+                desc: "Step name — e.g. 'Create Free Account', 'Catch the Free Shuttle'.",
+              },
+              {
+                name: "Description",
+                type: "Text (multiline)",
+                required: true,
+                desc: "2–3 sentences explaining this step. Keep it skimmable.",
+              },
+            ]}
+          />
+        </div>
+
+        <Tip>
+          Drag to reorder steps. Pick icons that match the action — shield for
+          account creation, rocket for travel, crosshair for gear, banknote for
+          earning.
+        </Tip>
+      </section>
+
+      {/* About */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>06 — About</h2>
+        <p className={styles.sectionIntro}>
+          The &ldquo;Who Is NEVERDIE?&rdquo; credibility section with photo,
+          meta tags, and bio.
+        </p>
+
+        <FieldTable
+          fields={[
+            {
+              name: "Show About Section",
+              type: "Toggle",
+              desc: "Turn the about section on/off.",
+            },
+            {
+              name: "Section Title",
+              type: "Text",
+              desc: "Heading (default: 'Who Is NEVERDIE?').",
+            },
+            {
+              name: "Person Name",
+              type: "Text",
+              desc: "Display name (default: 'Jon NEVERDIE Jacobs').",
+            },
+            {
+              name: "Meta Tags",
+              type: "List",
+              desc: "Small labels below the image — e.g. 'Metaverse Pioneer', 'Guinness Record', 'Est. 2005'.",
+            },
+            {
+              name: "About Image",
+              type: "Image",
+              desc: "Upload a photo — it renders as a circular headshot. Always add alt text.",
+            },
+            {
+              name: "Bio Paragraphs",
+              type: "List of text",
+              desc: "Each item = one paragraph. Use **double asterisks** for bold.",
+            },
+          ]}
+        />
+
+        <Tip>
+          If no image is uploaded, a default award icon shows instead. Keep the
+          bio to 2–3 paragraphs — the homepage isn&apos;t a biography.
+        </Tip>
+      </section>
+
+      {/* FAQ */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>07 — FAQ</h2>
+        <p className={styles.sectionIntro}>
+          Accordion-style frequently asked questions. Click a question to expand
+          the answer.
+        </p>
+
+        <FieldTable
+          fields={[
+            {
+              name: "Show FAQ Section",
+              type: "Toggle",
+              desc: "Turn the FAQ section on/off.",
+            },
+            {
+              name: "Section Title",
+              type: "Text",
+              desc: "Heading (default: 'Frequently Asked Questions').",
+            },
+            {
+              name: "FAQ Items",
+              type: "List",
+              desc: "Each item has a Question and Answer. Both are required.",
+            },
+          ]}
+        />
+
+        <div className={styles.sub}>
+          <h3 className={styles.subTitle}>Each FAQ item</h3>
+          <FieldTable
+            fields={[
+              {
+                name: "Question",
+                type: "Text",
+                required: true,
+                desc: "The question visitors will see (e.g. 'Is this really free?').",
+              },
+              {
+                name: "Answer",
+                type: "Text (multiline)",
+                required: true,
+                desc: "The answer that expands when clicked. Plain text only.",
+              },
+            ]}
+          />
+        </div>
+
+        <Tip>
+          Put the most important questions first — &ldquo;Is this really
+          free?&rdquo; should stay #1. Drag to reorder.
+        </Tip>
+      </section>
+
+      {/* Final CTA */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>08 — Final CTA</h2>
+        <p className={styles.sectionIntro}>
+          The closing conversion block at the very bottom of the page — one last
+          push to sign up.
+        </p>
+
+        <FieldTable
+          fields={[
+            {
+              name: "Show Final CTA Section",
+              type: "Toggle",
+              desc: "Turn the final CTA on/off.",
+            },
+            {
+              name: "Title",
+              type: "Text",
+              desc: "Use a pipe | to insert a line break. The last line gets accent colour automatically.",
+            },
+            {
+              name: "Body Text",
+              type: "Text (multiline)",
+              desc: "One paragraph below the title.",
+            },
+            {
+              name: "CTA Button",
+              type: "Label + URL",
+              desc: "Primary button — e.g. 'Create Free Account →'.",
+            },
+            {
+              name: "Secondary CTA Button",
+              type: "Label + URL",
+              desc: "Optional second button (e.g. 'Join Discord'). Leave empty to hide.",
+            },
+          ]}
+        />
+
+        <div className={styles.sub}>
+          <h3 className={styles.subTitle}>Title line break example</h3>
+          <p className={styles.subDesc}>
+            <span className={styles.code}>
+              Stop Playing for Free.|Start Getting Paid.
+            </span>
+            <br />→ Line 1: &ldquo;Stop Playing for Free.&rdquo;
+            <br />→ Line 2 (gold accent): &ldquo;Start Getting Paid.&rdquo;
+          </p>
+        </div>
+      </section>
+
+      {/* SEO & Meta */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>09 — Homepage SEO & Meta</h2>
+        <p className={styles.sectionIntro}>
+          Controls how the homepage appears in Google results and when someone
+          shares the link on Discord, Twitter, or Facebook.
+        </p>
+
+        <FieldTable
+          fields={[
+            {
+              name: "SEO Title",
+              type: "Text",
+              desc: "The browser tab text and Google result title. Keep under ~60 characters.",
+            },
+            {
+              name: "SEO Description",
+              type: "Text (multiline)",
+              desc: "The snippet in Google results. Keep under ~155 characters.",
+            },
+            {
+              name: "SEO Keywords",
+              type: "List",
+              desc: "Add keywords as individual items (not comma-separated in one field).",
+            },
+            {
+              name: "OG Title",
+              type: "Text",
+              desc: "What shows when someone shares the link on Discord / Facebook.",
+            },
+            {
+              name: "OG Description",
+              type: "Text (multiline)",
+              desc: "Snippet under the title in social shares.",
+            },
+            {
+              name: "OG Image",
+              type: "Image",
+              desc: "Upload a 1200×630 image — this is what shows in link previews.",
+            },
+            {
+              name: "Twitter Title",
+              type: "Text",
+              desc: "Override for Twitter/X. Leave blank to use OG Title.",
+            },
+            {
+              name: "Twitter Description",
+              type: "Text (multiline)",
+              desc: "Override for Twitter/X. Leave blank to use OG Description.",
+            },
+            {
+              name: "Twitter @handle",
+              type: "Text",
+              desc: "Your Twitter handle (default: @JonNEVERDIE).",
+            },
+            {
+              name: "Canonical URL",
+              type: "Text",
+              desc: "Leave blank unless you know what this does.",
+            },
+            {
+              name: "Signup Base URL",
+              type: "Text",
+              desc: "The account creation URL. Don't change unless the signup flow changes.",
+            },
+          ]}
+        />
+
+        <Note>
+          Most people only need to fill in SEO Title, SEO Description, and OG
+          Image. The rest are optional overrides.
+        </Note>
+      </section>
+    </>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TAB 2 — SETTINGS  (Getting Started + Site Settings)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+function SettingsTab() {
+  return (
+    <>
+      {/* Getting Started */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>01 — Getting Started</h2>
         <p className={styles.sectionIntro}>
@@ -107,8 +667,10 @@ function OverviewTab() {
           </li>
           <li className={styles.step}>
             <span className={styles.stepTitle}>Find your content type</span>
-            The sidebar lists: Site Settings (pinned at top), Pages, News Posts,
-            Guides, Map POIs, Authors, and Categories.
+            The sidebar has two pinned items at the top:{" "}
+            <strong>Homepage</strong> and <strong>Site Settings</strong>. Below
+            the divider are News Posts, Guides, Events, Pages, Authors, and
+            Categories.
           </li>
           <li className={styles.step}>
             <span className={styles.stepTitle}>Create or edit</span>
@@ -120,7 +682,7 @@ function OverviewTab() {
             <span className={styles.stepTitle}>Publish</span>
             Click the green <strong>Publish</strong> button to make changes
             live. You can also preview before publishing using the presentation
-            tool.
+            tool (eye icon in the top-right).
           </li>
         </ol>
 
@@ -130,13 +692,13 @@ function OverviewTab() {
         </Tip>
       </section>
 
-      {/* 2. Site Settings */}
+      {/* Site Settings */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>02 — Site Settings</h2>
         <p className={styles.sectionIntro}>
           A single global document that controls the site name, navigation,
           footer, social links, and SEO defaults. This is pinned to the top of
-          the Studio sidebar.
+          the Studio sidebar — right below Homepage.
         </p>
 
         <div className={styles.sub}>
@@ -164,7 +726,26 @@ function OverviewTab() {
                 type: "Image",
                 desc: "Site logo shown in the sidebar header. Supports hotspot/crop.",
               },
-              { name: "Favicon", type: "Image", desc: "Browser tab icon." },
+              {
+                name: "Favicon",
+                type: "Image",
+                desc: "Browser tab icon. Upload a 16×16 or 32×32 PNG.",
+              },
+              {
+                name: "Placeholder Image",
+                type: "Image + Alt",
+                desc: "Fallback image for cards and thumbnails when content doesn't have its own. Always add alt text.",
+              },
+              {
+                name: "Discord Invite URL",
+                type: "URL",
+                desc: "Your primary Discord invite link — used site-wide. e.g. https://discord.gg/NnkPwamsDQ.",
+              },
+              {
+                name: "Hero Overlay Darkness",
+                type: "Slider (0–100)",
+                desc: "Controls how dark the video overlay is on the homepage hero. Higher = darker = more readable text. Default is 65.",
+              },
             ]}
           />
         </div>
@@ -198,7 +779,8 @@ function OverviewTab() {
           />
           <Tip>
             The icon picker shows previews next to each option — just search by
-            name or category and select.
+            name or category and select. Drag links to reorder — the order here
+            is the order on the site.
           </Tip>
         </div>
 
@@ -240,21 +822,25 @@ function OverviewTab() {
         </div>
 
         <div className={styles.sub}>
-          <h3 className={styles.subTitle}>SEO</h3>
+          <h3 className={styles.subTitle}>SEO Defaults</h3>
+          <p className={styles.subDesc}>
+            Fallback values used when individual pages don&apos;t define their
+            own SEO fields.
+          </p>
           <FieldTable
             fields={[
               {
-                name: "SEO Title",
+                name: "Default SEO Title",
                 type: "Text",
-                desc: "Fallback <title> when individual pages don't define their own.",
+                desc: "Fallback <title> when pages don't define their own.",
               },
               {
-                name: "SEO Description",
-                type: "Text",
-                desc: "Default meta description for search engines.",
+                name: "Default SEO Description",
+                type: "Text (multiline)",
+                desc: "Fallback meta description when pages don't define their own.",
               },
               {
-                name: "OG Image",
+                name: "Default OG Image",
                 type: "Image",
                 desc: "Default social share image (used when pages don't have a cover image).",
               },
@@ -679,38 +1265,40 @@ function ContentTab() {
               name: "Title",
               type: "Text",
               required: true,
-              desc: "Article headline.",
+              desc: "Article headline. Max 120 characters.",
             },
             {
               name: "Slug",
               type: "Auto-generated",
               required: true,
-              desc: "URL path — auto-generated from title.",
+              desc: "URL path — auto-generated from title. Don't change after publish.",
             },
             {
               name: "Excerpt",
               type: "Text",
-              desc: "Short summary shown in card previews and SEO.",
+              desc: "Short summary shown in card previews and SEO. 1–2 sentences.",
             },
             {
               name: "Cover Image",
-              type: "Image",
-              desc: "Featured image shown on cards and the article header.",
+              type: "Image + Alt",
+              desc: "Featured image for cards and headers. Always add alt text for accessibility.",
             },
             {
               name: "Author",
               type: "Reference",
-              desc: "Link to an Author document.",
+              required: true,
+              desc: "Who wrote this post. Pick from the Authors list.",
             },
             {
               name: "Categories",
-              type: "List of References",
-              desc: "Tag with one or more categories.",
+              type: "List (max 5)",
+              desc: "Tag with up to 5 categories.",
             },
             {
               name: "Published At",
               type: "Date/Time",
-              desc: "Publication date — posts are sorted newest first.",
+              required: true,
+              desc: "Publication date — posts sort newest first.",
             },
             {
               name: "Featured",
@@ -720,7 +1308,7 @@ function ContentTab() {
             {
               name: "Body",
               type: "Rich Text",
-              desc: "Full article content with the rich text editor.",
+              desc: "Full article content. See the Editor tab for rich text details.",
             },
           ]}
         />
@@ -747,20 +1335,29 @@ function ContentTab() {
               name: "Title",
               type: "Text",
               required: true,
-              desc: "Guide title.",
+              desc: "Guide title. Max 120 characters.",
             },
             {
               name: "Slug",
               type: "Auto-generated",
               required: true,
-              desc: "URL path.",
+              desc: "URL path. Don't change after publish.",
             },
-            { name: "Excerpt", type: "Text", desc: "Short summary." },
-            { name: "Cover Image", type: "Image", desc: "Featured image." },
+            {
+              name: "Excerpt",
+              type: "Text",
+              desc: "Short summary shown on guide cards.",
+            },
+            {
+              name: "Cover Image",
+              type: "Image + Alt",
+              desc: "Featured image. Always add alt text.",
+            },
             {
               name: "Category",
               type: "Reference",
-              desc: "Which guide category this belongs to (e.g. Mining, Hunting, Trading).",
+              required: true,
+              desc: "Which category this belongs to (e.g. Mining, Hunting, Trading).",
             },
             {
               name: "Difficulty",
@@ -775,6 +1372,7 @@ function ContentTab() {
             {
               name: "Published At",
               type: "Date/Time",
+              required: true,
               desc: "Publication date.",
             },
             { name: "Body", type: "Rich Text", desc: "Full guide content." },
@@ -783,9 +1381,77 @@ function ContentTab() {
         <Options items={["Beginner", "Intermediate", "Advanced"]} />
       </section>
 
-      {/* 13. Map POIs */}
+      {/* 13. Events */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>13 — Map POIs</h2>
+        <h2 className={styles.sectionTitle}>13 — Events</h2>
+        <p className={styles.sectionIntro}>
+          In-game events shown on the{" "}
+          <span className={styles.code}>/events</span> page. Each event gets its
+          own detail page at <span className={styles.code}>/events/[slug]</span>
+          .
+        </p>
+
+        <FieldTable
+          fields={[
+            {
+              name: "Title",
+              type: "Text",
+              required: true,
+              desc: "Event name. Max 120 characters.",
+            },
+            {
+              name: "Slug",
+              type: "Auto-generated",
+              required: true,
+              desc: "URL path.",
+            },
+            {
+              name: "Excerpt",
+              type: "Text",
+              desc: "Short summary shown on event cards.",
+            },
+            {
+              name: "Cover Image",
+              type: "Image + Alt",
+              desc: "Featured image. Always add alt text.",
+            },
+            {
+              name: "Start Date",
+              type: "Date/Time",
+              desc: "When the event begins.",
+            },
+            {
+              name: "End Date",
+              type: "Date/Time",
+              desc: "When the event ends.",
+            },
+            {
+              name: "Location",
+              type: "Text",
+              desc: "In-game location name.",
+            },
+            {
+              name: "Event Type",
+              type: "Dropdown",
+              desc: "Category of event.",
+            },
+            {
+              name: "Featured",
+              type: "Toggle",
+              desc: "Promote to featured sections.",
+            },
+            {
+              name: "Body",
+              type: "Rich Text",
+              desc: "Full event details and instructions.",
+            },
+          ]}
+        />
+      </section>
+
+      {/* 14. Map POIs */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>14 — Map POIs</h2>
         <p className={styles.sectionIntro}>
           Points of interest on the interactive 3D sector map at{" "}
           <span className={styles.code}>/map</span>. Each POI appears as a
@@ -878,9 +1544,9 @@ function ContentTab() {
         </Tip>
       </section>
 
-      {/* 14. Authors & Categories */}
+      {/* 15. Authors & Categories */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>14 — Authors & Categories</h2>
+        <h2 className={styles.sectionTitle}>15 — Authors & Categories</h2>
         <p className={styles.sectionIntro}>
           Supporting content types used by News Posts and Guides.
         </p>
@@ -901,6 +1567,7 @@ function ContentTab() {
               {
                 name: "Slug",
                 type: "Auto-generated",
+                required: true,
                 desc: "URL-safe identifier.",
               },
               { name: "Avatar", type: "Image", desc: "Profile picture." },
@@ -951,7 +1618,7 @@ function EditorTab() {
   return (
     <>
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>15 — Rich Text Editor</h2>
+<h2 className={styles.sectionTitle}>16 — Rich Text Editor</h2>
         <p className={styles.sectionIntro}>
           The rich text editor is used wherever you see a &ldquo;Body&rdquo;
           field — in news posts, guides, and rich text sections. Here&apos;s
@@ -1124,13 +1791,13 @@ export default function CmsGuidePage() {
 
   useEffect(() => {
     setSubTabs(SUB_TABS);
-    setActiveSubTab("overview");
+    setActiveSubTab("homepage");
     return () => {
       setSubTabs([]);
     };
   }, [setSubTabs, setActiveSubTab]);
 
-  const tab = activeSubTab || "overview";
+  const tab = activeSubTab || "homepage";
 
   return (
     <div className={styles.page}>
@@ -1145,7 +1812,8 @@ export default function CmsGuidePage() {
       </header>
 
       {/* Tab Content */}
-      {tab === "overview" && <OverviewTab />}
+      {tab === "homepage" && <HomepageTab />}
+      {tab === "settings" && <SettingsTab />}
       {tab === "page-builder" && <PageBuilderTab />}
       {tab === "content" && <ContentTab />}
       {tab === "editor" && <EditorTab />}
