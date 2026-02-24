@@ -1,9 +1,11 @@
 import { defineField, defineType, defineArrayMember } from "sanity";
+import { FileText } from "lucide-react";
 
 export const pageType = defineType({
   name: "page",
   title: "Page",
   type: "document",
+  icon: FileText,
   fields: [
     defineField({
       name: "title",

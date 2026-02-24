@@ -25,6 +25,7 @@ export const calloutType = defineType({
       title: "Body",
       type: "text",
       rows: 3,
+      validation: (r) => r.required(),
     }),
   ],
   preview: {

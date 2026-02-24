@@ -1,14 +1,17 @@
 import { defineField, defineType } from "sanity";
+import { BookOpen } from "lucide-react";
 
 export const guideType = defineType({
   name: "guide",
   title: "Guide",
   type: "document",
+  icon: BookOpen,
   fields: [
     defineField({
       name: "title",
       title: "Title",
       type: "string",
+      description: "Guide title shown in listings and header.",
       validation: (r) => r.required().max(120),
     }),
     defineField({
@@ -16,6 +19,7 @@ export const guideType = defineType({
       title: "Slug",
       type: "slug",
       options: { source: "title", maxLength: 96 },
+      description: "URL-friendly identifier. Auto-generated from title.",
       validation: (r) => r.required(),
     }),
     defineField({
@@ -23,12 +27,22 @@ export const guideType = defineType({
       title: "Excerpt",
       type: "text",
       rows: 3,
+      description: "Short summary shown on guide cards.",
     }),
     defineField({
       name: "coverImage",
       title: "Cover Image",
       type: "image",
       options: { hotspot: true },
+      description: "Featured image for this guide.",
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt Text",
+          type: "string",
+          description: "Accessible description of the image.",
+        }),
+      ],
     }),
     defineField({
       name: "category",
@@ -37,6 +51,7 @@ export const guideType = defineType({
       to: [{ type: "category" }],
       description:
         "Which guide category this belongs to (e.g. Mining, Hunting, Trading).",
+      validation: (r) => r.required(),
     }),
     defineField({
       name: "difficulty",
@@ -63,6 +78,8 @@ export const guideType = defineType({
       name: "publishedAt",
       title: "Published At",
       type: "datetime",
+      description: "Publication date for this guide.",
+      validation: (r) => r.required(),
     }),
     defineField({
       name: "body",

@@ -285,6 +285,21 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
     label: "Create Free Account →",
     href: ctaUrl,
   };
+  const finalCtaSecondaryButton = data.finalCtaSecondaryButton;
+
+  /* Section visibility — default to true when not set */
+  const heroEnabled = data.heroEnabled !== false;
+  const statsEnabled = data.statsEnabled !== false;
+  const earningsEnabled = data.earningsEnabled !== false;
+  const stepsEnabled = data.stepsEnabled !== false;
+  const aboutEnabled = data.aboutEnabled !== false;
+  const faqEnabled = data.faqEnabled !== false;
+  const finalCtaEnabled = data.finalCtaEnabled !== false;
+
+  /* Secondary CTAs */
+  const heroSecondaryCta = data.heroSecondaryCta;
+  const stepsSubtitle = data.stepsSubtitle;
+  const aboutImage = data.aboutImage;
 
   /* ── Video crossfade ── */
   const [activeIdx, setActiveIdx] = useState(0);
@@ -335,312 +350,362 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
   return (
     <div className={styles.page}>
       {/* ═══════════════════ HERO ═══════════════════ */}
-      <section className={styles.hero}>
-        {/* Video background */}
-        <div className={styles.videoBackdrop} aria-hidden />
-        <div
-          className={`${styles.videoBg} ${videoVisible ? styles.videoVisible : ""}`}
-        >
-          <video
-            ref={videoRef}
-            className={styles.video}
-            src={videos[activeIdx]}
-            muted
-            playsInline
-            autoPlay
-            preload="auto"
-            onTimeUpdate={handleTimeUpdate}
-            onEnded={triggerTransition}
-          />
-        </div>
+      {heroEnabled && (
+        <section className={styles.hero}>
+          {/* Video background */}
+          <div className={styles.videoBackdrop} aria-hidden />
+          <div
+            className={`${styles.videoBg} ${videoVisible ? styles.videoVisible : ""}`}
+          >
+            <video
+              ref={videoRef}
+              className={styles.video}
+              src={videos[activeIdx]}
+              muted
+              playsInline
+              autoPlay
+              preload="auto"
+              onTimeUpdate={handleTimeUpdate}
+              onEnded={triggerTransition}
+            />
+          </div>
 
-        {/* Overlays */}
-        <div className={styles.heroNoise} />
-        <div className={styles.heroCrt} />
-        <div className={styles.heroVignette} />
-        <div className={styles.heroGlow} />
+          {/* Overlays */}
+          <div className={styles.heroNoise} />
+          <div className={styles.heroCrt} />
+          <div className={styles.heroVignette} />
+          <div className={styles.heroGlow} />
 
-        {/* Corner brackets */}
-        <div className={`${styles.corner} ${styles.cornerTL}`} />
-        <div className={`${styles.corner} ${styles.cornerTR}`} />
-        <div className={`${styles.corner} ${styles.cornerBL}`} />
-        <div className={`${styles.corner} ${styles.cornerBR}`} />
+          {/* Corner brackets */}
+          <div className={`${styles.corner} ${styles.cornerTL}`} />
+          <div className={`${styles.corner} ${styles.cornerTR}`} />
+          <div className={`${styles.corner} ${styles.cornerBL}`} />
+          <div className={`${styles.corner} ${styles.cornerBR}`} />
 
-        {/* Content */}
-        <motion.div
-          className={styles.heroContent}
-          variants={heroStagger}
-          initial="hidden"
-          animate={mounted ? "show" : "hidden"}
-        >
-          <motion.div className={styles.eyebrow} variants={heroFade}>
-            <span>{heroEyebrow}</span>
+          {/* Content */}
+          <motion.div
+            className={styles.heroContent}
+            variants={heroStagger}
+            initial="hidden"
+            animate={mounted ? "show" : "hidden"}
+          >
+            <motion.div className={styles.eyebrow} variants={heroFade}>
+              <span>{heroEyebrow}</span>
+            </motion.div>
+
+            <motion.h1 className={styles.title} variants={heroFade}>
+              {renderTitleAccent(heroTitle)}
+            </motion.h1>
+
+            <motion.p className={styles.tagline} variants={heroFade}>
+              {renderBold(heroTagline)}
+              <span className={styles.cursor} />
+            </motion.p>
+
+            <motion.div className={styles.noCreditCard} variants={heroFade}>
+              {heroDepositLine}
+            </motion.div>
+
+            <motion.div className={styles.heroCtas} variants={heroFade}>
+              <a href={heroCta.href ?? ctaUrl} className={styles.ctaLink}>
+                <Button variant="primary" size="lg">
+                  {heroCta.label ?? "Create Free Account →"}
+                </Button>
+              </a>
+              {heroSecondaryCta?.label && (
+                <a
+                  href={heroSecondaryCta.href ?? "#"}
+                  className={styles.ctaLink}
+                >
+                  <Button variant="ghost" size="lg">
+                    {heroSecondaryCta.label}
+                  </Button>
+                </a>
+              )}
+            </motion.div>
+
+            <motion.div className={styles.trustRow} variants={heroFade}>
+              {trustBadges.map((item) => (
+                <span key={item} className={styles.trustItem}>
+                  <CheckCircle2 size={14} className={styles.trustIcon} />
+                  {item}
+                </span>
+              ))}
+            </motion.div>
           </motion.div>
 
-          <motion.h1 className={styles.title} variants={heroFade}>
-            {renderTitleAccent(heroTitle)}
-          </motion.h1>
-
-          <motion.p className={styles.tagline} variants={heroFade}>
-            {renderBold(heroTagline)}
-            <span className={styles.cursor} />
-          </motion.p>
-
-          <motion.div className={styles.noCreditCard} variants={heroFade}>
-            {heroDepositLine}
-          </motion.div>
-
-          <motion.div className={styles.heroCtas} variants={heroFade}>
-            <a href={heroCta.href ?? ctaUrl} className={styles.ctaLink}>
-              <Button variant="primary" size="lg">
-                {heroCta.label ?? "Create Free Account →"}
-              </Button>
-            </a>
-          </motion.div>
-
-          <motion.div className={styles.trustRow} variants={heroFade}>
-            {trustBadges.map((item) => (
-              <span key={item} className={styles.trustItem}>
-                <CheckCircle2 size={14} className={styles.trustIcon} />
+          {/* Coordinate bar */}
+          <motion.div
+            className={styles.coordBar}
+            initial={{ opacity: 0 }}
+            animate={mounted ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.7, delay: 1.2 }}
+          >
+            {heroCoords.map((item, i) => (
+              <span key={i}>
+                {i > 0 && <span className={styles.coordDiv}>|</span>}
                 {item}
               </span>
             ))}
           </motion.div>
-        </motion.div>
 
-        {/* Coordinate bar */}
-        <motion.div
-          className={styles.coordBar}
-          initial={{ opacity: 0 }}
-          animate={mounted ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.7, delay: 1.2 }}
-        >
-          {heroCoords.map((item, i) => (
-            <span key={i}>
-              {i > 0 && <span className={styles.coordDiv}>|</span>}
-              {item}
-            </span>
-          ))}
-        </motion.div>
-
-        <div className={styles.heroBottomLine} aria-hidden />
-      </section>
+          <div className={styles.heroBottomLine} aria-hidden />
+        </section>
+      )}
 
       {/* ═══════════════════ STATS BAR ═══════════════════ */}
-      <motion.section
-        className={styles.statsBar}
-        variants={fadeIn}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-20px" }}
-      >
-        {stats.map((stat) => (
-          <div key={stat._key ?? stat.label} className={styles.stat}>
-            <div className={styles.statValue}>{stat.value}</div>
-            <div className={styles.statLabel}>{stat.label}</div>
-          </div>
-        ))}
-      </motion.section>
+      {statsEnabled && (
+        <motion.section
+          className={styles.statsBar}
+          variants={fadeIn}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-20px" }}
+        >
+          {stats.map((stat) => (
+            <div key={stat._key ?? stat.label} className={styles.stat}>
+              <div className={styles.statValue}>{stat.value}</div>
+              <div className={styles.statLabel}>{stat.label}</div>
+            </div>
+          ))}
+        </motion.section>
+      )}
 
       {/* ═══════════════════ EARNINGS BREAKDOWN ═══════════════════ */}
-      <motion.section
-        className={styles.section}
-        variants={fadeIn}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-40px" }}
-      >
-        <SectionHeader title={earningsTitle} size="lg" />
-        <p className={styles.earningsSubtitle}>{earningsSubtitle}</p>
-
-        <motion.div
-          className={styles.earningsGrid}
-          variants={staggerContainer}
+      {earningsEnabled && (
+        <motion.section
+          className={styles.section}
+          variants={fadeIn}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-40px" }}
         >
-          {earningsItems.map((item) => (
-            <motion.div
-              key={item._key ?? item.label}
-              className={`${styles.earningsCard} ${item.highlight ? styles.earningsHighlight : ""}`}
-              variants={fadeUp}
-            >
-              <span className={styles.earningsLabel}>{item.label}</span>
-              <span className={styles.earningsValue}>{item.value}</span>
-              {item.usd && (
-                <span className={styles.earningsUsd}>{item.usd}</span>
-              )}
-            </motion.div>
-          ))}
-        </motion.div>
+          <SectionHeader title={earningsTitle} size="lg" />
+          <p className={styles.earningsSubtitle}>{earningsSubtitle}</p>
 
-        <p className={styles.earningsNote}>{earningsNote}</p>
-
-        <div className={styles.sectionCta}>
-          <a href={earningsCta.href ?? ctaUrl} className={styles.ctaLink}>
-            <Button variant="primary" size="lg">
-              {earningsCta.label ?? "Start Earning →"}
-            </Button>
-          </a>
-        </div>
-      </motion.section>
-
-      {/* ═══════════════════ HOW TO START ═══════════════════ */}
-      <motion.section
-        className={styles.section}
-        variants={fadeIn}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-40px" }}
-      >
-        <SectionHeader title={stepsTitle} size="lg" />
-
-        <motion.div
-          className={styles.stepsTimeline}
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-40px" }}
-        >
-          {steps.map((step, i) => {
-            const StepIcon = dynamicIcon(step.icon ?? "box");
-            return (
+          <motion.div
+            className={styles.earningsGrid}
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-40px" }}
+          >
+            {earningsItems.map((item) => (
               <motion.div
-                key={step._key ?? step.title}
-                className={styles.stepRow}
+                key={item._key ?? item.label}
+                className={`${styles.earningsCard} ${item.highlight ? styles.earningsHighlight : ""}`}
                 variants={fadeUp}
               >
-                <div className={styles.stepIndicator}>
-                  <div className={styles.stepDot} />
-                  {i < steps.length - 1 && <div className={styles.stepLine} />}
-                </div>
-                <div className={styles.stepCard}>
-                  <Panel variant="default" size="md" noAnimation>
-                    <div className={styles.stepInner}>
-                      <div className={styles.stepHeader}>
-                        <div className={styles.stepNumber}>{i + 1}</div>
-                        <StepIcon
-                          size={20}
-                          className={styles.stepIcon}
-                          strokeWidth={1.5}
-                        />
-                      </div>
-                      <h3 className={styles.stepTitle}>{step.title}</h3>
-                      <p className={styles.stepDesc}>{step.description}</p>
-                    </div>
-                  </Panel>
-                </div>
+                <span className={styles.earningsLabel}>{item.label}</span>
+                <span className={styles.earningsValue}>{item.value}</span>
+                {item.usd && (
+                  <span className={styles.earningsUsd}>{item.usd}</span>
+                )}
               </motion.div>
-            );
-          })}
-        </motion.div>
+            ))}
+          </motion.div>
 
-        <div className={styles.sectionCta}>
-          <a href={stepsCta.href ?? ctaUrl} className={styles.ctaLink}>
-            <Button variant="primary" size="lg">
-              {stepsCta.label ?? "Get Started →"}
-            </Button>
-          </a>
-        </div>
-      </motion.section>
+          <p className={styles.earningsNote}>{earningsNote}</p>
+
+          <div className={styles.sectionCta}>
+            <a href={earningsCta.href ?? ctaUrl} className={styles.ctaLink}>
+              <Button variant="primary" size="lg">
+                {earningsCta.label ?? "Start Earning →"}
+              </Button>
+            </a>
+          </div>
+        </motion.section>
+      )}
+
+      {/* ═══════════════════ HOW TO START ═══════════════════ */}
+      {stepsEnabled && (
+        <motion.section
+          className={styles.section}
+          variants={fadeIn}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+        >
+          <SectionHeader title={stepsTitle} size="lg" />
+          {stepsSubtitle && (
+            <p className={styles.earningsSubtitle}>{stepsSubtitle}</p>
+          )}
+
+          <motion.div
+            className={styles.stepsTimeline}
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-40px" }}
+          >
+            {steps.map((step, i) => {
+              const StepIcon = dynamicIcon(step.icon ?? "box");
+              return (
+                <motion.div
+                  key={step._key ?? step.title}
+                  className={styles.stepRow}
+                  variants={fadeUp}
+                >
+                  <div className={styles.stepIndicator}>
+                    <div className={styles.stepDot} />
+                    {i < steps.length - 1 && (
+                      <div className={styles.stepLine} />
+                    )}
+                  </div>
+                  <div className={styles.stepCard}>
+                    <Panel variant="default" size="md" noAnimation>
+                      <div className={styles.stepInner}>
+                        <div className={styles.stepHeader}>
+                          <div className={styles.stepNumber}>{i + 1}</div>
+                          <StepIcon
+                            size={20}
+                            className={styles.stepIcon}
+                            strokeWidth={1.5}
+                          />
+                        </div>
+                        <h3 className={styles.stepTitle}>{step.title}</h3>
+                        <p className={styles.stepDesc}>{step.description}</p>
+                      </div>
+                    </Panel>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          <div className={styles.sectionCta}>
+            <a href={stepsCta.href ?? ctaUrl} className={styles.ctaLink}>
+              <Button variant="primary" size="lg">
+                {stepsCta.label ?? "Get Started →"}
+              </Button>
+            </a>
+          </div>
+        </motion.section>
+      )}
 
       {/* ═══════════════════ WHO IS NEVERDIE? ═══════════════════ */}
-      <motion.section
-        className={styles.aboutSection}
-        variants={fadeIn}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-40px" }}
-      >
-        <div className={styles.aboutOuter}>
-          <SectionHeader title={aboutTitle} size="lg" />
+      {aboutEnabled && (
+        <motion.section
+          className={styles.aboutSection}
+          variants={fadeIn}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+        >
+          <div className={styles.aboutOuter}>
+            <SectionHeader title={aboutTitle} size="lg" />
 
-          <Panel variant="accent" size="lg" noAnimation>
-            <div className={styles.aboutInner}>
-              <div className={styles.aboutIconCol}>
-                <div className={styles.aboutIcon}>
-                  <Award size={32} strokeWidth={1.5} />
+            <Panel variant="accent" size="lg" noAnimation>
+              <div className={styles.aboutInner}>
+                <div className={styles.aboutIconCol}>
+                  <div className={styles.aboutIcon}>
+                    {aboutImage?.asset?.url ? (
+                      <img
+                        src={aboutImage.asset.url}
+                        alt={aboutImage.alt ?? ""}
+                        className={styles.aboutImg}
+                      />
+                    ) : (
+                      <Award size={32} strokeWidth={1.5} />
+                    )}
+                  </div>
+                  <div className={styles.aboutMeta}>
+                    {aboutMetaTags.map((tag) => (
+                      <span key={tag} className={styles.aboutMetaTag}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div className={styles.aboutMeta}>
-                  {aboutMetaTags.map((tag) => (
-                    <span key={tag} className={styles.aboutMetaTag}>
-                      {tag}
-                    </span>
+
+                <div className={styles.aboutContent}>
+                  {aboutParagraphs.map((p, i) => (
+                    <p key={i} className={styles.aboutText}>
+                      {renderBold(p)}
+                    </p>
                   ))}
                 </div>
               </div>
+            </Panel>
+          </div>
+        </motion.section>
+      )}
 
-              <div className={styles.aboutContent}>
-                {aboutParagraphs.map((p, i) => (
-                  <p key={i} className={styles.aboutText}>
-                    {renderBold(p)}
-                  </p>
-                ))}
+      {/* ═══════════════════ FAQ ═══════════════════ */}
+      {faqEnabled && (
+        <motion.section
+          className={styles.section}
+          variants={fadeIn}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+        >
+          <SectionHeader title={faqTitle} />
+
+          <div className={styles.faqList}>
+            {faqs.map((faq) => (
+              <details
+                key={faq._key ?? faq.question}
+                className={styles.faqItem}
+              >
+                <summary className={styles.faqQuestion}>{faq.question}</summary>
+                <p className={styles.faqAnswer}>{faq.answer}</p>
+              </details>
+            ))}
+          </div>
+        </motion.section>
+      )}
+
+      {/* ═══════════════════ FINAL CTA ═══════════════════ */}
+      {finalCtaEnabled && (
+        <motion.section
+          className={styles.finalCta}
+          variants={fadeIn}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+        >
+          <Panel variant="accent" size="lg">
+            <div className={styles.finalCtaInner}>
+              <div className={styles.finalCtaText}>
+                <h2 className={styles.finalCtaTitle}>
+                  {finalCtaTitleRaw.split("|").map((line, i) => (
+                    <span key={i}>
+                      {i > 0 && <br />}
+                      {i === finalCtaTitleRaw.split("|").length - 1 ? (
+                        <span className={styles.titleAccent}>{line}</span>
+                      ) : (
+                        line
+                      )}
+                    </span>
+                  ))}
+                </h2>
+                <p className={styles.finalCtaBody}>{finalCtaBody}</p>
+              </div>
+              <div className={styles.finalCtaActions}>
+                <a
+                  href={finalCtaButton.href ?? ctaUrl}
+                  className={styles.ctaLink}
+                >
+                  <Button variant="primary" size="lg">
+                    {finalCtaButton.label ?? "Create Free Account →"}
+                  </Button>
+                </a>
+                {finalCtaSecondaryButton?.label && (
+                  <a
+                    href={finalCtaSecondaryButton.href ?? "#"}
+                    className={styles.ctaLink}
+                  >
+                    <Button variant="ghost" size="lg">
+                      {finalCtaSecondaryButton.label}
+                    </Button>
+                  </a>
+                )}
               </div>
             </div>
           </Panel>
-        </div>
-      </motion.section>
-
-      {/* ═══════════════════ FAQ ═══════════════════ */}
-      <motion.section
-        className={styles.section}
-        variants={fadeIn}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-40px" }}
-      >
-        <SectionHeader title={faqTitle} />
-
-        <div className={styles.faqList}>
-          {faqs.map((faq) => (
-            <details key={faq._key ?? faq.question} className={styles.faqItem}>
-              <summary className={styles.faqQuestion}>{faq.question}</summary>
-              <p className={styles.faqAnswer}>{faq.answer}</p>
-            </details>
-          ))}
-        </div>
-      </motion.section>
-
-      {/* ═══════════════════ FINAL CTA ═══════════════════ */}
-      <motion.section
-        className={styles.finalCta}
-        variants={fadeIn}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-40px" }}
-      >
-        <Panel variant="accent" size="lg">
-          <div className={styles.finalCtaInner}>
-            <div className={styles.finalCtaText}>
-              <h2 className={styles.finalCtaTitle}>
-                {finalCtaTitleRaw.split("|").map((line, i) => (
-                  <span key={i}>
-                    {i > 0 && <br />}
-                    {i === finalCtaTitleRaw.split("|").length - 1 ? (
-                      <span className={styles.titleAccent}>{line}</span>
-                    ) : (
-                      line
-                    )}
-                  </span>
-                ))}
-              </h2>
-              <p className={styles.finalCtaBody}>{finalCtaBody}</p>
-            </div>
-            <div className={styles.finalCtaActions}>
-              <a
-                href={finalCtaButton.href ?? ctaUrl}
-                className={styles.ctaLink}
-              >
-                <Button variant="primary" size="lg">
-                  {finalCtaButton.label ?? "Create Free Account →"}
-                </Button>
-              </a>
-            </div>
-          </div>
-        </Panel>
-      </motion.section>
+        </motion.section>
+      )}
     </div>
   );
 }

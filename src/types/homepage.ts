@@ -34,19 +34,23 @@ export interface HomepageFaq {
 
 export interface HomepageData {
   /* Hero */
+  heroEnabled?: boolean;
   heroEyebrow?: string;
   heroTitle?: string;
   heroTagline?: string;
   heroDepositLine?: string;
   heroCta?: HomepageCta;
+  heroSecondaryCta?: HomepageCta;
   heroTrustBadges?: string[];
   heroVideos?: { asset: { url: string } }[];
   heroCoords?: string[];
 
   /* Stats */
+  statsEnabled?: boolean;
   stats?: HomepageStat[];
 
   /* Earnings */
+  earningsEnabled?: boolean;
   earningsTitle?: string;
   earningsSubtitle?: string;
   earningsItems?: HomepageEarningsItem[];
@@ -54,24 +58,31 @@ export interface HomepageData {
   earningsCta?: HomepageCta;
 
   /* Steps */
+  stepsEnabled?: boolean;
   stepsTitle?: string;
+  stepsSubtitle?: string;
   steps?: HomepageStep[];
   stepsCta?: HomepageCta;
 
   /* About */
+  aboutEnabled?: boolean;
   aboutTitle?: string;
   aboutName?: string;
   aboutMetaTags?: string[];
+  aboutImage?: { asset: { _id: string; url: string }; alt?: string };
   aboutParagraphs?: string[];
 
   /* FAQ */
+  faqEnabled?: boolean;
   faqTitle?: string;
   faqs?: HomepageFaq[];
 
   /* Final CTA */
+  finalCtaEnabled?: boolean;
   finalCtaTitle?: string;
   finalCtaBody?: string;
   finalCtaButton?: HomepageCta;
+  finalCtaSecondaryButton?: HomepageCta;
 
   /* SEO */
   seoTitle?: string;

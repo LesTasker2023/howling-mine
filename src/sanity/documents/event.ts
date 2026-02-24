@@ -1,14 +1,17 @@
 import { defineField, defineType } from "sanity";
+import { Calendar } from "lucide-react";
 
 export const eventType = defineType({
   name: "event",
   title: "Event",
   type: "document",
+  icon: Calendar,
   fields: [
     defineField({
       name: "title",
       title: "Title",
       type: "string",
+      description: "Event name shown in listings and detail pages.",
       validation: (r) => r.required().max(120),
     }),
     defineField({
@@ -16,6 +19,7 @@ export const eventType = defineType({
       title: "Slug",
       type: "slug",
       options: { source: "title", maxLength: 96 },
+      description: "URL-friendly identifier.",
       validation: (r) => r.required(),
     }),
     defineField({
@@ -30,6 +34,15 @@ export const eventType = defineType({
       title: "Cover Image",
       type: "image",
       options: { hotspot: true },
+      description: "Featured image for this event.",
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt Text",
+          type: "string",
+          description: "Accessible description of the image.",
+        }),
+      ],
     }),
     defineField({
       name: "startDate",

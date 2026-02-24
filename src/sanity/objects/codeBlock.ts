@@ -28,6 +28,7 @@ export const codeBlockType = defineType({
       title: "Code",
       type: "text",
       rows: 10,
+      validation: (r) => r.required(),
     }),
     defineField({
       name: "filename",

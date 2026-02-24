@@ -25,10 +25,19 @@ export const homepageType = defineType({
   fields: [
     /* ════════════════════════ HERO ════════════════════════ */
     defineField({
+      name: "heroEnabled",
+      title: "Show Hero Section",
+      type: "boolean",
+      group: "hero",
+      initialValue: true,
+      description: "Toggle the entire hero section on/off.",
+    }),
+    defineField({
       name: "heroEyebrow",
       title: "Eyebrow Text",
       type: "string",
       group: "hero",
+      hidden: ({ parent }) => parent?.heroEnabled === false,
       description:
         "Small label above the title (e.g. 'REAL CASH · REAL ECONOMY · SINCE 2003').",
       initialValue: "REAL CASH · REAL ECONOMY · SINCE 2003",
@@ -77,12 +86,29 @@ export const homepageType = defineType({
       },
     }),
     defineField({
+      name: "heroSecondaryCta",
+      title: "Hero Secondary CTA",
+      type: "object",
+      group: "hero",
+      description:
+        "Optional second button (e.g. Discord invite). Leave empty to hide.",
+      fields: [
+        defineField({ name: "label", title: "Label", type: "string" }),
+        defineField({ name: "href", title: "URL", type: "string" }),
+      ],
+      initialValue: {
+        label: "Join Discord",
+        href: "https://discord.gg/NnkPwamsDQ",
+      },
+    }),
+    defineField({
       name: "heroTrustBadges",
       title: "Trust Badges",
       type: "array",
       group: "hero",
       description:
         "Short trust markers below the CTA (e.g. 'Zero startup cost', 'Free weapons & ammo').",
+      validation: (r) => r.max(6),
       of: [{ type: "string" }],
       initialValue: [
         "Zero startup cost",
@@ -98,6 +124,7 @@ export const homepageType = defineType({
       group: "hero",
       description:
         "Upload .webm or .mp4 videos that cross-fade in the hero background.",
+      validation: (r) => r.max(5),
       of: [
         {
           type: "file",
@@ -120,11 +147,20 @@ export const homepageType = defineType({
       group: "hero",
       description:
         "Items shown in the coordinate bar at the bottom of the hero.",
+      validation: (r) => r.max(6),
       of: [{ type: "string" }],
       initialValue: ["X:79228", "Y:79228", "Z:25", "HOWLING MINE"],
     }),
 
     /* ════════════════════════ STATS BAR ════════════════════════ */
+    defineField({
+      name: "statsEnabled",
+      title: "Show Stats Bar",
+      type: "boolean",
+      group: "stats",
+      initialValue: true,
+      description: "Toggle the stats bar section on/off.",
+    }),
     defineField({
       name: "stats",
       title: "Stats",
@@ -165,6 +201,14 @@ export const homepageType = defineType({
     }),
 
     /* ════════════════════════ EARNINGS ════════════════════════ */
+    defineField({
+      name: "earningsEnabled",
+      title: "Show Earnings Section",
+      type: "boolean",
+      group: "earnings",
+      initialValue: true,
+      description: "Toggle the earnings section on/off.",
+    }),
     defineField({
       name: "earningsTitle",
       title: "Section Title",
@@ -247,11 +291,27 @@ export const homepageType = defineType({
 
     /* ════════════════════════ STEPS ════════════════════════ */
     defineField({
+      name: "stepsEnabled",
+      title: "Show Steps Section",
+      type: "boolean",
+      group: "steps",
+      initialValue: true,
+      description: "Toggle the steps section on/off.",
+    }),
+    defineField({
       name: "stepsTitle",
       title: "Section Title",
       type: "string",
       group: "steps",
       initialValue: "From Zero to Earning",
+    }),
+    defineField({
+      name: "stepsSubtitle",
+      title: "Subtitle",
+      type: "string",
+      group: "steps",
+      description: "Optional one-liner below the section title.",
+      initialValue: "Three simple steps to start earning real money.",
     }),
     defineField({
       name: "steps",
@@ -308,6 +368,14 @@ export const homepageType = defineType({
 
     /* ════════════════════════ ABOUT ════════════════════════ */
     defineField({
+      name: "aboutEnabled",
+      title: "Show About Section",
+      type: "boolean",
+      group: "about",
+      initialValue: true,
+      description: "Toggle the about section on/off.",
+    }),
+    defineField({
       name: "aboutTitle",
       title: "Section Title",
       type: "string",
@@ -331,6 +399,22 @@ export const homepageType = defineType({
       initialValue: ["Metaverse Pioneer", "Guinness Record", "Est. 2005"],
     }),
     defineField({
+      name: "aboutImage",
+      title: "About Image",
+      type: "image",
+      group: "about",
+      options: { hotspot: true },
+      description: "Photo of the person or related visual.",
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt Text",
+          type: "string",
+          description: "Accessible description of the image.",
+        }),
+      ],
+    }),
+    defineField({
       name: "aboutParagraphs",
       title: "Bio Paragraphs",
       type: "array",
@@ -341,6 +425,14 @@ export const homepageType = defineType({
     }),
 
     /* ════════════════════════ FAQ ════════════════════════ */
+    defineField({
+      name: "faqEnabled",
+      title: "Show FAQ Section",
+      type: "boolean",
+      group: "faq",
+      initialValue: true,
+      description: "Toggle the FAQ section on/off.",
+    }),
     defineField({
       name: "faqTitle",
       title: "Section Title",
@@ -382,6 +474,14 @@ export const homepageType = defineType({
 
     /* ════════════════════════ FINAL CTA ════════════════════════ */
     defineField({
+      name: "finalCtaEnabled",
+      title: "Show Final CTA Section",
+      type: "boolean",
+      group: "finalCta",
+      initialValue: true,
+      description: "Toggle the final CTA section on/off.",
+    }),
+    defineField({
       name: "finalCtaTitle",
       title: "Title",
       type: "string",
@@ -412,6 +512,22 @@ export const homepageType = defineType({
         href: "https://account.entropiauniverse.com/create-account?ref=howlingmine",
       },
     }),
+    defineField({
+      name: "finalCtaSecondaryButton",
+      title: "Secondary CTA Button",
+      type: "object",
+      group: "finalCta",
+      description:
+        "Optional second button (e.g. Discord link). Leave empty to hide.",
+      fields: [
+        defineField({ name: "label", title: "Label", type: "string" }),
+        defineField({ name: "href", title: "URL", type: "string" }),
+      ],
+      initialValue: {
+        label: "Join Discord",
+        href: "https://discord.gg/NnkPwamsDQ",
+      },
+    }),
 
     /* ════════════════════════ SEO & META ════════════════════════ */
     defineField({
@@ -421,7 +537,7 @@ export const homepageType = defineType({
       group: "seo",
       description: "The <title> tag for this page. ~60 chars recommended.",
       initialValue:
-        "Get Paid to Play — Join The Howling Mine | Entropia Universe Jobs 2025",
+        "Get Paid to Play — Join The Howling Mine | Entropia Universe Jobs",
     }),
     defineField({
       name: "seoDescription",
@@ -451,7 +567,8 @@ export const homepageType = defineType({
     defineField({
       name: "ogDescription",
       title: "Open Graph Description",
-      type: "string",
+      type: "text",
+      rows: 2,
       group: "seo",
       initialValue:
         "Earn $18/month with free weapons & ammo. Real cash economy since 2003. Zero deposit required.",
@@ -472,7 +589,8 @@ export const homepageType = defineType({
     defineField({
       name: "twitterDescription",
       title: "Twitter Description",
-      type: "string",
+      type: "text",
+      rows: 2,
       group: "seo",
     }),
     defineField({

@@ -22,12 +22,13 @@ export interface SiteSettings {
   tagline?: string;
   logo?: any; // Sanity image reference
   favicon?: any;
-  placeholderImage?: any; // Site-wide fallback image
+  placeholderImage?: { asset?: { _id: string; url: string }; alt?: string };
   mainNav?: NavLink[];
   footerText?: string;
   footerLinks?: FooterLink[];
   socialLinks?: SocialLink[];
   heroOverlayOpacity?: number;
+  discordUrl?: string;
   seoTitle?: string;
   seoDescription?: string;
   ogImage?: any;

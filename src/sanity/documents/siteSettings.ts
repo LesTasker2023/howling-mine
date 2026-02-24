@@ -11,7 +11,6 @@ export const siteSettingsType = defineType({
   icon: Settings,
   groups: [
     { name: "general", title: "General", default: true },
-    { name: "hero", title: "Hero" },
     { name: "navigation", title: "Navigation" },
     { name: "footer", title: "Footer" },
     { name: "social", title: "Social Links" },
@@ -56,6 +55,7 @@ export const siteSettingsType = defineType({
       title: "Favicon",
       type: "image",
       group: "general",
+      description: "16×16 or 32×32 PNG recommended.",
     }),
     defineField({
       name: "placeholderImage",
@@ -65,133 +65,36 @@ export const siteSettingsType = defineType({
       options: { hotspot: true },
       description:
         "Default placeholder image used for cards and thumbnails when no specific image is set.",
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt Text",
+          type: "string",
+          description: "Accessible description of the placeholder image.",
+        }),
+      ],
+    }),
+    defineField({
+      name: "discordUrl",
+      title: "Discord Invite URL",
+      type: "url",
+      group: "general",
+      description:
+        "Primary Discord invite link used site-wide (e.g. https://discord.gg/NnkPwamsDQ).",
+      validation: (r) => r.uri({ allowRelative: false, scheme: ["https"] }),
     }),
 
-    /* ── Hero ── */
-    defineField({
-      name: "heroTitle",
-      title: "Hero Title",
-      type: "string",
-      group: "hero",
-      description:
-        "Main headline on the homepage hero. Wrap a word in *asterisks* to add accent + glitch effect.",
-      initialValue: "The *Howling* Mine",
-    }),
-    defineField({
-      name: "heroTagline",
-      title: "Hero Tagline",
-      type: "string",
-      group: "hero",
-      description:
-        "Subheading shown below the title with a terminal typing cursor.",
-    }),
-    defineField({
-      name: "heroPrimaryCta",
-      title: "Primary CTA",
-      type: "object",
-      group: "hero",
-      fields: [
-        defineField({ name: "label", title: "Label", type: "string" }),
-        defineField({ name: "href", title: "URL", type: "string" }),
-      ],
-    }),
-    defineField({
-      name: "heroSecondaryCta",
-      title: "Secondary CTA",
-      type: "object",
-      group: "hero",
-      fields: [
-        defineField({ name: "label", title: "Label", type: "string" }),
-        defineField({ name: "href", title: "URL", type: "string" }),
-      ],
-    }),
-    defineField({
-      name: "heroVideos",
-      title: "Hero Background Videos",
-      type: "array",
-      group: "hero",
-      description:
-        "Upload .webm or .mp4 videos for the hero background. They cycle in order with a fade-to-black transition.",
-      of: [
-        {
-          type: "file",
-          title: "Video",
-          options: { accept: "video/*" },
-          fields: [
-            defineField({
-              name: "alt",
-              title: "Description",
-              type: "string",
-              description:
-                "Brief label for this video (e.g. 'Mining asteroid field').",
-            }),
-          ],
-        },
-      ],
-      validation: (r) => r.min(1),
-    }),
+    /* ── Hero Overlay ── */
     defineField({
       name: "heroOverlayOpacity",
       title: "Hero Overlay Darkness",
       type: "number",
-      group: "hero",
+      group: "general",
       description:
         "Controls how dark the video overlay is on the homepage hero. 0 = no darkening, 100 = fully black. Default is 65.",
       validation: (r) => r.min(0).max(100),
       initialValue: 65,
       components: { input: SliderInput },
-    }),
-    defineField({
-      name: "heroWalkthrough",
-      title: "Walkthrough Steps",
-      type: "array",
-      group: "hero",
-      description:
-        "Up to 8 step cards shown after the boot sequence. They display in a 4×2 snake-path grid: 1→2→3→4, then 8←7←6←5.",
-      validation: (r) => r.max(8),
-      of: [
-        {
-          type: "object",
-          name: "walkthroughStep",
-          title: "Step",
-          fields: [
-            defineField({
-              name: "title",
-              title: "Title",
-              type: "string",
-              validation: (r) => r.required(),
-            }),
-            defineField({
-              name: "subtitle",
-              title: "Subtitle",
-              type: "string",
-            }),
-            defineField({
-              name: "href",
-              title: "Link URL",
-              type: "string",
-              description: "Page to open when this card is clicked.",
-            }),
-            defineField({
-              name: "image",
-              title: "Image",
-              type: "image",
-              options: { hotspot: true },
-              description: "Image shown on the card (uploaded to Sanity).",
-            }),
-            defineField({
-              name: "placeholderSrc",
-              title: "Placeholder Image URL",
-              type: "string",
-              description:
-                "Fallback image path if no uploaded image (e.g. /images/planets/calypso.png). Used for local/static assets.",
-            }),
-          ],
-          preview: {
-            select: { title: "title", subtitle: "subtitle", media: "image" },
-          },
-        },
-      ],
     }),
 
     /* ── Navigation ── */
@@ -336,6 +239,8 @@ export const siteSettingsType = defineType({
       type: "text",
       rows: 2,
       group: "seo",
+      description:
+        "Fallback meta description when pages don't define their own.",
     }),
     defineField({
       name: "ogImage",
