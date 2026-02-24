@@ -1,11 +1,12 @@
 import { defineField, defineType } from "sanity";
+import { MapPin } from "lucide-react";
 import { CoordsPasteInput } from "../components/CoordsPasteInput";
 
 export const mapPoiType = defineType({
   name: "mapPoi",
   title: "Map POI",
   type: "document",
-  icon: () => "📍",
+  icon: MapPin,
   description: "A point of interest on the Howling Mine area map.",
   fields: [
     defineField({

@@ -1,0 +1,91 @@
+/* ============================================================================
+   THE HOWLING MINE — Sanity Studio CSS Overrides
+   Applied on top of the @sanity/ui buildTheme for things the theme API
+   can't control (navbar bg, sidebar, scrollbar, accent glows).
+   ============================================================================ */
+
+/* Force dark scheme */
+html[data-sanity] {
+  color-scheme: dark;
+}
+
+/* ── Navbar ── */
+[data-testid="navbar"],
+[data-ui="Navbar"] {
+  background: #0d0d0d !important;
+  border-bottom: 1px solid rgba(234, 179, 8, 0.12) !important;
+}
+
+/* ── Sidebar / Structure pane list ── */
+[data-ui="PaneLayout"] > [data-ui="Pane"]:first-child {
+  background: #0f0f0f !important;
+}
+
+/* Sidebar list item hover */
+[data-ui="PaneLayout"] [data-ui="MenuItem"]:hover,
+[data-ui="PaneLayout"] [data-ui="TreeItem"]:hover {
+  background: rgba(234, 179, 8, 0.06) !important;
+}
+
+/* Selected / active sidebar item */
+[data-ui="PaneLayout"] [data-selected="true"],
+[data-ui="PaneLayout"] [aria-selected="true"] {
+  background: rgba(234, 179, 8, 0.1) !important;
+  border-left: 2px solid #eab308;
+}
+
+/* ── Focus ring — gold ── */
+*:focus-visible {
+  outline: 2px solid rgba(234, 179, 8, 0.5) !important;
+  outline-offset: 1px;
+}
+
+/* ── Cards / document panels ── */
+[data-ui="Card"] {
+  background: #121212;
+}
+
+/* ── Accent links/buttons ── */
+[data-ui="Button"][data-tone="primary"] {
+  --card-focus-ring-color: #eab308 !important;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(234, 179, 8, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(234, 179, 8, 0.35);
+}
+
+/* ── Dividers — subtler ── */
+[data-ui="Divider"] {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ── Tab underline — gold instead of blue ── */
+[data-ui="Tab"][data-selected] {
+  color: #eab308 !important;
+}
+[data-ui="Tab"][data-selected]::after {
+  background: #eab308 !important;
+}
+
+/* ── Badge (publish / draft status) ── */
+[data-ui="Badge"][data-tone="primary"] {
+  background: rgba(234, 179, 8, 0.15) !important;
+  color: #eab308 !important;
+}
+
+/* ── Presence avatars ring ── */
+[data-ui="Avatar"] {
+  --avatar-border-color: #eab308;
+}
