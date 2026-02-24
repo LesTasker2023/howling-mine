@@ -456,7 +456,7 @@ function HomepageTab() {
 
         <Tip>
           If no image is uploaded, a default award icon shows instead. Keep the
-          bio to 2–3 paragraphs — the homepage isn&apos;t a biography.
+          bio to 2–3 paragraphs.
         </Tip>
       </section>
 
@@ -617,7 +617,7 @@ function HomepageTab() {
             {
               name: "Twitter @handle",
               type: "Text",
-              desc: "Your Twitter handle (default: @JonNEVERDIE).",
+              desc: "Your Twitter handle (default: @NEVERDIE).",
             },
             {
               name: "Canonical URL",
@@ -1618,7 +1618,7 @@ function EditorTab() {
   return (
     <>
       <section className={styles.section}>
-<h2 className={styles.sectionTitle}>16 — Rich Text Editor</h2>
+        <h2 className={styles.sectionTitle}>16 — Rich Text Editor</h2>
         <p className={styles.sectionIntro}>
           The rich text editor is used wherever you see a &ldquo;Body&rdquo;
           field — in news posts, guides, and rich text sections. Here&apos;s

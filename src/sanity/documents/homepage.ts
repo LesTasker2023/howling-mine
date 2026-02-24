@@ -2,6 +2,12 @@ import { defineField, defineType } from "sanity";
 import { Home } from "lucide-react";
 import { IconPickerInput } from "@/sanity/components/IconPickerInput";
 
+/* Helper: hide a field when its parent section toggle is off */
+const hiddenWhen = (toggle: string) => ({
+  hidden: ({ parent }: { parent?: Record<string, unknown> }) =>
+    parent?.[toggle] === false,
+});
+
 /**
  * Homepage singleton — every section of the landing page is CMS-editable.
  *
@@ -37,7 +43,7 @@ export const homepageType = defineType({
       title: "Eyebrow Text",
       type: "string",
       group: "hero",
-      hidden: ({ parent }) => parent?.heroEnabled === false,
+      ...hiddenWhen("heroEnabled"),
       description:
         "Small label above the title (e.g. 'REAL CASH · REAL ECONOMY · SINCE 2003').",
       initialValue: "REAL CASH · REAL ECONOMY · SINCE 2003",
@@ -47,8 +53,10 @@ export const homepageType = defineType({
       title: "Title",
       type: "string",
       group: "hero",
+      ...hiddenWhen("heroEnabled"),
       description:
         "Main headline. Wrap a word in *asterisks* for accent color (e.g. 'GET *PAID* TO PLAY').",
+      validation: (r) => r.required().max(120),
       initialValue: "GET *PAID* TO PLAY",
     }),
     defineField({
@@ -57,8 +65,10 @@ export const homepageType = defineType({
       type: "text",
       rows: 3,
       group: "hero",
+      ...hiddenWhen("heroEnabled"),
       description:
         "Paragraph below the title. Use **double asterisks** for bold text.",
+      validation: (r) => r.max(500),
       initialValue:
         "Earn up to **$18/month** with free weapons, free ammo, and a real community behind you. The in-game currency converts to **real dollars** — withdraw to your bank account whenever you want.",
     }),
@@ -67,6 +77,7 @@ export const homepageType = defineType({
       title: "Deposit Line",
       type: "string",
       group: "hero",
+      ...hiddenWhen("heroEnabled"),
       description:
         "The small line below the tagline (e.g. '$0 Deposit — Start Right Now').",
       initialValue: "$0 Deposit — Start Right Now",
@@ -74,12 +85,9 @@ export const homepageType = defineType({
     defineField({
       name: "heroCta",
       title: "Hero CTA Button",
-      type: "object",
+      type: "ctaLink",
       group: "hero",
-      fields: [
-        defineField({ name: "label", title: "Label", type: "string" }),
-        defineField({ name: "href", title: "URL", type: "string" }),
-      ],
+      ...hiddenWhen("heroEnabled"),
       initialValue: {
         label: "Create Free Account →",
         href: "https://account.entropiauniverse.com/create-account?ref=howlingmine",
@@ -88,14 +96,11 @@ export const homepageType = defineType({
     defineField({
       name: "heroSecondaryCta",
       title: "Hero Secondary CTA",
-      type: "object",
+      type: "ctaLink",
       group: "hero",
+      ...hiddenWhen("heroEnabled"),
       description:
         "Optional second button (e.g. Discord invite). Leave empty to hide.",
-      fields: [
-        defineField({ name: "label", title: "Label", type: "string" }),
-        defineField({ name: "href", title: "URL", type: "string" }),
-      ],
       initialValue: {
         label: "Join Discord",
         href: "https://discord.gg/NnkPwamsDQ",
@@ -106,6 +111,7 @@ export const homepageType = defineType({
       title: "Trust Badges",
       type: "array",
       group: "hero",
+      ...hiddenWhen("heroEnabled"),
       description:
         "Short trust markers below the CTA (e.g. 'Zero startup cost', 'Free weapons & ammo').",
       validation: (r) => r.max(6),
@@ -122,6 +128,7 @@ export const homepageType = defineType({
       title: "Background Videos",
       type: "array",
       group: "hero",
+      ...hiddenWhen("heroEnabled"),
       description:
         "Upload .webm or .mp4 videos that cross-fade in the hero background.",
       validation: (r) => r.max(5),
@@ -145,6 +152,7 @@ export const homepageType = defineType({
       title: "Coordinate Bar Text",
       type: "array",
       group: "hero",
+      ...hiddenWhen("heroEnabled"),
       description:
         "Items shown in the coordinate bar at the bottom of the hero.",
       validation: (r) => r.max(6),
@@ -166,6 +174,7 @@ export const homepageType = defineType({
       title: "Stats",
       type: "array",
       group: "stats",
+      ...hiddenWhen("statsEnabled"),
       description: "4 stat cards shown below the hero.",
       validation: (r) => r.max(6),
       of: [
@@ -214,6 +223,8 @@ export const homepageType = defineType({
       title: "Section Title",
       type: "string",
       group: "earnings",
+      ...hiddenWhen("earningsEnabled"),
+      validation: (r) => r.required().max(120),
       initialValue: "Earnings Breakdown",
     }),
     defineField({
@@ -221,6 +232,7 @@ export const homepageType = defineType({
       title: "Subtitle",
       type: "string",
       group: "earnings",
+      ...hiddenWhen("earningsEnabled"),
       initialValue:
         "The Job System pays you to play. Here's exactly what you earn.",
     }),
@@ -229,6 +241,7 @@ export const homepageType = defineType({
       title: "Earnings Cards",
       type: "array",
       group: "earnings",
+      ...hiddenWhen("earningsEnabled"),
       validation: (r) => r.max(6),
       of: [
         {
@@ -271,18 +284,16 @@ export const homepageType = defineType({
       title: "Footnote",
       type: "string",
       group: "earnings",
+      ...hiddenWhen("earningsEnabled"),
       initialValue:
         "* Combine Howling Mine and Rocktropia jobs for maximum earnings. Withdraw directly to your bank account.",
     }),
     defineField({
       name: "earningsCta",
       title: "Earnings CTA",
-      type: "object",
+      type: "ctaLink",
       group: "earnings",
-      fields: [
-        defineField({ name: "label", title: "Label", type: "string" }),
-        defineField({ name: "href", title: "URL", type: "string" }),
-      ],
+      ...hiddenWhen("earningsEnabled"),
       initialValue: {
         label: "Start Earning →",
         href: "https://account.entropiauniverse.com/create-account?ref=howlingmine",
@@ -303,6 +314,8 @@ export const homepageType = defineType({
       title: "Section Title",
       type: "string",
       group: "steps",
+      ...hiddenWhen("stepsEnabled"),
+      validation: (r) => r.required().max(120),
       initialValue: "From Zero to Earning",
     }),
     defineField({
@@ -310,6 +323,7 @@ export const homepageType = defineType({
       title: "Subtitle",
       type: "string",
       group: "steps",
+      ...hiddenWhen("stepsEnabled"),
       description: "Optional one-liner below the section title.",
       initialValue: "Three simple steps to start earning real money.",
     }),
@@ -318,6 +332,7 @@ export const homepageType = defineType({
       title: "Steps",
       type: "array",
       group: "steps",
+      ...hiddenWhen("stepsEnabled"),
       validation: (r) => r.max(8),
       of: [
         {
@@ -354,12 +369,9 @@ export const homepageType = defineType({
     defineField({
       name: "stepsCta",
       title: "Steps CTA",
-      type: "object",
+      type: "ctaLink",
       group: "steps",
-      fields: [
-        defineField({ name: "label", title: "Label", type: "string" }),
-        defineField({ name: "href", title: "URL", type: "string" }),
-      ],
+      ...hiddenWhen("stepsEnabled"),
       initialValue: {
         label: "Get Started →",
         href: "https://account.entropiauniverse.com/create-account?ref=howlingmine",
@@ -380,6 +392,8 @@ export const homepageType = defineType({
       title: "Section Title",
       type: "string",
       group: "about",
+      ...hiddenWhen("aboutEnabled"),
+      validation: (r) => r.required().max(120),
       initialValue: "Who Is NEVERDIE?",
     }),
     defineField({
@@ -387,6 +401,7 @@ export const homepageType = defineType({
       title: "Person Name",
       type: "string",
       group: "about",
+      ...hiddenWhen("aboutEnabled"),
       initialValue: "Jon NEVERDIE Jacobs",
     }),
     defineField({
@@ -394,6 +409,7 @@ export const homepageType = defineType({
       title: "Meta Tags",
       type: "array",
       group: "about",
+      ...hiddenWhen("aboutEnabled"),
       description: "Small labels below the icon (e.g. 'Metaverse Pioneer').",
       of: [{ type: "string" }],
       initialValue: ["Metaverse Pioneer", "Guinness Record", "Est. 2005"],
@@ -403,6 +419,7 @@ export const homepageType = defineType({
       title: "About Image",
       type: "image",
       group: "about",
+      ...hiddenWhen("aboutEnabled"),
       options: { hotspot: true },
       description: "Photo of the person or related visual.",
       fields: [
@@ -419,6 +436,7 @@ export const homepageType = defineType({
       title: "Bio Paragraphs",
       type: "array",
       group: "about",
+      ...hiddenWhen("aboutEnabled"),
       description:
         "Each item becomes a paragraph. Use **double asterisks** for bold.",
       of: [{ type: "text" }],
@@ -438,6 +456,8 @@ export const homepageType = defineType({
       title: "Section Title",
       type: "string",
       group: "faq",
+      ...hiddenWhen("faqEnabled"),
+      validation: (r) => r.required().max(120),
       initialValue: "Frequently Asked Questions",
     }),
     defineField({
@@ -445,6 +465,7 @@ export const homepageType = defineType({
       title: "FAQ Items",
       type: "array",
       group: "faq",
+      ...hiddenWhen("faqEnabled"),
       of: [
         {
           type: "object",
@@ -486,7 +507,9 @@ export const homepageType = defineType({
       title: "Title",
       type: "string",
       group: "finalCta",
+      ...hiddenWhen("finalCtaEnabled"),
       description: "Use a pipe | to insert a line break.",
+      validation: (r) => r.required().max(120),
       initialValue: "Stop Playing for Free.|Start Getting Paid.",
     }),
     defineField({
@@ -495,18 +518,17 @@ export const homepageType = defineType({
       type: "text",
       rows: 3,
       group: "finalCta",
+      ...hiddenWhen("finalCtaEnabled"),
+      validation: (r) => r.max(500),
       initialValue:
         "No deposit. No credit card. Real money, your bank account. Join thousands of players already earning in Entropia Universe.",
     }),
     defineField({
       name: "finalCtaButton",
       title: "CTA Button",
-      type: "object",
+      type: "ctaLink",
       group: "finalCta",
-      fields: [
-        defineField({ name: "label", title: "Label", type: "string" }),
-        defineField({ name: "href", title: "URL", type: "string" }),
-      ],
+      ...hiddenWhen("finalCtaEnabled"),
       initialValue: {
         label: "Create Free Account →",
         href: "https://account.entropiauniverse.com/create-account?ref=howlingmine",
@@ -515,14 +537,11 @@ export const homepageType = defineType({
     defineField({
       name: "finalCtaSecondaryButton",
       title: "Secondary CTA Button",
-      type: "object",
+      type: "ctaLink",
       group: "finalCta",
+      ...hiddenWhen("finalCtaEnabled"),
       description:
         "Optional second button (e.g. Discord link). Leave empty to hide.",
-      fields: [
-        defineField({ name: "label", title: "Label", type: "string" }),
-        defineField({ name: "href", title: "URL", type: "string" }),
-      ],
       initialValue: {
         label: "Join Discord",
         href: "https://discord.gg/NnkPwamsDQ",
@@ -536,6 +555,7 @@ export const homepageType = defineType({
       type: "string",
       group: "seo",
       description: "The <title> tag for this page. ~60 chars recommended.",
+      validation: (r) => r.max(70),
       initialValue:
         "Get Paid to Play — Join The Howling Mine | Entropia Universe Jobs",
     }),
@@ -546,6 +566,7 @@ export const homepageType = defineType({
       rows: 3,
       group: "seo",
       description: "Meta description. ~155 chars recommended.",
+      validation: (r) => r.max(200),
       initialValue:
         "Earn up to $18/month playing Entropia Universe. Free weapons, free ammo, zero deposit required. Real cash withdrawals since 2003. Join The Howling Mine crew and start earning today.",
     }),
@@ -555,13 +576,14 @@ export const homepageType = defineType({
       type: "array",
       group: "seo",
       of: [{ type: "string" }],
-      description: "Comma-style keywords for the meta tag.",
+      description: "One keyword or phrase per tag.",
     }),
     defineField({
       name: "ogTitle",
       title: "Open Graph Title",
       type: "string",
       group: "seo",
+      validation: (r) => r.max(70),
       initialValue: "Get Paid to Play — Join The Howling Mine",
     }),
     defineField({
@@ -570,6 +592,7 @@ export const homepageType = defineType({
       type: "text",
       rows: 2,
       group: "seo",
+      validation: (r) => r.max(200),
       initialValue:
         "Earn $18/month with free weapons & ammo. Real cash economy since 2003. Zero deposit required.",
     }),
@@ -585,6 +608,7 @@ export const homepageType = defineType({
       title: "Twitter Title",
       type: "string",
       group: "seo",
+      validation: (r) => r.max(70),
     }),
     defineField({
       name: "twitterDescription",
@@ -592,29 +616,34 @@ export const homepageType = defineType({
       type: "text",
       rows: 2,
       group: "seo",
+      validation: (r) => r.max(200),
     }),
     defineField({
       name: "twitterCreator",
       title: "Twitter @handle",
       type: "string",
       group: "seo",
-      initialValue: "@JonNEVERDIE",
+      initialValue: "@NEVERDIE",
     }),
     defineField({
       name: "canonicalUrl",
       title: "Canonical URL",
-      type: "string",
+      type: "url",
       group: "seo",
       description:
         "Override the automatic canonical (leave blank for default).",
+      validation: (r) =>
+        r.uri({ allowRelative: false, scheme: ["http", "https"] }),
     }),
     defineField({
       name: "signupBaseUrl",
       title: "Signup Base URL",
-      type: "string",
+      type: "url",
       group: "seo",
       description:
         "Base URL for the signup link. ?ref= param is appended automatically.",
+      validation: (r) =>
+        r.uri({ allowRelative: false, scheme: ["http", "https"] }),
       initialValue:
         "https://account.entropiauniverse.com/create-account?ref=howlingmine",
     }),

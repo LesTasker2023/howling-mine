@@ -3,6 +3,7 @@ import { getClient } from "@/sanity/client";
 import { HOMEPAGE_QUERY } from "@/sanity/queries";
 import { sanityFetch } from "@/sanity/live";
 import { urlFor } from "@/sanity/image";
+import { JsonLd, faqPageSchema, organizationSchema } from "@/lib/jsonLd";
 import HomePage from "./(home)/HomePage";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -69,5 +70,23 @@ export default async function Home({ searchParams }: PageProps) {
     signupUrl = url.toString();
   }
 
-  return <HomePage data={data ?? {}} signupUrl={signupUrl} />;
+  /* ── JSON-LD structured data ── */
+  const faqs: { question: string; answer: string }[] =
+    data?.faqs?.filter(
+      (f: { question?: string; answer?: string }) => f.question && f.answer,
+    ) ?? [];
+
+  return (
+    <>
+      {faqs.length > 0 && <JsonLd data={faqPageSchema(faqs)} />}
+      <JsonLd
+        data={organizationSchema({
+          name: "The Howling Mine",
+          url: "https://thehowlingmine.com",
+          description: data?.seoDescription ?? undefined,
+        })}
+      />
+      <HomePage data={data ?? {}} signupUrl={signupUrl} />
+    </>
+  );
 }

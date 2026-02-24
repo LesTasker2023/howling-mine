@@ -4,6 +4,7 @@ import {
   POST_SLUGS_QUERY,
   GUIDE_SLUGS_QUERY,
   PAGE_SLUGS_QUERY,
+  EVENT_SLUGS_QUERY,
 } from "@/sanity/queries";
 
 const SITE_URL =
@@ -25,12 +26,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let postSlugs: string[] = [];
   let guideSlugs: string[] = [];
   let pageSlugs: string[] = [];
+  let eventSlugs: string[] = [];
 
   try {
-    [postSlugs, guideSlugs, pageSlugs] = await Promise.all([
+    [postSlugs, guideSlugs, pageSlugs, eventSlugs] = await Promise.all([
       client.fetch(POST_SLUGS_QUERY),
       client.fetch(GUIDE_SLUGS_QUERY),
       client.fetch(PAGE_SLUGS_QUERY),
+      client.fetch(EVENT_SLUGS_QUERY),
     ]);
   } catch {
     // Sanity not configured — return static routes only
@@ -54,5 +57,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...staticRoutes, ...postRoutes, ...guideRoutes, ...pageRoutes];
+  const eventRoutes: MetadataRoute.Sitemap = eventSlugs.map((slug) => ({
+    url: `${SITE_URL}/events/${slug}`,
+    changeFrequency: "weekly",
+    priority: 0.6,
+  }));
+
+  return [
+    ...staticRoutes,
+    ...postRoutes,
+    ...guideRoutes,
+    ...eventRoutes,
+    ...pageRoutes,
+  ];
 }

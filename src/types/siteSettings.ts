@@ -1,5 +1,7 @@
 /** Shared TypeScript types for the siteSettings singleton */
 
+import type { SanityImageRef } from "./homepage";
+
 export interface NavLink {
   label: string;
   href: string;
@@ -20,8 +22,8 @@ export interface SiteSettings {
   siteName?: string;
   siteNameShort?: string;
   tagline?: string;
-  logo?: any; // Sanity image reference
-  favicon?: any;
+  logo?: SanityImageRef;
+  favicon?: SanityImageRef;
   placeholderImage?: { asset: { _id: string; url: string }; alt?: string };
   mainNav?: NavLink[];
   footerText?: string;
@@ -31,5 +33,5 @@ export interface SiteSettings {
   discordUrl?: string;
   seoTitle?: string;
   seoDescription?: string;
-  ogImage?: any;
+  ogImage?: SanityImageRef;
 }

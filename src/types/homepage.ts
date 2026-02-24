@@ -1,5 +1,13 @@
 /** TypeScript types for the homepage singleton document */
 
+export interface SanityImageRef {
+  _type: "image";
+  asset: { _ref: string; _type: "reference" };
+  alt?: string;
+  hotspot?: { x: number; y: number; height: number; width: number };
+  crop?: { top: number; bottom: number; left: number; right: number };
+}
+
 export interface HomepageCta {
   label: string;
   href: string;
@@ -90,7 +98,7 @@ export interface HomepageData {
   seoKeywords?: string[];
   ogTitle?: string;
   ogDescription?: string;
-  ogImage?: any;
+  ogImage?: SanityImageRef;
   twitterTitle?: string;
   twitterDescription?: string;
   twitterCreator?: string;

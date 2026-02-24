@@ -15,6 +15,7 @@ import { richTextType } from "./objects/richText";
 import { codeBlockType } from "./objects/codeBlock";
 import { calloutType } from "./objects/callout";
 import { imageWithAltType } from "./objects/imageWithAlt";
+import { ctaLinkType } from "./objects/ctaLink";
 
 // Page Builder section types
 import {
@@ -44,6 +45,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     codeBlockType,
     calloutType,
     imageWithAltType,
+    ctaLinkType,
     // Page Builder sections
     heroSectionType,
     pageHeroSectionType,

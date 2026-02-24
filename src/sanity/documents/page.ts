@@ -45,6 +45,13 @@ export const pageType = defineType({
       ],
     }),
   ],
+  orderings: [
+    {
+      title: "Title A→Z",
+      name: "titleAsc",
+      by: [{ field: "title", direction: "asc" }],
+    },
+  ],
   preview: {
     select: { title: "title", slug: "slug.current" },
     prepare({ title, slug }) {

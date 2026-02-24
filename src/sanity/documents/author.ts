@@ -37,6 +37,13 @@ export const authorType = defineType({
       description: "Short biography shown alongside authored content.",
     }),
   ],
+  orderings: [
+    {
+      title: "Name A→Z",
+      name: "nameAsc",
+      by: [{ field: "name", direction: "asc" }],
+    },
+  ],
   preview: {
     select: { title: "name", media: "avatar" },
   },

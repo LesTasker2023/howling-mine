@@ -1,16 +1,19 @@
 import { groq } from "next-sanity";
 
+/* Reusable image projection */
+const imageProjection = `{ asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }`;
+
 /* ─── Posts ─── */
 export const POSTS_QUERY = groq`
-  *[_type == "post"] | order(publishedAt desc) {
+  *[_type == "post" && publishedAt <= now()] | order(publishedAt desc) {
     _id,
     title,
     slug,
     excerpt,
     publishedAt,
     featured,
-    coverImage,
-    author->{ name, slug, avatar },
+    coverImage ${imageProjection},
+    author->{ name, slug, avatar ${imageProjection} },
     categories[]->{ title, slug }
   }
 `;
@@ -23,8 +26,8 @@ export const POST_BY_SLUG_QUERY = groq`
     excerpt,
     publishedAt,
     featured,
-    coverImage,
-    author->{ name, slug, avatar, bio },
+    coverImage ${imageProjection},
+    author->{ name, slug, avatar ${imageProjection}, bio },
     categories[]->{ title, slug },
     body
   }
@@ -78,7 +81,7 @@ export const PAGE_SLUGS_QUERY = groq`
 
 /* ─── Guides ─── */
 export const GUIDES_QUERY = groq`
-  *[_type == "guide"] | order(order asc) {
+  *[_type == "guide" && publishedAt <= now()] | order(order asc) {
     _id,
     title,
     slug,
@@ -86,7 +89,7 @@ export const GUIDES_QUERY = groq`
     difficulty,
     order,
     publishedAt,
-    coverImage,
+    coverImage ${imageProjection},
     category->{ title, slug }
   }
 `;
@@ -99,7 +102,7 @@ export const GUIDE_BY_SLUG_QUERY = groq`
     excerpt,
     difficulty,
     publishedAt,
-    coverImage,
+    coverImage ${imageProjection},
     category->{ title, slug },
     body
   }
@@ -121,7 +124,7 @@ export const EVENTS_QUERY = groq`
     location,
     eventType,
     featured,
-    coverImage
+    coverImage ${imageProjection}
   }
 `;
 
@@ -136,7 +139,7 @@ export const EVENT_BY_SLUG_QUERY = groq`
     location,
     eventType,
     featured,
-    coverImage,
+    coverImage ${imageProjection},
     body
   }
 `;

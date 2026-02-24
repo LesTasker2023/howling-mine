@@ -233,7 +233,7 @@ async function seed() {
     twitterTitle: "Get Paid to Play — The Howling Mine",
     twitterDescription:
       "Earn $18/month with free weapons & ammo. Real cash economy since 2003.",
-    twitterCreator: "@JonNEVERDIE",
+    twitterCreator: "@NEVERDIE",
     signupBaseUrl:
       "https://account.entropiauniverse.com/create-account?ref=howlingmine",
   };
