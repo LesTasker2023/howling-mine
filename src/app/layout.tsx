@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
-import { VisualEditing } from "next-sanity/visual-editing";
+import SanityVisualEditing from "@/components/SanityVisualEditing";
 import { NavShellServer } from "@/components/layout";
 import { TopBarProvider } from "@/context/TopBarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -95,8 +95,12 @@ export default async function RootLayout({
             <NavShellServer>{children}</NavShellServer>
           </TopBarProvider>
         </ThemeProvider>
-        <SanityLive />
-        {(await draftMode()).isEnabled && <VisualEditing />}
+        {(await draftMode()).isEnabled && (
+          <>
+            <SanityLive />
+            <SanityVisualEditing />
+          </>
+        )}
       </body>
     </html>
   );
