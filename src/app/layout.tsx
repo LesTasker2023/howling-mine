@@ -95,12 +95,8 @@ export default async function RootLayout({
             <NavShellServer>{children}</NavShellServer>
           </TopBarProvider>
         </ThemeProvider>
-        {(await draftMode()).isEnabled && (
-          <>
-            <SanityLive />
-            <VisualEditing />
-          </>
-        )}
+        <SanityLive />
+        {(await draftMode()).isEnabled && <VisualEditing />}
       </body>
     </html>
   );
