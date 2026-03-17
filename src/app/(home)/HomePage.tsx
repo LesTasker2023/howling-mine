@@ -244,6 +244,10 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
   const videos = data.heroVideos?.length
     ? data.heroVideos.map((v) => v.asset.url)
     : FALLBACK_VIDEOS;
+  const videoTransitions = data.heroVideoTransitions !== false;
+  const transitionDuration = data.heroVideoTransitionDuration ?? 800;
+  const playbackSpeed = data.heroVideoPlaybackSpeed ?? 1;
+  const overlayOpacity = (data.heroOverlayOpacity ?? 65) / 100;
 
   const stats = data.stats?.length ? data.stats : FALLBACK_STATS;
   const earningsTitle = data.earningsTitle ?? "Earnings Breakdown";
@@ -311,11 +315,23 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
   const triggerTransition = useCallback(() => {
     if (transRef.current) return;
     transRef.current = true;
+
+    if (!videoTransitions || videos.length === 1) {
+      // No fade — restart the current video immediately
+      const vid = videoRef.current;
+      if (vid) {
+        vid.currentTime = 0;
+        vid.play().catch(() => {});
+      }
+      transRef.current = false;
+      return;
+    }
+
     setVideoVisible(false);
     timerRef.current = setTimeout(() => {
       setActiveIdx((prev) => (prev + 1) % videos.length);
-    }, 800);
-  }, [videos.length]);
+    }, transitionDuration);
+  }, [videos.length, videoTransitions, transitionDuration]);
 
   const handleTimeUpdate = useCallback(() => {
     const vid = videoRef.current;
@@ -329,13 +345,15 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
     const vid = videoRef.current;
     if (!vid) return;
     vid.load();
+    vid.playbackRate = playbackSpeed;
     vid.play().catch(() => {});
     setTimeout(() => setVideoVisible(true), 0);
-  }, [activeIdx]);
+  }, [activeIdx, playbackSpeed]);
 
   useEffect(() => () => clearTimeout(timerRef.current), []);
 
   useEffect(() => {
+    if (videos.length < 2) return;
     const nextIdx = (activeIdx + 1) % videos.length;
     const link = document.createElement("link");
     link.rel = "preload";
@@ -351,7 +369,10 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
     <div className={styles.page}>
       {/* ═══════════════════ HERO ═══════════════════ */}
       {heroEnabled && (
-        <section className={styles.hero}>
+        <section
+          className={styles.hero}
+          style={{ "--video-opacity": overlayOpacity } as React.CSSProperties}
+        >
           {/* Video background */}
           <div className={styles.videoBackdrop} aria-hidden />
           <div

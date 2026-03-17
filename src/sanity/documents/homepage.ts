@@ -1,6 +1,7 @@
 import { defineField, defineType } from "sanity";
 import { Home } from "lucide-react";
 import { IconPickerInput } from "@/sanity/components/IconPickerInput";
+import { SliderInput } from "@/sanity/components/SliderInput";
 
 /* Helper: hide a field when its parent section toggle is off */
 const hiddenWhen = (toggle: string) => ({
@@ -130,7 +131,7 @@ export const homepageType = defineType({
       group: "hero",
       ...hiddenWhen("heroEnabled"),
       description:
-        "Upload .webm or .mp4 videos that cross-fade in the hero background.",
+        "Upload .webm or .mp4 videos that loop in the hero background.",
       validation: (r) => r.max(5),
       of: [
         {
@@ -146,6 +147,52 @@ export const homepageType = defineType({
           ],
         },
       ],
+    }),
+    defineField({
+      name: "heroVideoTransitions",
+      title: "Enable Fade Transitions",
+      type: "boolean",
+      group: "hero",
+      ...hiddenWhen("heroEnabled"),
+      description:
+        "Fade to black between videos when cycling. Turn off for instant seamless looping.",
+      initialValue: true,
+    }),
+    defineField({
+      name: "heroVideoTransitionDuration",
+      title: "Transition Duration (ms)",
+      type: "number",
+      group: "hero",
+      hidden: ({ parent }: { parent?: Record<string, unknown> }) =>
+        parent?.heroEnabled === false ||
+        parent?.heroVideoTransitions === false,
+      description:
+        "How long the fade-to-black takes in milliseconds. Default: 800.",
+      validation: (r) => r.min(200).max(3000),
+      initialValue: 800,
+    }),
+    defineField({
+      name: "heroVideoPlaybackSpeed",
+      title: "Playback Speed",
+      type: "number",
+      group: "hero",
+      ...hiddenWhen("heroEnabled"),
+      description:
+        "Video playback speed. 1 = normal, 0.75 = atmospheric slow, 0.5 = half speed.",
+      validation: (r) => r.min(0.25).max(2),
+      initialValue: 1,
+    }),
+    defineField({
+      name: "heroOverlayOpacity",
+      title: "Overlay Darkness",
+      type: "number",
+      group: "hero",
+      ...hiddenWhen("heroEnabled"),
+      description:
+        "How dark the overlay is over the video. 0 = fully visible, 100 = fully black. Default: 65.",
+      validation: (r) => r.min(0).max(100),
+      initialValue: 65,
+      components: { input: SliderInput },
     }),
     defineField({
       name: "heroCoords",

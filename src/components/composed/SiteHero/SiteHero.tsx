@@ -15,6 +15,12 @@ interface SiteHeroProps {
   secondaryCta?: { label: string; href: string };
   /** Array of video paths for the background */
   videos?: string[];
+  /** Fade to black between videos. Default: true */
+  videoTransitions?: boolean;
+  /** Duration of the fade in ms. Default: 800 */
+  transitionDuration?: number;
+  /** Playback speed multiplier. Default: 1 */
+  playbackSpeed?: number;
 }
 
 /* ── Stagger orchestration ── */
@@ -62,6 +68,9 @@ export function SiteHero({
   primaryCta,
   secondaryCta,
   videos = [],
+  videoTransitions = true,
+  transitionDuration = 800,
+  playbackSpeed = 1,
 }: SiteHeroProps) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -78,21 +87,23 @@ export function SiteHero({
   const triggerTransition = useCallback(() => {
     if (transitioningRef.current) return;
     transitioningRef.current = true;
+
+    if (!videoTransitions || videos.length === 1) {
+      // No fade — restart current video immediately
+      const vid = videoRef.current;
+      if (vid) {
+        vid.currentTime = 0;
+        vid.play().catch(() => {});
+      }
+      transitioningRef.current = false;
+      return;
+    }
+
     setVisible(false);
     timerRef.current = setTimeout(() => {
-      if (videos.length > 1) {
-        setActiveIdx((prev) => (prev + 1) % videos.length);
-      } else {
-        const vid = videoRef.current;
-        if (vid) {
-          vid.currentTime = 0;
-          vid.play().catch(() => {});
-        }
-        transitioningRef.current = false;
-        setTimeout(() => setVisible(true), 100);
-      }
-    }, 800);
-  }, [videos.length]);
+      setActiveIdx((prev) => (prev + 1) % videos.length);
+    }, transitionDuration);
+  }, [videos.length, videoTransitions, transitionDuration]);
 
   const handleTimeUpdate = useCallback(() => {
     const vid = videoRef.current;
@@ -107,9 +118,10 @@ export function SiteHero({
     const vid = videoRef.current;
     if (!vid) return;
     vid.load();
+    vid.playbackRate = playbackSpeed;
     vid.play().catch(() => {});
     setTimeout(() => setVisible(true), 0);
-  }, [activeIdx, hasVideos]);
+  }, [activeIdx, hasVideos, playbackSpeed]);
 
   useEffect(() => () => clearTimeout(timerRef.current), []);
 

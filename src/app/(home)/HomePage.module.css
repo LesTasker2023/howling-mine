@@ -38,7 +38,7 @@
 }
 
 .videoBg.videoVisible {
-  opacity: 0.35;
+  opacity: var(--video-opacity, 0.35);
 }
 
 .video {

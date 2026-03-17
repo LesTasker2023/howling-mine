@@ -51,6 +51,10 @@ export interface HomepageData {
   heroSecondaryCta?: HomepageCta;
   heroTrustBadges?: string[];
   heroVideos?: { asset: { url: string } }[];
+  heroVideoTransitions?: boolean;
+  heroVideoTransitionDuration?: number;
+  heroVideoPlaybackSpeed?: number;
+  heroOverlayOpacity?: number;
   heroCoords?: string[];
 
   /* Stats */

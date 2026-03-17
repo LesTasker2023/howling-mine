@@ -2,7 +2,6 @@ import { defineField, defineType } from "sanity";
 import { Settings } from "lucide-react";
 import { IconPickerInput } from "@/sanity/components/IconPickerInput";
 import { NavLinkPreview } from "@/sanity/components/NavLinkPreview";
-import { SliderInput } from "@/sanity/components/SliderInput";
 
 export const siteSettingsType = defineType({
   name: "siteSettings",
@@ -82,19 +81,6 @@ export const siteSettingsType = defineType({
       description:
         "Primary Discord invite link used site-wide (e.g. https://discord.gg/NnkPwamsDQ).",
       validation: (r) => r.uri({ allowRelative: false, scheme: ["https"] }),
-    }),
-
-    /* ── Hero Overlay ── */
-    defineField({
-      name: "heroOverlayOpacity",
-      title: "Hero Overlay Darkness",
-      type: "number",
-      group: "general",
-      description:
-        "Controls how dark the video overlay is on the homepage hero. 0 = no darkening, 100 = fully black. Default is 65.",
-      validation: (r) => r.min(0).max(100),
-      initialValue: 65,
-      components: { input: SliderInput },
     }),
 
     /* ── Navigation ── */

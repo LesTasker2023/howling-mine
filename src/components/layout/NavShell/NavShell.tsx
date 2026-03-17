@@ -121,11 +121,6 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
         className={styles.shell}
         data-expanded={expanded}
         data-has-subbar={subTabs.length > 0}
-        style={
-          {
-            "--hero-overlay-brightness": `${1 - (settings.heroOverlayOpacity ?? 65) / 100}`,
-          } as React.CSSProperties
-        }
       >
         {/* Mobile toggle */}
         <button
