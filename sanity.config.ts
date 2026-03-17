@@ -7,8 +7,6 @@ import { presentationTool } from "sanity/presentation";
 import { visionTool } from "@sanity/vision";
 import { schema } from "@/sanity/schema";
 import { resolve } from "@/sanity/presentation/resolve";
-import { howlingMineTheme } from "@/sanity/studioTheme";
-import { StudioLogo, StudioLoading } from "@/sanity/studioComponents";
 import {
   Home,
   Settings,
@@ -20,7 +18,6 @@ import {
   Tag,
   MapPin,
 } from "lucide-react";
-import "./src/sanity/studio.css";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production";
@@ -67,16 +64,6 @@ export default defineConfig({
   dataset,
   basePath: "/studio",
 
-  theme: howlingMineTheme,
-
-  studio: {
-    components: {
-      logo: StudioLogo,
-      loading: StudioLoading,
-    },
-  },
-
-  /* Force dark mode (matches the site) */
   form: {
     image: {
       directUploads: true,
