@@ -123,6 +123,21 @@ const homepageLocations: DocumentLocationResolverObject = {
       : undefined,
 };
 
+const mapPoiLocations: DocumentLocationResolverObject = {
+  select: { title: "name" },
+  resolve: (doc) =>
+    doc
+      ? {
+          locations: [
+            {
+              title: (doc.name as string) || "Map POI",
+              href: "/map",
+            },
+          ],
+        }
+      : undefined,
+};
+
 export const resolve = {
   mainDocuments,
   locations: {
@@ -131,5 +146,6 @@ export const resolve = {
     post: postLocations,
     guide: guideLocations,
     event: eventLocations,
+    mapPoi: mapPoiLocations,
   },
 };

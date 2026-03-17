@@ -79,6 +79,14 @@ export async function generateMetadata(): Promise<Metadata> {
 // Blocking script to apply cached theme CSS vars before first paint (eliminates FOUC)
 const THEME_INIT_SCRIPT = `(function(){try{var c=JSON.parse(localStorage.getItem("hm-theme-css"));if(c){var s=document.documentElement.style;for(var k in c){if(k==="data-theme"){document.documentElement.dataset.theme=c[k];document.documentElement.style.colorScheme=c[k]}else{s.setProperty(k,c[k])}}}}catch(e){}})()`;
 
+async function SafeSanityLive() {
+  try {
+    return <SanityLive />;
+  } catch {
+    return null;
+  }
+}
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -97,7 +105,7 @@ export default async function RootLayout({
         </ThemeProvider>
         {(await draftMode()).isEnabled && (
           <>
-            <SanityLive />
+            <SafeSanityLive />
             <SanityVisualEditing />
           </>
         )}
