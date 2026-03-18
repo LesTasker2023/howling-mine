@@ -963,7 +963,41 @@
 
 @media (max-width: 768px) {
   .hero {
-    padding: var(--space-10) var(--space-5);
+    padding: var(--space-6) var(--space-5);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .heroContent {
+    align-items: center;
+    text-align: center;
+    gap: var(--space-6);
+    width: 100%;
+  }
+
+  .title {
+    font-size: clamp(3.5rem, 13vw, 6rem);
+  }
+
+
+  .trustRow {
+    display: none;
+  }
+
+  .heroCtas {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+  }
+
+  .ctaLink {
+    width: 100%;
+  }
+
+  .ctaLink > * {
+    width: 100%;
+    justify-content: center;
   }
 
   .corner {
@@ -973,15 +1007,6 @@
 
   .sideReadout {
     display: none;
-  }
-
-  .heroCtas {
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  .trustRow {
-    gap: var(--space-4);
   }
 
   .coordBar {

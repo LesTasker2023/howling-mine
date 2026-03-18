@@ -42,6 +42,7 @@ const heroFade: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
+
 /* ── Fallback data ── */
 const FALLBACK_VIDEOS = [
   "/videos/hero-2.webm",
@@ -217,6 +218,7 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
     () => true,
     () => false,
   );
+
 
   const baseSignup = data.signupBaseUrl ?? SIGNUP_BASE;
   const ctaUrl = signupUrl ?? baseSignup;
