@@ -180,6 +180,7 @@ export const SITE_SETTINGS_QUERY = groq`
     siteBgType,
     siteBgImage { asset->{ url } },
     siteBgVideo { asset->{ url, mimeType } },
+    siteBgOverlayOpacity,
     seoTitle,
     seoDescription,
     ogImage

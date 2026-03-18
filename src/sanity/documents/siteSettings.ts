@@ -119,6 +119,16 @@ export const siteSettingsType = defineType({
       description: "Used when type is set to Video. MP4 recommended.",
       hidden: ({ document }) => document?.siteBgType !== "video",
     }),
+    defineField({
+      name: "siteBgOverlayOpacity",
+      title: "Overlay Opacity (%)",
+      type: "number",
+      group: "appearance",
+      initialValue: 70,
+      validation: (r) => r.min(0).max(100),
+      description: "Black overlay on top of the background. 0 = fully transparent, 100 = fully black.",
+      hidden: ({ document }) => !document?.siteBgType || document?.siteBgType === "none",
+    }),
 
     /* ── Navigation ── */
     defineField({

@@ -5,9 +5,10 @@ interface SiteBgProps {
   imageUrl?: string | null;
   videoUrl?: string | null;
   videoMimeType?: string | null;
+  overlayOpacity?: number;
 }
 
-export function SiteBg({ type, imageUrl, videoUrl, videoMimeType }: SiteBgProps) {
+export function SiteBg({ type, imageUrl, videoUrl, videoMimeType, overlayOpacity = 0.7 }: SiteBgProps) {
   if (!type || type === "none") return null;
   if (type === "image" && !imageUrl) return null;
   if (type === "video" && !videoUrl) return null;
@@ -58,7 +59,7 @@ export function SiteBg({ type, imageUrl, videoUrl, videoMimeType }: SiteBgProps)
         style={{
           position: "absolute",
           inset: 0,
-          background: "rgba(0,0,0,0.7)",
+          background: `rgba(0,0,0,${overlayOpacity})`,
         }}
       />
     </div>

@@ -115,6 +115,7 @@ export default async function RootLayout({
           imageUrl={settings?.siteBgImage?.asset?.url ?? null}
           videoUrl={settings?.siteBgVideo?.asset?.url ?? null}
           videoMimeType={settings?.siteBgVideo?.asset?.mimeType ?? null}
+          overlayOpacity={(settings?.siteBgOverlayOpacity ?? 70) / 100}
         />
         <ThemeProvider>
           <TopBarProvider>

@@ -33,6 +33,7 @@
   justify-content: space-between;
   gap: var(--space-4);
   padding: 2rem 2.5rem;
+  background: var(--bg-base);
 }
 
 .textTop {
