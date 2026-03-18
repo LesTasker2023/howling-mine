@@ -371,7 +371,7 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
       {heroEnabled && (
         <section
           className={styles.hero}
-          style={{ "--video-opacity": overlayOpacity } as React.CSSProperties}
+          style={{ "--hero-overlay-opacity": overlayOpacity } as React.CSSProperties}
         >
           {/* Video background */}
           <div className={styles.videoBackdrop} aria-hidden />
@@ -390,6 +390,9 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
               onEnded={triggerTransition}
             />
           </div>
+
+          {/* Dark overlay */}
+          <div className={styles.heroOverlay} />
 
           {/* Overlays */}
           <div className={styles.heroNoise} />
