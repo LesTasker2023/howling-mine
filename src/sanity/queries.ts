@@ -159,7 +159,8 @@ export const MAP_POIS_QUERY = groq`
     euZ,
     icon,
     description,
-    pvpLootable
+    pvpLootable,
+    image { asset->{ url } }
   }
 `;
 

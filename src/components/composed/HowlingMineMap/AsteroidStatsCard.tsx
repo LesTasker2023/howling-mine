@@ -200,6 +200,14 @@ export function AsteroidStatsCard({ poi, onClose }: AsteroidStatsCardProps) {
             </Badge>
           )}
 
+          {/* POI Image */}
+          {poi.image?.asset?.url && (
+            <div className={styles.poiImage}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={poi.image.asset.url} alt={poi.name} />
+            </div>
+          )}
+
           {/* Description (non-asteroids) */}
           {poi.description && !isAsteroid && (
             <p className={styles.desc}>{poi.description}</p>

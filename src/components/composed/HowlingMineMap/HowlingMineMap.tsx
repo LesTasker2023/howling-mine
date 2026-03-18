@@ -22,6 +22,7 @@ export interface MapPoi {
   icon?: string;
   description?: string;
   pvpLootable?: boolean;
+  image?: { asset: { url: string } };
 }
 
 interface HowlingMineMapProps {

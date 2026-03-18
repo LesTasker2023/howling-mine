@@ -111,6 +111,13 @@ export const mapPoiType = defineType({
       },
     }),
     defineField({
+      name: "image",
+      title: "POI Image",
+      type: "image",
+      description: "Optional snapshot shown in the map card (e.g. in-game screenshot).",
+      options: { hotspot: true },
+    }),
+    defineField({
       name: "description",
       title: "Description",
       type: "text",
