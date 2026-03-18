@@ -53,8 +53,8 @@ function pathsForDocument(
 
     case "siteSettings":
     case "navigation":
-      // Settings/nav affect every page — revalidate layout
-      paths.push("/", "/news", "/guides", "/events", "/map", "/stats");
+      // Settings/nav affect every page — revalidate entire layout tree
+      paths.push("/__layout__");
       break;
 
     default:
@@ -89,7 +89,11 @@ export async function POST(req: NextRequest) {
     const paths = pathsForDocument(body?._type, body?.slug);
 
     for (const path of paths) {
-      revalidatePath(path);
+      if (path === "/__layout__") {
+        revalidatePath("/", "layout");
+      } else {
+        revalidatePath(path);
+      }
     }
 
     return NextResponse.json({
