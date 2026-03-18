@@ -105,7 +105,12 @@ export default async function RootLayout({
       (siteBgType === "video" && !!settings?.siteBgVideo?.asset?.url));
 
   return (
-    <html lang="en" suppressHydrationWarning className={hasSiteBg ? "has-site-bg" : undefined}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={hasSiteBg ? "has-site-bg" : undefined}
+      style={{ "--site-bg-overlay": `${(settings?.siteBgOverlayOpacity ?? 70) / 100}` } as React.CSSProperties}
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
