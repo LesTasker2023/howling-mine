@@ -898,11 +898,7 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     // ─── M-Type PVP zone sphere ───
     const mPois = pois.filter((p) => p.category === "asteroid-m");
     if (mPois.length > 1) {
-      // Compute centroid from actual M-type positions
-      let cx = 0, cy = 0, cz = 0;
-      for (const m of mPois) { cx += m.euX; cy += m.euY; cz += m.euZ; }
-      cx /= mPois.length; cy /= mPois.length; cz /= mPois.length;
-      const pvpCenter = euToThree(cx, cy, cz, center, scale);
+      const pvpCenter = euToThree(78200, 76900, -1550, center, scale);
 
       // Find max distance from center to any M-type asteroid
       let maxDist = 0;
