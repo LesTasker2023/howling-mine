@@ -333,7 +333,7 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
 
         {/* Content */}
         <main className={styles.content}>
-          {children}
+          <div className={styles.contentInner}>{children}</div>
           <Footer text={settings.footerText} />
         </main>
 

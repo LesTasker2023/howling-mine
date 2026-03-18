@@ -415,7 +415,7 @@
 }
 
 /* Push footer to the bottom when content is short */
-.content > :first-child {
+.contentInner {
   flex: 1;
 }
 
