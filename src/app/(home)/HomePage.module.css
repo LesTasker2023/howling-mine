@@ -1071,6 +1071,34 @@
   }
 }
 
+/* Mobile landscape — title + CTA only */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .heroContent {
+    align-items: center;
+    text-align: center;
+  }
+
+  .eyebrow,
+  .tagline,
+  .noCreditCard,
+  .trustRow {
+    display: none;
+  }
+
+  .title {
+    font-size: clamp(2.5rem, 8vh, 4rem);
+  }
+
+  .heroCtas {
+    align-items: center;
+  }
+}
+
 @media (max-width: 480px) {
   .trustRow {
     flex-direction: column;
