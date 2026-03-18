@@ -178,9 +178,11 @@ export function AsteroidStatsCard({ poi, onClose }: AsteroidStatsCardProps) {
           <div className={styles.header}>
             <div className={styles.headerText}>
               <span className={styles.name}>{poi.name}</span>
-              <Badge variant="primary">
-                {CAT_LABELS[poi.category] ?? poi.category}
-              </Badge>
+              <div className={styles.categoryBadge}>
+                <Badge variant="primary">
+                  {CAT_LABELS[poi.category] ?? poi.category}
+                </Badge>
+              </div>
             </div>
             <Button
               variant="ghost"

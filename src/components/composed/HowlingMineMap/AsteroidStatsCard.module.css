@@ -40,6 +40,17 @@
   line-height: 1.2;
 }
 
+/* ── Category badge ── */
+.categoryBadge {
+  width: 100%;
+  text-align: center;
+}
+
+.categoryBadge > * {
+  width: 100%;
+  justify-content: center;
+}
+
 /* ── POI Image ── */
 .poiImage {
   width: 100%;
