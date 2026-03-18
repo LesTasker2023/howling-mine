@@ -70,6 +70,13 @@
   opacity: 0.5;
 }
 
+.excerpt {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
 .meta {
   display: flex;
   gap: var(--space-3);

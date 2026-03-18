@@ -1,0 +1,95 @@
+/* ============================================================================
+   SplitHero — top bar + 50/50 text/image hero for guide and news detail pages
+   ============================================================================ */
+
+.hero {
+  margin-bottom: var(--space-8);
+}
+
+/* ── Top bar: back link then badges, stacked column ── */
+.topBar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+/* ── 50/50 split ── */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 380px;
+  border-top: 1px solid rgba(218, 177, 11, 0.7);
+  border-left: 1px solid rgba(218, 177, 11, 0.7);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* ── Left: text — title+excerpt top, date pinned to bottom ── */
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: 2rem 2.5rem;
+}
+
+.textTop {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.textBottom {
+  margin-top: auto;
+}
+
+/* ── Right: image with blend gradient ── */
+.imageWrap {
+  position: relative;
+  min-height: 380px;
+}
+
+.image {
+  object-fit: cover;
+}
+
+/* Left-to-right gradient: page background bleeds deep into image */
+.gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    var(--bg-base) 0%,
+    rgba(0, 0, 0, 0.7) 35%,
+    rgba(0, 0, 0, 0.3) 65%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  z-index: 1;
+}
+
+/* ── Mobile: stack, image on top ── */
+@media (max-width: 768px) {
+  .split {
+    grid-template-columns: 1fr;
+    min-height: unset;
+  }
+
+  .imageWrap {
+    min-height: 240px;
+    order: -1;
+  }
+
+  .gradient {
+    background: linear-gradient(
+      to bottom,
+      transparent 40%,
+      var(--bg-base) 100%
+    );
+  }
+
+  .text {
+    padding: 1.25rem 1.5rem;
+  }
+}

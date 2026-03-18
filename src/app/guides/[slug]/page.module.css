@@ -96,6 +96,13 @@
   opacity: 0.5;
 }
 
+.excerpt {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
 .date {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
