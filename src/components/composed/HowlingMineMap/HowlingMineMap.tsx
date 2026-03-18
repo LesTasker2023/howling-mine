@@ -936,6 +936,34 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
       const wireMesh = new THREE.Mesh(wireGeo, wireMat);
       wireMesh.position.copy(pvpCenter);
       scene.add(wireMesh);
+
+      // ─── Crossed torus rings (asteroid belt layout) ───
+      const torusRadius = pvpRadius * 0.72;
+      const tubeRadius = pvpRadius * 0.018;
+      const torusMat = new THREE.MeshBasicMaterial({
+        color: 0xeab308,
+        transparent: true,
+        opacity: 0.4,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      });
+
+      // Ring 1 — horizontal (XZ plane)
+      const ring1 = new THREE.Mesh(
+        new THREE.TorusGeometry(torusRadius, tubeRadius, 8, 64),
+        torusMat,
+      );
+      ring1.rotation.x = Math.PI / 2;
+      ring1.position.copy(pvpCenter);
+      scene.add(ring1);
+
+      // Ring 2 — vertical (XY plane, 90° to ring 1 = cross formation)
+      const ring2 = new THREE.Mesh(
+        new THREE.TorusGeometry(torusRadius, tubeRadius, 8, 64),
+        torusMat,
+      );
+      ring2.position.copy(pvpCenter);
+      scene.add(ring2);
     }
 
     // ─── Raycaster ───
