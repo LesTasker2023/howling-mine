@@ -30,6 +30,10 @@ body {
   overflow: hidden;
 }
 
+body.has-site-bg {
+  background-color: transparent;
+}
+
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
   width: 6px;

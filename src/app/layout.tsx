@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import SanityVisualEditing from "@/components/SanityVisualEditing";
-import { NavShellServer } from "@/components/layout";
+import { NavShellServer, SiteBg } from "@/components/layout";
 import { TopBarProvider } from "@/context/TopBarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { SanityLive } from "@/sanity/live";
@@ -92,12 +92,30 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getClient(false).fetch(
+    SITE_SETTINGS_QUERY,
+    {},
+    { next: { revalidate: 300 } },
+  );
+
+  const siteBgType = settings?.siteBgType ?? "none";
+  const hasSiteBg =
+    siteBgType !== "none" &&
+    ((siteBgType === "image" && !!settings?.siteBgImage?.asset?.url) ||
+      (siteBgType === "video" && !!settings?.siteBgVideo?.asset?.url));
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className={hasSiteBg ? "has-site-bg" : undefined}>
+        <SiteBg
+          type={hasSiteBg ? siteBgType : null}
+          imageUrl={settings?.siteBgImage?.asset?.url ?? null}
+          videoUrl={settings?.siteBgVideo?.asset?.url ?? null}
+          videoMimeType={settings?.siteBgVideo?.asset?.mimeType ?? null}
+        />
         <ThemeProvider>
           <TopBarProvider>
             <NavShellServer>{children}</NavShellServer>

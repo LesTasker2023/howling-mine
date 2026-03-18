@@ -10,6 +10,7 @@ export const siteSettingsType = defineType({
   icon: Settings,
   groups: [
     { name: "general", title: "General", default: true },
+    { name: "appearance", title: "Appearance" },
     { name: "navigation", title: "Navigation" },
     { name: "footer", title: "Footer" },
     { name: "social", title: "Social Links" },
@@ -81,6 +82,42 @@ export const siteSettingsType = defineType({
       description:
         "Primary Discord invite link used site-wide (e.g. https://discord.gg/NnkPwamsDQ).",
       validation: (r) => r.uri({ allowRelative: false, scheme: ["https"] }),
+    }),
+
+    /* ── Appearance ── */
+    defineField({
+      name: "siteBgType",
+      title: "Site Background Type",
+      type: "string",
+      group: "appearance",
+      options: {
+        list: [
+          { title: "None", value: "none" },
+          { title: "Image", value: "image" },
+          { title: "Video", value: "video" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "none",
+      description: "Fixed background shown on all pages with a 70% dark overlay.",
+    }),
+    defineField({
+      name: "siteBgImage",
+      title: "Background Image",
+      type: "image",
+      group: "appearance",
+      options: { hotspot: true },
+      description: "Used when type is set to Image.",
+      hidden: ({ document }) => document?.siteBgType !== "image",
+    }),
+    defineField({
+      name: "siteBgVideo",
+      title: "Background Video",
+      type: "file",
+      group: "appearance",
+      options: { accept: "video/*" },
+      description: "Used when type is set to Video. MP4 recommended.",
+      hidden: ({ document }) => document?.siteBgType !== "video",
     }),
 
     /* ── Navigation ── */

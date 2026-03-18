@@ -69,9 +69,28 @@ export default async function GuidePage({ params }: Props) {
   if (!guide) notFound();
 
   const coverImage = guide.coverImage ?? (await getPlaceholderImage());
+  const coverImageUrl = urlFor(coverImage).width(1920).height(1080).auto("format").url();
 
   return (
-    <article className={styles.article}>
+    <>
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: -1,
+          overflow: "hidden",
+          pointerEvents: "none",
+        }}
+      >
+        <img
+          src={coverImageUrl}
+          alt=""
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+        />
+        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.7)" }} />
+      </div>
+      <article className={styles.article}>
       <SplitHero
         imageSrc={urlFor(coverImage).width(900).height(675).auto("format").url()}
         imageAlt={guide.title}
@@ -113,5 +132,6 @@ export default async function GuidePage({ params }: Props) {
         <PortableTextBody value={guide.body} />
       </div>
     </article>
+    </>
   );
 }

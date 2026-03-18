@@ -71,9 +71,27 @@ export default async function PostPage({ params }: Props) {
   if (!post) notFound();
 
   const coverImage = post.coverImage ?? (await getPlaceholderImage());
+  const coverImageUrl = urlFor(coverImage).width(1920).height(1080).auto("format").url();
 
   return (
     <>
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: -1,
+          overflow: "hidden",
+          pointerEvents: "none",
+        }}
+      >
+        <img
+          src={coverImageUrl}
+          alt=""
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+        />
+        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.7)" }} />
+      </div>
       <JsonLd
         data={articleSchema({
           title: post.title,

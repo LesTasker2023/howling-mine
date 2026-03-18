@@ -177,6 +177,9 @@ export const SITE_SETTINGS_QUERY = groq`
     footerText,
     footerLinks[] { label, href },
     socialLinks[] { platform, url },
+    siteBgType,
+    siteBgImage { asset->{ url } },
+    siteBgVideo { asset->{ url, mimeType } },
     seoTitle,
     seoDescription,
     ogImage
