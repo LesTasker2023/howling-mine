@@ -19,6 +19,7 @@
   padding: var(--space-8) clamp(var(--space-6), 8vw, 120px);
   overflow: hidden;
   background: var(--bg-base);
+  user-select: none;
 }
 
 /* ── Video background ── */
