@@ -31,6 +31,7 @@ export const mapPoiType = defineType({
           { title: "Asteroid (ND)", value: "asteroid-nd" },
           { title: "Asteroid (Scrap)", value: "asteroid-scrap" },
           { title: "Landmark", value: "landmark" },
+          { title: "Outlaw Zone", value: "outlaw-zone" },
           { title: "PVP Zone", value: "pvp-zone" },
           { title: "Safe Zone", value: "safe-zone" },
         ],

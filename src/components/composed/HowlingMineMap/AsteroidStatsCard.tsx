@@ -46,6 +46,7 @@ const CAT_LABELS: Record<string, string> = {
   "asteroid-nd": "ND-Type",
   "asteroid-scrap": "Scrap",
   landmark: "Landmark",
+  "outlaw-zone": "Outlaw Zone",
   "pvp-zone": "PVP Zone",
   "safe-zone": "Safe Zone",
 };

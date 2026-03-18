@@ -38,6 +38,7 @@ const CAT_COLORS: Record<string, number> = {
   "asteroid-nd": 0xc850c0,
   "asteroid-scrap": 0xa0a0a0,
   landmark: 0xf59e0b,
+  "outlaw-zone": 0x84cc16,
   "pvp-zone": 0xef4444,
   "safe-zone": 0x22c55e,
 };
@@ -51,6 +52,7 @@ const CAT_LABELS: Record<string, string> = {
   "asteroid-nd": "ND-Type",
   "asteroid-scrap": "Scrap",
   landmark: "Landmark",
+  "outlaw-zone": "Outlaw Zone",
   "pvp-zone": "PVP Zone",
   "safe-zone": "Safe Zone",
 };
