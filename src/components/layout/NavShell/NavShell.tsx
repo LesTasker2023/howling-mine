@@ -209,37 +209,6 @@ export function NavShell({ children, settings = {} }: NavShellProps) {
             </div>
           </nav>
 
-          {/* Footer */}
-          <div className={styles.sidebarFooter}>
-            <button
-              className={styles.navItem}
-              data-active={settingsOpen}
-              data-disabled
-              title={!expanded ? "Settings" : "Coming soon"}
-              disabled
-              aria-disabled
-              style={{ opacity: 0.35, pointerEvents: "none" }}
-            >
-              <Settings size={20} />
-              <span className={styles.navLabel}>Settings</span>
-            </button>
-            <button
-              className={styles.navItem}
-              data-disabled
-              title={
-                !expanded ? (isLoggedIn ? "Log out" : "Log in") : "Coming soon"
-              }
-              disabled
-              aria-disabled
-              style={{ opacity: 0.35, pointerEvents: "none" }}
-            >
-              {isLoggedIn ? <LogOut size={20} /> : <LogIn size={20} />}
-              <span className={styles.navLabel}>
-                {isLoggedIn ? "Log out" : "Log in"}
-              </span>
-            </button>
-          </div>
-
           {/* Expand / Collapse toggle — overhangs right edge */}
           <button
             className={styles.expandToggle}
