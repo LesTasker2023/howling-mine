@@ -105,7 +105,7 @@ export default async function RootLayout({
       (siteBgType === "video" && !!settings?.siteBgVideo?.asset?.url));
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={hasSiteBg ? "has-site-bg" : undefined}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>

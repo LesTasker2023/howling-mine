@@ -30,7 +30,8 @@ body {
   overflow: hidden;
 }
 
-body.has-site-bg {
+html.has-site-bg,
+html.has-site-bg body {
   background-color: transparent;
 }
 
