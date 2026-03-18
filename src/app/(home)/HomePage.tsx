@@ -385,7 +385,7 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
               muted
               playsInline
               autoPlay
-              preload="auto"
+              preload="metadata"
               onTimeUpdate={handleTimeUpdate}
               onEnded={triggerTransition}
             />
