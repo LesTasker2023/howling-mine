@@ -52,8 +52,9 @@ function pathsForDocument(
       break;
 
     case "siteSettings":
-      // Settings affect layout/footer on every page
-      paths.push("/");
+    case "navigation":
+      // Settings/nav affect every page — revalidate layout
+      paths.push("/", "/news", "/guides", "/events", "/map", "/stats");
       break;
 
     default:
