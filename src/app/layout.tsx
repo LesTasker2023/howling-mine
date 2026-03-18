@@ -95,7 +95,7 @@ export default async function RootLayout({
   const settings = await getClient(false).fetch(
     SITE_SETTINGS_QUERY,
     {},
-    { next: { revalidate: 300 } },
+    { next: { revalidate: 30 } },
   );
 
   const siteBgType = settings?.siteBgType ?? "none";

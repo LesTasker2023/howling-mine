@@ -59,7 +59,7 @@ export function SiteBg({ type, imageUrl, videoUrl, videoMimeType, overlayOpacity
         style={{
           position: "absolute",
           inset: 0,
-          background: "rgba(0,0,0,var(--site-bg-overlay, 0.7))",
+          background: `rgba(0,0,0,${overlayOpacity})`,
         }}
       />
     </div>

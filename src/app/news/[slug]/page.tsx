@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/client";
-import { POST_BY_SLUG_QUERY, POST_SLUGS_QUERY } from "@/sanity/queries";
+import { POST_BY_SLUG_QUERY, POST_SLUGS_QUERY, SITE_SETTINGS_QUERY } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
 import { getPlaceholderImage } from "@/sanity/getPlaceholderImage";
 import { PortableTextBody } from "@/components/ui/PortableTextBody";
@@ -72,6 +72,8 @@ export default async function PostPage({ params }: Props) {
 
   const coverImage = post.coverImage ?? (await getPlaceholderImage());
   const coverImageUrl = urlFor(coverImage).width(1920).height(1080).auto("format").url();
+  const siteSettings = await client.fetch(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 30 } });
+  const overlayOpacity = (siteSettings?.siteBgOverlayOpacity ?? 70) / 100;
 
   return (
     <>
@@ -90,7 +92,7 @@ export default async function PostPage({ params }: Props) {
           alt=""
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
         />
-        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,var(--site-bg-overlay, 0.7))" }} />
+        <div style={{ position: "absolute", inset: 0, background: `rgba(0,0,0,${overlayOpacity})` }} />
       </div>
       <JsonLd
         data={articleSchema({
