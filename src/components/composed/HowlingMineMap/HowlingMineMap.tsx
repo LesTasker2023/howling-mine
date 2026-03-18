@@ -896,11 +896,13 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
     }
 
     // ─── M-Type PVP zone sphere ───
-    // Hardcoded EU center (matches ProjectDelta reference) — manually tuned
-    // to encompass all M-type asteroids without reaching ND-type clusters.
     const mPois = pois.filter((p) => p.category === "asteroid-m");
     if (mPois.length > 1) {
-      const pvpCenter = euToThree(78200, 76900, -1550, center, scale);
+      // Compute centroid from actual M-type positions
+      let cx = 0, cy = 0, cz = 0;
+      for (const m of mPois) { cx += m.euX; cy += m.euY; cz += m.euZ; }
+      cx /= mPois.length; cy /= mPois.length; cz /= mPois.length;
+      const pvpCenter = euToThree(cx, cy, cz, center, scale);
 
       // Find max distance from center to any M-type asteroid
       let maxDist = 0;
@@ -937,33 +939,6 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
       wireMesh.position.copy(pvpCenter);
       scene.add(wireMesh);
 
-      // ─── Crossed torus rings (asteroid belt layout) ───
-      const torusRadius = pvpRadius * 0.72;
-      const tubeRadius = pvpRadius * 0.018;
-      const torusMat = new THREE.MeshBasicMaterial({
-        color: 0xeab308,
-        transparent: true,
-        opacity: 0.4,
-        side: THREE.DoubleSide,
-        depthWrite: false,
-      });
-
-      // Ring 1 — horizontal (XZ plane)
-      const ring1 = new THREE.Mesh(
-        new THREE.TorusGeometry(torusRadius, tubeRadius, 8, 64),
-        torusMat,
-      );
-      ring1.rotation.x = Math.PI / 2;
-      ring1.position.copy(pvpCenter);
-      scene.add(ring1);
-
-      // Ring 2 — vertical (XY plane, 90° to ring 1 = cross formation)
-      const ring2 = new THREE.Mesh(
-        new THREE.TorusGeometry(torusRadius, tubeRadius, 8, 64),
-        torusMat,
-      );
-      ring2.position.copy(pvpCenter);
-      scene.add(ring2);
     }
 
     // ─── Raycaster ───
