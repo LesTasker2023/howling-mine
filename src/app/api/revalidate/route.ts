@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
 
     const { isValidSignature, body } = await parseBody<{
       _type?: string;
+      _id?: string;
       slug?: string;
     }>(req, secret);
 
@@ -84,6 +85,15 @@ export async function POST(req: NextRequest) {
         { message: "Invalid signature" },
         { status: 401 },
       );
+    }
+
+    // Skip draft mutations — only revalidate when a document is published
+    if (body?._id?.startsWith("drafts.")) {
+      return NextResponse.json({
+        revalidated: false,
+        reason: "draft mutation ignored",
+        now: Date.now(),
+      });
     }
 
     const paths = pathsForDocument(body?._type, body?.slug);

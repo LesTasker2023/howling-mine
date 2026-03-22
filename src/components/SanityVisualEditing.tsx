@@ -6,14 +6,9 @@ import { useRouter } from "next/navigation";
 /**
  * Wraps VisualEditing with a custom refresh handler.
  *
- * Default behaviour calls `revalidatePath('/', 'layout')` when the Presentation
- * tool sends a mutation with `livePreviewEnabled: false` (happens intermittently
- * due to comlink timing). That hard-refreshes the entire page.
- *
- * Because we run `<SanityLive />` with a `browserToken`, draft mutations are
- * already picked up via the Live Content API → `revalidateSyncTags` →
- * `router.refresh()`. So here we just do a soft refresh in *all* cases that
- * weren't already handled by SanityLive.
+ * Draft mutations are handled by SanityLive (live content API with browserToken)
+ * so we skip those entirely here. We only trigger a soft refresh on publish
+ * events (source === "manual") to avoid the editor refreshing while typing.
  */
 export default function SanityVisualEditing() {
   const router = useRouter();
@@ -21,12 +16,12 @@ export default function SanityVisualEditing() {
   return (
     <VisualEditing
       refresh={(payload) => {
-        // When livePreviewEnabled is true for mutations, SanityLive handles it.
-        if (payload.source === "mutation" && payload.livePreviewEnabled) {
-          return false; // no-op — SanityLive will trigger router.refresh()
+        // SanityLive handles all live draft updates via browserToken — no-op
+        if (payload.source === "mutation") {
+          return false;
         }
 
-        // Everything else: soft refresh instead of revalidatePath('/', 'layout')
+        // Manual refresh (e.g. publish action) — soft refresh the page
         router.refresh();
         return Promise.resolve();
       }}
