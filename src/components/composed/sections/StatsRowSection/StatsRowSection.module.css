@@ -36,6 +36,7 @@
 .grid {
   display: grid;
   gap: 0;
+  justify-content: center;
 }
 
 /* Vertical dividers between stat blocks */

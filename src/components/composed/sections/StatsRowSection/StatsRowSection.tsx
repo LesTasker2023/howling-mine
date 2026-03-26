@@ -37,7 +37,7 @@ export function StatsRowSection({
       <motion.div
         className={styles.grid}
         style={{
-          gridTemplateColumns: `repeat(${Math.min(stats.length, 4)}, 1fr)`,
+          gridTemplateColumns: `repeat(${Math.min(stats.length, 4)}, auto)`,
         }}
         variants={staggerContainer}
         initial="hidden"
