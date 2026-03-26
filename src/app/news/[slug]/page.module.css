@@ -160,7 +160,6 @@
 /* ── Body ── */
 .body {
   padding: 0 var(--space-8);
-  max-width: 52rem;
 }
 
 /* ── Footer ── */
