@@ -58,6 +58,14 @@
 
 **Tonal Shift:** Warm gold drops to cold blue-grey. Music thins to almost nothing. This is the rupture.
 
+### CUT 2-PRE — THE PAUSE [AUDIENCE ONLY — no character awareness]
+
+- **Duration:** 3–5 seconds
+- **Shot Type:** Cockpit interior, mid-shift. Routine.
+- **Movement:** He's working. Mining data scrolling normally. Hands on the controls. Then — nothing. His hand lifts, just slightly, off the controls. Eyes lose focus for a half-second. No sound. No thought he can name. Then the distress alert fires and he's moving before the second ping.
+- **Voiceover:** None. Silence under the cockpit hum.
+- **Mood:** A wrong note in a familiar song. Gone before you can identify it. The audience will file it away as nothing — stress, maybe, or a moment of tiredness. In Ch3, they'll understand what it was. The collective registered a connection being severed. The echo reached him. He felt the kid die before the call confirmed it. He just didn't have a name for it yet.
+
 ### CUT 2A
 
 - **Duration:** 8–10 seconds

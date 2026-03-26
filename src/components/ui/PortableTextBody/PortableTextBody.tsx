@@ -9,9 +9,9 @@ import styles from "./PortableTextBody.module.css";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const components: Partial<PortableTextReactComponents> = {
   block: {
-    h2: ({ children }) => <h2 className={styles.h2}>{children}</h2>,
-    h3: ({ children }) => <h3 className={styles.h3}>{children}</h3>,
-    h4: ({ children }) => <h4 className={styles.h4}>{children}</h4>,
+    h2: ({ children, value }) => <h2 id={value._key} className={styles.h2}>{children}</h2>,
+    h3: ({ children, value }) => <h3 id={value._key} className={styles.h3}>{children}</h3>,
+    h4: ({ children, value }) => <h4 id={value._key} className={styles.h4}>{children}</h4>,
     blockquote: ({ children }) => (
       <blockquote className={styles.blockquote}>{children}</blockquote>
     ),

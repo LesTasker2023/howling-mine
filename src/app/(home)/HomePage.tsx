@@ -318,28 +318,31 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
     if (transRef.current) return;
     transRef.current = true;
 
-    if (!videoTransitions || videos.length === 1) {
-      // No fade — restart the current video immediately
+    // Fade to black (reveals dark backdrop)
+    setVideoVisible(false);
+
+    timerRef.current = setTimeout(() => {
       const vid = videoRef.current;
       if (vid) {
         vid.currentTime = 0;
         vid.play().catch(() => {});
       }
-      transRef.current = false;
-      return;
-    }
-
-    setVideoVisible(false);
-    timerRef.current = setTimeout(() => {
-      setActiveIdx((prev) => (prev + 1) % videos.length);
+      if (videos.length > 1) {
+        setActiveIdx((prev) => (prev + 1) % videos.length);
+      }
+      // Brief pause at black before fading back in
+      setTimeout(() => {
+        setVideoVisible(true);
+        transRef.current = false;
+      }, 200);
     }, transitionDuration);
-  }, [videos.length, videoTransitions, transitionDuration]);
+  }, [videos.length, transitionDuration]);
 
   const handleTimeUpdate = useCallback(() => {
     const vid = videoRef.current;
     if (!vid || transRef.current) return;
     const remaining = vid.duration - vid.currentTime;
-    if (isFinite(remaining) && remaining < 1.0) triggerTransition();
+    if (isFinite(remaining) && remaining < 0.5) triggerTransition();
   }, [triggerTransition]);
 
   useEffect(() => {

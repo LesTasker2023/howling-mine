@@ -30,6 +30,7 @@ import {
   HudPieChart,
   DialGauge,
 } from "@/components/ui/charts";
+import { SteamPopulation } from "@/components/composed/SteamPopulation";
 import styles from "./MiningAnalytics.module.css";
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -357,6 +358,9 @@ function OverviewTab({ data }: { data: SpaceMiningStats }) {
 
   return (
     <div className={styles.tabContent}>
+      {/* Steam Population */}
+      <SteamPopulation />
+
       {/* â•â•â• PANEL 1 â€” Key Metrics â•â•â• */}
       <Panel size="md">
         <SectionHeader title="Key Metrics" accent />
