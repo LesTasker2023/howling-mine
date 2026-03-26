@@ -206,12 +206,6 @@ export default function EventsHub({ events }: { events: GameEvent[] }) {
       <div className={styles.empty}>
         <CalendarDays size={48} className={styles.emptyIcon} />
         <h1 className={styles.emptyTitle}>No Events Yet</h1>
-        <p className={styles.emptyText}>
-          Create your first event in the Sanity Studio.
-        </p>
-        <Link href="/studio" className={styles.studioLink}>
-          Open Studio →
-        </Link>
       </div>
     );
   }

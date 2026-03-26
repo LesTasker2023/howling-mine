@@ -107,12 +107,6 @@ export default function GuidesHub({ guides }: { guides: Guide[] }) {
       <div className={styles.empty}>
         <BookOpen size={48} className={styles.emptyIcon} />
         <h1 className={styles.emptyTitle}>No Guides Yet</h1>
-        <p className={styles.emptyText}>
-          Create your first guide in the Sanity Studio.
-        </p>
-        <Link href="/studio" className={styles.studioLink}>
-          Open Studio →
-        </Link>
       </div>
     );
   }

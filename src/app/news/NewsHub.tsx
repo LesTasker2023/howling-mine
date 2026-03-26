@@ -103,12 +103,6 @@ export default function NewsHub({ posts }: { posts: Post[] }) {
       <div className={styles.empty}>
         <Newspaper size={48} className={styles.emptyIcon} />
         <h1 className={styles.emptyTitle}>No Posts Yet</h1>
-        <p className={styles.emptyText}>
-          Create your first news post in the Sanity Studio.
-        </p>
-        <Link href="/studio" className={styles.studioLink}>
-          Open Studio →
-        </Link>
       </div>
     );
   }
