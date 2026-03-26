@@ -124,6 +124,9 @@ export default async function EventPage({ params }: Props) {
     ? (EVENT_TYPE_LABELS[event.eventType] ?? event.eventType)
     : null;
 
+  const startDate = event.startDate ? new Date(event.startDate) : null;
+  const endDate = event.endDate ? new Date(event.endDate) : null;
+
   return (
     <>
       <JsonLd
@@ -144,67 +147,139 @@ export default async function EventPage({ params }: Props) {
         })}
       />
       <article className={styles.article}>
-        <header className={styles.header}>
-          <Link href="/events" className={styles.back}>
-            ← Events
-          </Link>
+        <Link href="/events" className={styles.back}>
+          ← Events
+        </Link>
 
-          {/* Badges row */}
-          <div className={styles.badges}>
-            {status === "live" && (
-              <span className={`${styles.badge} ${styles.badgeLive}`}>
-                ● LIVE NOW
-              </span>
-            )}
-            {typeLabel && <span className={styles.badge}>{typeLabel}</span>}
-            {event.featured && <span className={styles.badge}>Featured</span>}
-          </div>
-
-          <h1 className={styles.title}>{event.title}</h1>
-
-          {/* Meta row */}
-          <div className={styles.meta}>
-            {event.startDate && (
-              <span className={styles.metaItem}>
-                <CalendarDays size={12} />
-                {formatDateRange(event.startDate, event.endDate)}
-              </span>
-            )}
-            {event.startDate && (
-              <span className={styles.metaItem}>
-                {formatTime(event.startDate)}
-              </span>
-            )}
-            {event.location && (
-              <span className={styles.metaItem}>
-                <MapPin size={12} />
-                {event.location}
-              </span>
-            )}
-          </div>
-        </header>
-
+        {/* ── Hero with cover image ── */}
         {coverImage && (
-          <Image
-            src={urlFor(coverImage)
-              .width(1200)
-              .height(630)
-              .auto("format")
-              .url()}
-            alt={event.coverImage?.alt ?? event.title}
-            width={1200}
-            height={630}
-            className={styles.cover}
-            priority
-          />
-        )}
-
-        {event.body && (
-          <div className={styles.body}>
-            <PortableTextBody value={event.body} />
+          <div className={styles.heroWrap}>
+            <Image
+              src={urlFor(coverImage)
+                .width(1600)
+                .height(700)
+                .auto("format")
+                .url()}
+              alt={event.coverImage?.alt ?? event.title}
+              width={1600}
+              height={700}
+              className={styles.heroImage}
+              priority
+            />
+            <div className={styles.heroOverlay} />
+            <div className={styles.heroContent}>
+              <div className={styles.badges}>
+                {status === "live" && (
+                  <span className={`${styles.badge} ${styles.badgeLive}`}>
+                    ● LIVE NOW
+                  </span>
+                )}
+                {typeLabel && <span className={styles.badge}>{typeLabel}</span>}
+                {event.featured && <span className={styles.badge}>Featured</span>}
+              </div>
+              <h1 className={styles.title}>{event.title}</h1>
+              {event.excerpt && (
+                <p className={styles.excerpt}>{event.excerpt}</p>
+              )}
+            </div>
           </div>
         )}
+
+        {/* ── Two-column: body + info sidebar ── */}
+        <div className={styles.layout}>
+          {/* Main body */}
+          <div className={styles.main}>
+            {event.body && (
+              <div className={styles.body}>
+                <PortableTextBody value={event.body} />
+              </div>
+            )}
+          </div>
+
+          {/* Info sidebar */}
+          <aside className={styles.sidebar}>
+            {/* Date & time card */}
+            <div className={styles.infoCard}>
+              <h3 className={styles.infoLabel}>
+                <CalendarDays size={14} />
+                Date &amp; Time
+              </h3>
+              {startDate && (
+                <div className={styles.infoValue}>
+                  {formatDateRange(event.startDate, event.endDate)}
+                </div>
+              )}
+              {startDate && (
+                <div className={styles.infoDetail}>
+                  {formatTime(event.startDate)}
+                  {endDate && ` — ${formatTime(event.endDate)}`}
+                </div>
+              )}
+
+              {/* Countdown for upcoming events */}
+              {status === "upcoming" && startDate && (
+                <div className={styles.countdown}>
+                  <CountdownDisplay target={startDate} />
+                </div>
+              )}
+            </div>
+
+            {/* Location card */}
+            {event.location && (
+              <div className={styles.infoCard}>
+                <h3 className={styles.infoLabel}>
+                  <MapPin size={14} />
+                  Location
+                </h3>
+                <div className={styles.infoValue}>{event.location}</div>
+              </div>
+            )}
+
+            {/* Event type */}
+            {typeLabel && (
+              <div className={styles.infoCard}>
+                <h3 className={styles.infoLabel}>Event Type</h3>
+                <div className={styles.infoValue}>{typeLabel}</div>
+              </div>
+            )}
+
+            {/* Status indicator */}
+            <div className={styles.statusCard} data-status={status}>
+              {status === "live" && "● This event is happening now"}
+              {status === "upcoming" && "Upcoming event"}
+              {status === "past" && "This event has ended"}
+            </div>
+          </aside>
+        </div>
       </article>
     </>
+  );
+}
+
+/* ── Static countdown (renders server-side snapshot) ── */
+function CountdownDisplay({ target }: { target: Date }) {
+  const now = new Date();
+  const diff = target.getTime() - now.getTime();
+  if (diff <= 0) return null;
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+  return (
+    <div className={styles.countdownGrid}>
+      <div className={styles.countdownUnit}>
+        <span className={styles.countdownNumber}>{days}</span>
+        <span className={styles.countdownLabel}>days</span>
+      </div>
+      <div className={styles.countdownUnit}>
+        <span className={styles.countdownNumber}>{hours}</span>
+        <span className={styles.countdownLabel}>hrs</span>
+      </div>
+      <div className={styles.countdownUnit}>
+        <span className={styles.countdownNumber}>{minutes}</span>
+        <span className={styles.countdownLabel}>min</span>
+      </div>
+    </div>
   );
 }

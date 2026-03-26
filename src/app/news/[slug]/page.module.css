@@ -1,24 +1,18 @@
 /* ============================================================================
-   News post detail page
+   News post detail — hero cover, author bar, body, footer tags
    ============================================================================ */
 
 .article {
-  padding: var(--space-8);
-  max-width: 1440px;
   width: 100%;
+  max-width: 1440px;
   margin: 0 auto;
   overflow-wrap: break-word;
   word-break: break-word;
 }
 
-.header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin-bottom: var(--space-6);
-}
-
 .back {
+  display: inline-block;
+  padding: var(--space-6) var(--space-8);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--text-muted);
@@ -31,31 +25,72 @@
   color: var(--color-primary);
 }
 
-.tags {
+/* ── Hero with cover image ── */
+.heroWrap {
+  position: relative;
+  width: calc(100% - var(--space-8) * 2);
+  margin: 0 var(--space-8) var(--space-6);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2.3 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    transparent 100%
+  );
+}
+
+.heroContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.badges {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);
 }
 
-.tag {
+.badge {
   font-family: var(--font-mono);
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 2px 7px;
+  padding: 3px 10px;
   border-radius: var(--radius-sm);
-  background: rgba(var(--color-primary-rgb), 0.1);
+  background: rgba(var(--color-primary-rgb), 0.2);
   color: var(--color-primary);
+  backdrop-filter: blur(4px);
 }
 
 .title {
   font-family: var(--font-mono);
-  font-size: clamp(1.4rem, 5vw, var(--text-3xl));
+  font-size: clamp(1.6rem, 5vw, var(--text-3xl));
   font-weight: 700;
-  color: var(--text-bright);
+  color: #fff;
   letter-spacing: 0.02em;
   line-height: 1.2;
   text-transform: uppercase;
+  max-width: 48rem;
 }
 
 .title::before {
@@ -71,39 +106,117 @@
 }
 
 .excerpt {
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.7);
   line-height: 1.6;
+  max-width: 40rem;
   margin: 0;
 }
 
-.meta {
+/* ── Author bar ── */
+.authorBar {
   display: flex;
+  align-items: center;
   gap: var(--space-3);
+  padding: var(--space-4) var(--space-8);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-6);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(var(--color-primary-rgb), 0.15);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.authorMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.authorName {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.authorDetail {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--text-muted);
 }
 
-.cover {
-  width: 100%;
-  height: auto;
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-8);
-  border: 1px solid var(--border-subtle);
+/* ── Body ── */
+.body {
+  padding: 0 var(--space-8);
+  max-width: 52rem;
 }
 
-.body {
-  margin-top: var(--space-6);
+/* ── Footer ── */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-8);
+  margin-top: var(--space-8);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.footerTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.footerTag {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(var(--color-primary-rgb), 0.1);
+  color: var(--color-primary);
 }
 
 /* ── Mobile ── */
-@media (max-width: 640px) {
-  .article {
+@media (max-width: 900px) {
+  .heroWrap {
+    width: calc(100% - var(--space-4) * 2);
+    margin: 0 var(--space-4) var(--space-4);
+  }
+
+  .heroContent {
     padding: var(--space-4);
   }
 
-  .cover {
-    margin-bottom: var(--space-4);
+  .authorBar {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .body {
+    padding: 0 var(--space-4);
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-4);
+  }
+
+  .back {
+    padding: var(--space-4);
   }
 }

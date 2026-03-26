@@ -1,24 +1,18 @@
 /* ============================================================================
-   Event detail page
+   Event detail — hero cover, two-column layout with info sidebar
    ============================================================================ */
 
 .article {
-  padding: var(--space-8);
-  max-width: 1440px;
   width: 100%;
+  max-width: 1440px;
   margin: 0 auto;
   overflow-wrap: break-word;
   word-break: break-word;
 }
 
-.header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin-bottom: var(--space-6);
-}
-
 .back {
+  display: inline-block;
+  padding: var(--space-6) var(--space-8);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--text-muted);
@@ -29,6 +23,45 @@
 
 .back:hover {
   color: var(--color-primary);
+}
+
+/* ── Hero with cover image ── */
+.heroWrap {
+  position: relative;
+  width: calc(100% - var(--space-8) * 2);
+  margin: 0 var(--space-8) var(--space-6);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2.3 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    transparent 100%
+  );
+}
+
+.heroContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
 .badges {
@@ -42,38 +75,33 @@
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 2px 7px;
+  padding: 3px 10px;
   border-radius: var(--radius-sm);
-  background: rgba(var(--color-primary-rgb), 0.1);
+  background: rgba(var(--color-primary-rgb), 0.2);
   color: var(--color-primary);
+  backdrop-filter: blur(4px);
 }
 
 .badgeLive {
-  background: rgba(var(--status-danger-rgb), 0.15);
+  background: rgba(var(--status-danger-rgb), 0.2);
   color: var(--status-danger);
   animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 .title {
   font-family: var(--font-mono);
-  font-size: clamp(1.4rem, 5vw, var(--text-3xl));
+  font-size: clamp(1.6rem, 5vw, var(--text-3xl));
   font-weight: 700;
-  color: var(--text-bright);
+  color: #fff;
   letter-spacing: 0.02em;
   line-height: 1.2;
   text-transform: uppercase;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  max-width: 48rem;
 }
 
 .title::before {
@@ -88,40 +116,169 @@
   opacity: 0.5;
 }
 
-.meta {
+.excerpt {
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  max-width: 40rem;
+  margin: 0;
+}
+
+/* ── Two-column layout ── */
+.layout {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-8);
+  padding: 0 var(--space-8);
+  align-items: flex-start;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  max-width: 52rem;
+}
+
+.body {
+  margin-top: 0;
+}
+
+/* ── Info sidebar ── */
+.sidebar {
+  flex-shrink: 0;
+  width: 300px;
+  position: sticky;
+  top: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.infoCard {
+  padding: var(--space-4);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.infoLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.infoValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.infoDetail {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--text-muted);
 }
 
-.metaItem {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+/* ── Countdown ── */
+.countdown {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
 }
 
-.cover {
-  width: 100%;
-  height: auto;
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-8);
+.countdownGrid {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.countdownUnit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  padding: var(--space-2);
+  background: var(--bg-base);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border-subtle);
 }
 
-.body {
-  margin-top: var(--space-6);
+.countdownNumber {
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.countdownLabel {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Status card ── */
+.statusCard {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+}
+
+.statusCard[data-status="live"] {
+  background: rgba(var(--status-danger-rgb), 0.1);
+  border-color: rgba(var(--status-danger-rgb), 0.3);
+  color: var(--status-danger);
+}
+
+.statusCard[data-status="upcoming"] {
+  background: rgba(var(--color-primary-rgb), 0.08);
+  border-color: rgba(var(--color-primary-rgb), 0.2);
+  color: var(--color-primary);
+}
+
+.statusCard[data-status="past"] {
+  background: var(--bg-surface);
+  color: var(--text-muted);
 }
 
 /* ── Mobile ── */
-@media (max-width: 640px) {
-  .article {
+@media (max-width: 900px) {
+  .heroWrap {
+    width: calc(100% - var(--space-4) * 2);
+    margin: 0 var(--space-4) var(--space-4);
+  }
+
+  .heroContent {
     padding: var(--space-4);
   }
 
-  .cover {
-    margin-bottom: var(--space-4);
+  .layout {
+    flex-direction: column;
+    padding: 0 var(--space-4);
+  }
+
+  .sidebar {
+    width: 100%;
+    position: static;
+    order: -1;
+  }
+
+  .back {
+    padding: var(--space-4);
   }
 }

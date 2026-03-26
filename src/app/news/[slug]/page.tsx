@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/client";
-import { POST_BY_SLUG_QUERY, POST_SLUGS_QUERY, SITE_SETTINGS_QUERY } from "@/sanity/queries";
+import { POST_BY_SLUG_QUERY, POST_SLUGS_QUERY } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
 import { getPlaceholderImage } from "@/sanity/getPlaceholderImage";
 import { PortableTextBody } from "@/components/ui/PortableTextBody";
-import { SplitHero } from "@/components/composed/SplitHero/SplitHero";
 import { JsonLd, articleSchema } from "@/lib/jsonLd";
+import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
 
@@ -60,6 +60,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
+/* ── Reading time estimate ── */
+function estimateReadingTime(body: unknown[]): number {
+  if (!body) return 1;
+  let words = 0;
+  for (const b of body) {
+    const block = b as { children?: { text?: string }[] };
+    if (block.children) {
+      for (const child of block.children) {
+        words += (child.text ?? "").split(/\s+/).length;
+      }
+    }
+  }
+  return Math.max(1, Math.round(words / 230));
+}
+
+/* ── Page ── */
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
   let post;
@@ -71,29 +87,10 @@ export default async function PostPage({ params }: Props) {
   if (!post) notFound();
 
   const coverImage = post.coverImage ?? (await getPlaceholderImage());
-  const coverImageUrl = urlFor(coverImage).width(1920).height(1080).auto("format").url();
-  const siteSettings = await client.fetch(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 30 } });
-  const overlayOpacity = (siteSettings?.siteBgOverlayOpacity ?? 70) / 100;
+  const readingTime = post.body ? estimateReadingTime(post.body) : 1;
 
   return (
     <>
-      <div
-        aria-hidden="true"
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: -1,
-          overflow: "hidden",
-          pointerEvents: "none",
-        }}
-      >
-        <img
-          src={coverImageUrl}
-          alt=""
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
-        />
-        <div style={{ position: "absolute", inset: 0, background: `rgba(0,0,0,${overlayOpacity})` }} />
-      </div>
       <JsonLd
         data={articleSchema({
           title: post.title,
@@ -111,46 +108,93 @@ export default async function PostPage({ params }: Props) {
         })}
       />
       <article className={styles.article}>
-        <SplitHero
-          imageSrc={urlFor(coverImage).width(900).height(675).auto("format").url()}
-          imageAlt={post.title}
-          topBar={
-            <>
-              <Link href="/news" className={styles.back}>← News</Link>
+        <Link href="/news" className={styles.back}>
+          ← News
+        </Link>
+
+        {/* ── Hero with cover image ── */}
+        {coverImage && (
+          <div className={styles.heroWrap}>
+            <Image
+              src={urlFor(coverImage)
+                .width(1600)
+                .height(700)
+                .auto("format")
+                .url()}
+              alt={post.coverImage?.alt ?? post.title}
+              width={1600}
+              height={700}
+              className={styles.heroImage}
+              priority
+            />
+            <div className={styles.heroOverlay} />
+            <div className={styles.heroContent}>
               {post.categories?.length ? (
-                <div className={styles.tags}>
-                  {post.categories.map((c: any) => (
-                    <span key={c.slug.current} className={styles.tag}>{c.title}</span>
+                <div className={styles.badges}>
+                  {post.categories.map((c: { slug: { current: string }; title: string }) => (
+                    <span key={c.slug.current} className={styles.badge}>
+                      {c.title}
+                    </span>
                   ))}
+                  {post.featured && (
+                    <span className={styles.badge}>Featured</span>
+                  )}
                 </div>
               ) : null}
-            </>
-          }
-          textTop={
-            <>
               <h1 className={styles.title}>{post.title}</h1>
-              {post.excerpt && <p className={styles.excerpt}>{post.excerpt}</p>}
-            </>
-          }
-          textBottom={
-            <div className={styles.meta}>
-              {post.author?.name && <span>{post.author.name}</span>}
-              {post.publishedAt && (
-                <time>
-                  {new Date(post.publishedAt).toLocaleDateString("en-GB", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </time>
+              {post.excerpt && (
+                <p className={styles.excerpt}>{post.excerpt}</p>
               )}
             </div>
-          }
-        />
+          </div>
+        )}
 
-        <div className={styles.body}>
-          <PortableTextBody value={post.body} />
+        {/* ── Author bar ── */}
+        <div className={styles.authorBar}>
+          {post.author?.name && (
+            <div className={styles.avatar}>
+              {post.author.name.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <div className={styles.authorMeta}>
+            {post.author?.name && (
+              <span className={styles.authorName}>{post.author.name}</span>
+            )}
+            <span className={styles.authorDetail}>
+              {post.publishedAt &&
+                new Date(post.publishedAt).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              {post.publishedAt && ` · `}
+              {readingTime} min read
+            </span>
+          </div>
         </div>
+
+        {/* ── Body ── */}
+        {post.body && (
+          <div className={styles.body}>
+            <PortableTextBody value={post.body} />
+          </div>
+        )}
+
+        {/* ── Footer tags ── */}
+        {post.categories?.length ? (
+          <footer className={styles.footer}>
+            <div className={styles.footerTags}>
+              {post.categories.map((c: { slug: { current: string }; title: string }) => (
+                <span key={c.slug.current} className={styles.footerTag}>
+                  {c.title}
+                </span>
+              ))}
+            </div>
+            <Link href="/news" className={styles.back}>
+              ← Back to News
+            </Link>
+          </footer>
+        ) : null}
       </article>
     </>
   );
