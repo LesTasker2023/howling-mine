@@ -6,6 +6,19 @@ import Image from "next/image";
 import { urlFor } from "@/sanity/image";
 import styles from "./PortableTextBody.module.css";
 
+function toEmbedUrl(url?: string): string | null {
+  if (!url) return null;
+  // YouTube
+  const ytMatch = url.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]+)/,
+  );
+  if (ytMatch) return `https://www.youtube-nocookie.com/embed/${ytMatch[1]}`;
+  // Vimeo
+  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+  return null;
+}
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const components: Partial<PortableTextReactComponents> = {
   block: {
@@ -83,6 +96,26 @@ const components: Partial<PortableTextReactComponents> = {
         )}
       </aside>
     ),
+    videoEmbed: ({ value }: { value: any }) => {
+      const embedUrl = toEmbedUrl(value.url);
+      if (!embedUrl) return null;
+      return (
+        <figure className={styles.videoFigure}>
+          <div className={styles.videoWrapper}>
+            <iframe
+              src={embedUrl}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className={styles.videoIframe}
+              title={value.caption || "Embedded video"}
+            />
+          </div>
+          {value.caption && (
+            <figcaption className={styles.caption}>{value.caption}</figcaption>
+          )}
+        </figure>
+      );
+    },
   },
 };
 /* eslint-enable @typescript-eslint/no-explicit-any */
