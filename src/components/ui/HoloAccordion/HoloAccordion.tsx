@@ -55,10 +55,10 @@ export function HoloAccordion({ panels }: HoloAccordionProps) {
                 <div className={styles.header}>
                   {panel.image?.asset && (
                     <Image
-                      src={urlFor(panel.image).width(200).height(200).auto("format").url()}
+                      src={urlFor(panel.image).width(360).height(360).auto("format").url()}
                       alt={panel.title}
-                      width={200}
-                      height={200}
+                      width={360}
+                      height={360}
                       className={styles.image}
                     />
                   )}

@@ -936,7 +936,6 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
       const wireMesh = new THREE.Mesh(wireGeo, wireMat);
       wireMesh.position.copy(pvpCenter);
       scene.add(wireMesh);
-
     }
 
     // ─── Raycaster ───

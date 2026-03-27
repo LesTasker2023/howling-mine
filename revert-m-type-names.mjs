@@ -10,7 +10,9 @@ const client = createClient({
 console.log("🔄 Reverting M-Type names back to 'M'...\n");
 
 // Fetch all M-Types
-const asteroids = await client.fetch(`*[_type == "mapPoi" && category == "asteroid-m"]`);
+const asteroids = await client.fetch(
+  `*[_type == "mapPoi" && category == "asteroid-m"]`,
+);
 console.log(`Found ${asteroids.length} M-Type asteroids to revert\n`);
 
 // Batch updates
@@ -23,7 +25,7 @@ for (const asteroid of asteroids) {
       .set({
         name: "M",
       })
-      .commit()
+      .commit(),
   );
 }
 
