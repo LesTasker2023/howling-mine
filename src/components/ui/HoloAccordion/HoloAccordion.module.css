@@ -5,10 +5,10 @@
 .accordion {
   display: flex;
   max-height: 352px;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(var(--white-rgb), 0.15);
   border-radius: var(--radius-md);
   overflow: hidden;
-  background: rgba(var(--white-rgb), 0.02);
+  background: rgba(var(--black-rgb), 0.8);
 }
 
 /* ── Panel ── */

@@ -255,7 +255,7 @@
 
 /* ── H2 Sections ── */
 .section {
-  margin: var(--space-10) 0;
+  margin-bottom: var(--space-10) 0;
   padding: var(--space-6) var(--space-6) var(--space-4);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
