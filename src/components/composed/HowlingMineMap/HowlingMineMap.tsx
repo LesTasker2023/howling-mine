@@ -842,13 +842,15 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
       scene.add(ring);
       poiRings.set(poi._id, ring);
 
-      // Label sprite
-      const hexColor = "#" + new THREE.Color(color).getHexString();
-      const label = createLabel(poi.name, hexColor, isStation ? 52 : 40);
-      label.position.copy(pos);
-      label.position.y += isStation ? 0.35 : 0.2;
-      scene.add(label);
-      labelSprites.set(poi._id, label);
+      // Label sprite (skip M-types)
+      if (poi.category !== "asteroid-m") {
+        const hexColor = "#" + new THREE.Color(color).getHexString();
+        const label = createLabel(poi.name, hexColor, isStation ? 52 : 40);
+        label.position.copy(pos);
+        label.position.y += isStation ? 0.35 : 0.2;
+        scene.add(label);
+        labelSprites.set(poi._id, label);
+      }
 
       // PVP indicator — small red dot below
       if (poi.pvpLootable) {
