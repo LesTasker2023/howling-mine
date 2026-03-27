@@ -101,6 +101,7 @@ const FALLBACK_STEPS = [
     title: "Create Free Account",
     description:
       "Sign up for Entropia Universe — completely free. Complete the short Setesh tutorial to learn combat, looting, and navigation.",
+    cta: undefined,
   },
   {
     _key: "st2",
@@ -108,6 +109,7 @@ const FALLBACK_STEPS = [
     title: "Catch the Free Shuttle",
     description:
       "Take the FREE daily shuttle from any major spaceport. You'll land at Howling Mine Space Terminal — that's home base. No cost, no strings.",
+    cta: undefined,
   },
   {
     _key: "st3",
@@ -115,6 +117,7 @@ const FALLBACK_STEPS = [
     title: "Grab Free Gear",
     description:
       'Find "The Employer" NPC inside the terminal. Accept a daily mission — free weapons and ammo included. Walk in, gear up, walk out armed.',
+    cta: undefined,
   },
   {
     _key: "st4",
@@ -122,6 +125,7 @@ const FALLBACK_STEPS = [
     title: "Hunt & Cash Out",
     description:
       "Clear AI bots using your free gear. Earn 2 PED ($0.20 USD) daily. Withdraw to your bank account anytime. The daily job resets every 24 hours.",
+    cta: undefined,
   },
 ];
 
