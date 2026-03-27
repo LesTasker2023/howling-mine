@@ -16,6 +16,7 @@ import { codeBlockType } from "./objects/codeBlock";
 import { calloutType } from "./objects/callout";
 import { imageWithAltType } from "./objects/imageWithAlt";
 import { videoEmbedType } from "./objects/videoEmbed";
+import { objectShowcaseType } from "./objects/objectShowcase";
 import { ctaLinkType } from "./objects/ctaLink";
 
 // Page Builder section types
@@ -47,6 +48,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     calloutType,
     imageWithAltType,
     videoEmbedType,
+    objectShowcaseType,
     ctaLinkType,
     // Page Builder sections
     heroSectionType,

@@ -61,5 +61,6 @@ export const richTextType = defineType({
     defineArrayMember({ type: "codeBlock" }),
     defineArrayMember({ type: "callout" }),
     defineArrayMember({ type: "videoEmbed" }),
+    defineArrayMember({ type: "objectShowcase" }),
   ],
 });
