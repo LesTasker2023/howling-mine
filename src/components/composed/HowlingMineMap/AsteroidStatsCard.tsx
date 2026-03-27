@@ -159,7 +159,7 @@ export function AsteroidStatsCard({ poi, onClose }: AsteroidStatsCardProps) {
   }, []);
 
   const copyWaypoint = useCallback(() => {
-    const txt = `/wp [${poi.name}, ${formatCoord(poi.euX)}, ${formatCoord(poi.euY)}, ${formatCoord(poi.euZ)}]`;
+    const txt = `/wp [Space, ${poi.euX}, ${poi.euY}, ${poi.euZ}, ${poi.name}]`;
     copyValue("wp", txt);
   }, [poi, copyValue]);
 
@@ -299,7 +299,7 @@ export function AsteroidStatsCard({ poi, onClose }: AsteroidStatsCardProps) {
             ).map(([axis, val]) => (
               <div key={axis} className={styles.coordChip}>
                 <span className={styles.coordAxis}>{axis}</span>
-                <span className={styles.coordVal}>{formatCoord(val)}</span>
+                <span className={styles.coordVal}>{val}</span>
               </div>
             ))}
           </div>
