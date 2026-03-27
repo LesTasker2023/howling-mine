@@ -557,7 +557,7 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
         >
           <SectionHeader title={stepsTitle} size="lg" />
           {stepsSubtitle && (
-            <p className={styles.earningsSubtitle}>{stepsSubtitle}</p>
+            <p className={styles.stepsSubtitle}>{stepsSubtitle}</p>
           )}
 
           <motion.div
@@ -594,6 +594,16 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
                         </div>
                         <h3 className={styles.stepTitle}>{step.title}</h3>
                         <p className={styles.stepDesc}>{step.description}</p>
+                        {step.cta && (
+                          <a
+                            href={step.cta.href}
+                            className={styles.stepCtaLink}
+                          >
+                            <Button variant="secondary" size="md">
+                              {step.cta.label}
+                            </Button>
+                          </a>
+                        )}
                       </div>
                     </Panel>
                   </div>

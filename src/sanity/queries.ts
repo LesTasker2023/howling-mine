@@ -215,7 +215,7 @@ export const HOMEPAGE_QUERY = groq`
     stepsEnabled,
     stepsTitle,
     stepsSubtitle,
-    steps[] { _key, icon, title, description },
+    steps[] { _key, icon, title, description, cta { label, href } },
     stepsCta { label, href },
     aboutEnabled,
     aboutTitle,

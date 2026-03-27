@@ -32,6 +32,7 @@ export interface HomepageStep {
   icon?: string;
   title: string;
   description: string;
+  cta?: HomepageCta;
 }
 
 export interface HomepageFaq {

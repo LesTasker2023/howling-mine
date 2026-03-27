@@ -406,6 +406,12 @@ export const homepageType = defineType({
               rows: 3,
               validation: (r) => r.required(),
             }),
+            defineField({
+              name: "cta",
+              title: "Step CTA (Optional)",
+              type: "ctaLink",
+              description: "Optional button that appears bottom-right of the card.",
+            }),
           ],
           preview: {
             select: { title: "title", subtitle: "description" },
