@@ -62,5 +62,6 @@ export const richTextType = defineType({
     defineArrayMember({ type: "callout" }),
     defineArrayMember({ type: "videoEmbed" }),
     defineArrayMember({ type: "objectShowcase" }),
+    defineArrayMember({ type: "holoAccordion" }),
   ],
 });

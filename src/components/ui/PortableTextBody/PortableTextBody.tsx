@@ -4,6 +4,7 @@ import {
 } from "@portabletext/react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/image";
+import { HoloAccordion } from "@/components/ui/HoloAccordion";
 import styles from "./PortableTextBody.module.css";
 
 function toEmbedUrl(url?: string): string | null {
@@ -150,6 +151,11 @@ const components: Partial<PortableTextReactComponents> = {
           </div>
         </div>
       );
+    },
+    holoAccordion: ({ value }: { value: any }) => {
+      const panels = value.panels ?? [];
+      if (panels.length === 0) return null;
+      return <HoloAccordion panels={panels} />;
     },
   },
 };

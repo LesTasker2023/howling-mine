@@ -17,6 +17,7 @@ import { calloutType } from "./objects/callout";
 import { imageWithAltType } from "./objects/imageWithAlt";
 import { videoEmbedType } from "./objects/videoEmbed";
 import { objectShowcaseType } from "./objects/objectShowcase";
+import { holoAccordionType } from "./objects/holoAccordion";
 import { ctaLinkType } from "./objects/ctaLink";
 
 // Page Builder section types
@@ -49,6 +50,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     imageWithAltType,
     videoEmbedType,
     objectShowcaseType,
+    holoAccordionType,
     ctaLinkType,
     // Page Builder sections
     heroSectionType,
