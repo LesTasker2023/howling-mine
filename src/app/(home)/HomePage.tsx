@@ -42,7 +42,6 @@ const heroFade: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
-
 /* ── Fallback data ── */
 const FALLBACK_VIDEOS = [
   "/videos/hero-2.webm",
@@ -219,7 +218,6 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
     () => false,
   );
 
-
   const baseSignup = data.signupBaseUrl ?? SIGNUP_BASE;
   const ctaUrl = signupUrl ?? baseSignup;
 
@@ -376,7 +374,9 @@ export default function HomePage({ data, signupUrl }: HomePageProps) {
       {heroEnabled && (
         <section
           className={styles.hero}
-          style={{ "--hero-overlay-opacity": overlayOpacity } as React.CSSProperties}
+          style={
+            { "--hero-overlay-opacity": overlayOpacity } as React.CSSProperties
+          }
         >
           {/* Video background */}
           <div className={styles.videoBackdrop} aria-hidden />

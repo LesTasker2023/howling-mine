@@ -164,8 +164,7 @@ export const homepageType = defineType({
       type: "number",
       group: "hero",
       hidden: ({ parent }: { parent?: Record<string, unknown> }) =>
-        parent?.heroEnabled === false ||
-        parent?.heroVideoTransitions === false,
+        parent?.heroEnabled === false || parent?.heroVideoTransitions === false,
       description:
         "How long the fade-to-black takes in milliseconds. Default: 800.",
       validation: (r) => r.min(200).max(3000),
@@ -410,7 +409,8 @@ export const homepageType = defineType({
               name: "cta",
               title: "Step CTA (Optional)",
               type: "ctaLink",
-              description: "Optional button that appears bottom-right of the card.",
+              description:
+                "Optional button that appears bottom-right of the card.",
             }),
           ],
           preview: {
