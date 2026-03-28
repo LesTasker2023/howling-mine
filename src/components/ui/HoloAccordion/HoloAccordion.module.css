@@ -50,7 +50,7 @@
 }
 
 .panel[data-active="true"] .tab {
-  background: rgba(var(--color-primary-rgb), 0.06);
+  background: rgba(var(--color-primary-rgb), 0.1);
   border-right-color: rgba(var(--color-primary-rgb), 0.2);
 }
 
@@ -59,13 +59,11 @@
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: var(--text-muted);
-  opacity: 0.5;
+  color: var(--color-primary);
 }
 
 .panel[data-active="true"] .tabIndex {
   color: var(--color-primary);
-  opacity: 0.8;
 }
 
 .tabLabel {
@@ -77,13 +75,16 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--color-primary);
   white-space: nowrap;
   user-select: none;
+  margin-top: auto;
+  opacity: 0.75;
 }
 
 .panel[data-active="true"] .tabLabel {
   color: var(--color-primary);
+  opacity: 1;
 }
 
 /* ── Expanded content ── */
