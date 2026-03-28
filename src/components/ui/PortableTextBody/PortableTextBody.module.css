@@ -255,11 +255,12 @@
 
 /* ── H2 Sections ── */
 .section {
-  margin-bottom: var(--space-10) 0;
+  margin-bottom: var(--space-8);
   padding: var(--space-6) var(--space-6) var(--space-4);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   background: rgba(var(--white-rgb), 0.02);
+  position: relative;
 }
 
 .section > .h2 {
