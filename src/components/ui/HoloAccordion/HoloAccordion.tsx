@@ -52,40 +52,39 @@ export function HoloAccordion({ panels }: HoloAccordionProps) {
             {/* Expanded content */}
             <div className={styles.content}>
               <div className={styles.contentInner}>
-                <div className={styles.header}>
+                {/* Top: image left, text right */}
+                <div className={styles.main}>
                   {panel.image?.asset && (
                     <Image
-                      src={urlFor(panel.image).width(360).height(360).auto("format").url()}
+                      src={urlFor(panel.image).width(480).height(480).auto("format").url()}
                       alt={panel.title}
-                      width={360}
-                      height={360}
+                      width={480}
+                      height={480}
                       className={styles.image}
                     />
                   )}
-                  <div className={styles.titles}>
+                  <div className={styles.text}>
                     <h3 className={styles.title}>{panel.title}</h3>
                     {panel.subtitle && (
                       <p className={styles.subtitle}>{panel.subtitle}</p>
                     )}
+                    {panel.description && (
+                      <p className={styles.description}>{panel.description}</p>
+                    )}
                   </div>
                 </div>
 
-                <div className={styles.body}>
-                  {panel.description && (
-                    <p className={styles.description}>{panel.description}</p>
-                  )}
-
-                  {panel.stats && panel.stats.length > 0 && (
-                    <dl className={styles.stats}>
-                      {panel.stats.map((stat, si) => (
-                        <div key={si} className={styles.stat}>
-                          <dt className={styles.statLabel}>{stat.label}</dt>
-                          <dd className={styles.statValue}>{stat.value}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  )}
-                </div>
+                {/* Bottom: stats bar */}
+                {panel.stats && panel.stats.length > 0 && (
+                  <dl className={styles.stats}>
+                    {panel.stats.map((stat, si) => (
+                      <div key={si} className={styles.stat}>
+                        <dt className={styles.statLabel}>{stat.label}</dt>
+                        <dd className={styles.statValue}>{stat.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
               </div>
             </div>
           </div>

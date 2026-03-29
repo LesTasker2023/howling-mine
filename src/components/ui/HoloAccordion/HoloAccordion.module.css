@@ -111,7 +111,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  justify-content: space-between;
+  height: 100%;
   padding: var(--space-5);
   min-width: 280px;
   overflow-y: auto;
@@ -141,31 +142,35 @@
   border-width: 0 1px 1px 0;
 }
 
-/* ── Header: image + titles ── */
-.header {
+/* ── Main: image left + text right ── */
+.main {
   display: flex;
-  gap: var(--space-4);
+  gap: var(--space-5);
   align-items: flex-start;
+  flex: 1;
+  min-height: 0;
 }
 
 .image {
-  width: 180px;
-  height: 180px;
+  width: 220px;
+  height: 220px;
   border-radius: var(--radius-sm);
-  object-fit: cover;
+  object-fit: contain;
   flex-shrink: 0;
 }
 
-.titles {
+.text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-2);
   min-width: 0;
+  flex: 1;
+  padding-top: var(--space-1);
 }
 
 .title {
   font-family: var(--font-mono);
-  font-size: var(--text-lg);
+  font-size: var(--text-xl);
   font-weight: 700;
   color: var(--text-bright);
   margin: 0;
@@ -178,13 +183,6 @@
   margin: 0;
 }
 
-/* ── Body ── */
-.body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
 .description {
   font-size: var(--text-sm);
   color: var(--text-primary);
@@ -192,15 +190,18 @@
   margin: 0;
 }
 
-/* ── Stats ── */
+/* ── Stats (bottom bar) ── */
 .stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  display: flex;
   gap: var(--space-2);
   margin: 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+  flex-shrink: 0;
 }
 
 .stat {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -277,8 +278,22 @@
     min-width: unset;
   }
 
+  .main {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
   .image {
-    width: 72px;
-    height: 72px;
+    width: 100px;
+    height: 100px;
+  }
+
+  .stats {
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    min-width: calc(50% - var(--space-1));
+    flex: unset;
   }
 }
