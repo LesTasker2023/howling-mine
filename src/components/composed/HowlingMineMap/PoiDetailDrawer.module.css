@@ -1,0 +1,394 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   PoiDetailDrawer — Full-height slide-out panel within the map container
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Drawer shell — no backdrop, map stays interactive ── */
+.drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 340px;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  background: rgba(var(--bg-deep-rgb), 0.94);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid var(--border-default);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) 0;
+}
+
+.headerText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-bright);
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.categoryRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ── Body content ── */
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+/* ── POI Image ── */
+.poiImage {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.poiImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Description ── */
+.description {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Section divider ── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.sectionLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── Overview row (slimline 4-stat) ── */
+.overviewRow {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.overviewStat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: var(--space-1) 0;
+  background: rgba(var(--white-rgb), 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.overviewValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-bright);
+  line-height: 1;
+}
+
+.overviewAccent {
+  color: var(--text-accent);
+}
+
+.overviewLabel {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── No data message ── */
+.noStats {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  padding: var(--space-2) 0;
+  margin: 0;
+}
+
+/* ── Activity bar chart (24h) ── */
+.activityChart {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 40px;
+  padding: var(--space-1) 0;
+}
+
+.activityBar {
+  flex: 1;
+  min-width: 0;
+  border-radius: 1px 1px 0 0;
+  background: var(--text-accent);
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+
+.activityBar:hover {
+  opacity: 1;
+}
+
+.activityAxis {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  padding: 0 1px;
+}
+
+/* ── Recent globals feed ── */
+.feedList {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.feedItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: rgba(var(--white-rgb), 0.02);
+  border-radius: var(--radius-sm);
+}
+
+.feedItem:nth-child(odd) {
+  background: rgba(var(--white-rgb), 0.04);
+}
+
+.feedValue {
+  font-weight: 600;
+  color: var(--text-accent);
+  min-width: 52px;
+  text-align: right;
+}
+
+.feedValueHof {
+  color: var(--status-warning);
+}
+
+.feedAvatar {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.feedTime {
+  color: var(--text-muted);
+  font-size: 9px;
+  flex-shrink: 0;
+}
+
+.feedVariant {
+  color: var(--text-muted);
+  font-size: 9px;
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+
+/* ── Top miners ── */
+.minerList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.minerItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: rgba(var(--white-rgb), 0.02);
+  border-radius: var(--radius-sm);
+}
+
+.minerItem:nth-child(odd) {
+  background: rgba(var(--white-rgb), 0.04);
+}
+
+.minerRank {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 700;
+  min-width: 14px;
+}
+
+.minerName {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.minerPed {
+  color: var(--text-accent);
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.minerCount {
+  color: var(--text-muted);
+  font-size: 9px;
+  min-width: 20px;
+  text-align: right;
+}
+
+/* ── Coordinates (compact inline bar) ── */
+.coordBar {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.coordChip {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px var(--space-2);
+  background: rgba(var(--white-rgb), 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.coordAxis {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.coordVal {
+  color: var(--text-accent);
+  flex: 1;
+  text-align: right;
+}
+
+/* ── Activity (no section wrapper, sits tight under button) ── */
+.activityWrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+
+/* ── Mobile: bottom sheet ── */
+@media (max-width: 768px) {
+  .drawer {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 60vh;
+    border-left: none;
+    border-top: 1px solid var(--border-default);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+
+  .body {
+    padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .header {
+    padding: var(--space-3) var(--space-3) 0;
+  }
+
+  .body {
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+
+  .name {
+    font-size: var(--text-base);
+  }
+
+  .statsGrid {
+    gap: var(--space-1);
+  }
+
+  .coords {
+    gap: var(--space-1);
+  }
+
+  .coordChip {
+    padding: 2px var(--space-1);
+    font-size: 10px;
+  }
+}
+
+/* ── Landscape mobile: narrower side panel ── */
+@media (orientation: landscape) and (max-height: 500px) {
+  .drawer {
+    width: 280px;
+    max-height: none;
+    top: 0;
+    bottom: 0;
+    left: auto;
+    border-top: none;
+    border-left: 1px solid var(--border-default);
+    border-radius: 0;
+  }
+}

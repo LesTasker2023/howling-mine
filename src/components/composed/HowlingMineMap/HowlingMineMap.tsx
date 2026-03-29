@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { useTopBar } from "@/context/TopBarContext";
-import { AsteroidStatsCard } from "./AsteroidStatsCard";
+import { PoiDetailDrawer } from "./PoiDetailDrawer";
 import styles from "./HowlingMineMap.module.css";
 
 /* ── Types ── */
@@ -1180,17 +1180,14 @@ export function HowlingMineMap({ pois }: HowlingMineMapProps) {
           ))}
       </div>
 
-      {/* ── Detail panel ── */}
-      {selectedPoi && (
-        <AsteroidStatsCard
-          key={selectedPoi._id}
-          poi={selectedPoi}
-          onClose={() => {
-            selectedRef.current = null;
-            setSelectedPoi(null);
-          }}
-        />
-      )}
+      {/* ── Detail drawer ── */}
+      <PoiDetailDrawer
+        poi={selectedPoi}
+        onClose={() => {
+          selectedRef.current = null;
+          setSelectedPoi(null);
+        }}
+      />
     </div>
   );
 }
