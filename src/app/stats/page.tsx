@@ -11,6 +11,11 @@ const EC = "https://api.entropiacentral.com";
 const PAGE_SIZE = 30;
 const MAX_PAGES = 10;
 
+const EC_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+};
+
 export const metadata: Metadata = {
   title: "Mining Analytics — The Howling Mine",
   description:
@@ -30,7 +35,7 @@ async function fetchLast24hGlobals(): Promise<GlobalEntry[]> {
     try {
       const res = await fetch(
         `${EC}/globals?pageNumber=${page}&pageSize=${PAGE_SIZE}&sortBy=dateTime&sortOrder=desc&type=Space%20Mining`,
-        { next: { revalidate: 300 } },
+        { headers: EC_HEADERS, next: { revalidate: 300 } },
       );
       if (!res.ok) break;
       const json = await res.json();
