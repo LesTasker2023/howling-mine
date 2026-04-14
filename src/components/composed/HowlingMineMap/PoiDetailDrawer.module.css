@@ -379,6 +379,41 @@
   }
 }
 
+/* ── Trend row (space mining stats) ── */
+.trendRow {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+}
+
+.trendItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.trendUp {
+  color: var(--color-success, #22c55e);
+}
+
+.trendDown {
+  color: var(--color-danger, #ef4444);
+}
+
+.trendNeutral {
+  color: var(--text-muted);
+}
+
+.favoriteItem {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin: var(--space-1) 0 0;
+}
+
 /* ── Landscape mobile: narrower side panel ── */
 @media (orientation: landscape) and (max-height: 500px) {
   .drawer {

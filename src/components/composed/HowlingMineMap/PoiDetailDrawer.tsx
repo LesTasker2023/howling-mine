@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    PoiDetailDrawer — Full-height slide-out panel for selected map POIs
-   Shows all CMS fields + live Delta API globals for asteroid types
+   Shows all CMS fields + live EntropiaCentral space mining stats for asteroids
    ═══════════════════════════════════════════════════════════════════════════ */
 "use client";
 
@@ -11,59 +11,23 @@ import {
   Check,
   X,
   ShieldAlert,
-  Clock,
+  TrendingUp,
+  TrendingDown,
+  Minus,
 } from "lucide-react";
 import { Badge, Button, Skeleton } from "@/components/ui";
+import type { SpaceMiningStats, AsteroidTypeStats } from "@/components/composed/MiningAnalytics";
 import type { MapPoi } from "./HowlingMineMap";
 import styles from "./PoiDetailDrawer.module.css";
 
-/* ── Delta API types ── */
-interface TypeStats {
-  totalGlobals: number;
-  totalPED: number;
-  uniqueMiners: number;
-  avgGlobal: number;
-  highestGlobal: number;
-  lowestGlobal: number;
-  medianGlobal: number;
-  hofCount: number;
-  athCount: number;
-  globalsPerHour: number;
-}
-
-interface RecentGlobal {
-  avatar: string;
-  variant: string;
-  value: number;
-  dateTime: string;
-  isHof: boolean;
-  isAth: boolean;
-}
-
-interface TopMiner {
-  avatar: string;
-  totalPED: number;
-  globalCount: number;
-  hofCount: number;
-  avgGlobal: number;
-  highestGlobal: number;
-}
-
-interface HourlyBucket {
-  bucketIndex: number;
-  timestamp: string;
-  globalCount: number;
-  totalPED: number;
-}
-
-interface TypeStatsResponse {
-  asteroidType: string;
-  stats: TypeStats;
-  recentGlobals: RecentGlobal[];
-  topMiners: TopMiner[];
-  hourlyActivity: HourlyBucket[];
-  percentiles: { p50: number; p75: number; p90: number; p95: number; p99: number };
-}
+/* ── Map POI category → asteroid type key ── */
+const CAT_TO_TYPE: Record<string, string> = {
+  "asteroid-c": "C",
+  "asteroid-f": "F",
+  "asteroid-s": "S",
+  "asteroid-m": "M",
+  "asteroid-nd": "ND",
+};
 
 /* ── Category labels ── */
 const CAT_LABELS: Record<string, string> = {
@@ -86,7 +50,7 @@ function formatPED(n: number): string {
   return n.toFixed(0);
 }
 
-function timeAgo(dateStr: string): string {
+function timeAgoDrawer(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
   if (mins < 1) return "just now";
@@ -97,51 +61,22 @@ function timeAgo(dateStr: string): string {
   return `${days}d ago`;
 }
 
-/* ── Delta API fetch with cache ── */
-const DELTA_API = "https://www.thedeltaproject.net";
-const CACHE_TTL = 60_000;
+/* ── EntropiaCentral space mining stats fetch (shared cache) ── */
+const CACHE_TTL = 5 * 60_000; // 5 min
 
-const API_TYPE: Record<string, string> = {
-  "asteroid-c": "C",
-  "asteroid-f": "F",
-  "asteroid-s": "S",
-  "asteroid-m": "M",
-  "asteroid-nd": "ND",
-};
+let statsCache: { data: SpaceMiningStats | null; ts: number } | null = null;
 
-const statsCache = new Map<
-  string,
-  { data: TypeStatsResponse | null; ts: number }
->();
-
-async function fetchTypeStats(
-  category: string,
-): Promise<TypeStatsResponse | null> {
-  const cached = statsCache.get(category);
-  if (cached && Date.now() - cached.ts < CACHE_TTL) return cached.data;
-
-  const apiType = API_TYPE[category];
-  if (!apiType) {
-    statsCache.set(category, { data: null, ts: Date.now() });
-    return null;
-  }
+async function fetchSpaceMiningStats(): Promise<SpaceMiningStats | null> {
+  if (statsCache && Date.now() - statsCache.ts < CACHE_TTL) return statsCache.data;
 
   try {
-    const res = await fetch(
-      `${DELTA_API}/api/mining-stats/asteroid/${apiType}?period=24h`,
-    );
-    if (!res.ok) throw new Error("API error");
-    const json: TypeStatsResponse = await res.json();
-
-    if (!json.stats || json.stats.totalGlobals === 0) {
-      statsCache.set(category, { data: null, ts: Date.now() });
-      return null;
-    }
-
-    statsCache.set(category, { data: json, ts: Date.now() });
-    return json;
+    const res = await fetch("/api/space-mining-stats");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data: SpaceMiningStats = await res.json();
+    statsCache = { data, ts: Date.now() };
+    return data;
   } catch {
-    statsCache.set(category, { data: null, ts: Date.now() });
+    statsCache = { data: null, ts: Date.now() };
     return null;
   }
 }
@@ -160,14 +95,14 @@ interface PoiDetailDrawerProps {
 }
 
 export function PoiDetailDrawer({ poi, onClose }: PoiDetailDrawerProps) {
-  const [data, setData] = useState<TypeStatsResponse | null>(null);
+  const [data, setData] = useState<SpaceMiningStats | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const fetchIdRef = useRef(0);
 
   const isAsteroid = poi?.category.startsWith("asteroid-") ?? false;
 
-  /* Fetch globals when POI changes */
+  /* Fetch space mining stats when an asteroid POI is opened */
   useEffect(() => {
     if (!poi || !isAsteroid) {
       setData(null);
@@ -176,12 +111,12 @@ export function PoiDetailDrawer({ poi, onClose }: PoiDetailDrawerProps) {
     }
     const id = ++fetchIdRef.current;
     setLoaded(false);
-    fetchTypeStats(poi.category).then((result) => {
+    fetchSpaceMiningStats().then((result) => {
       if (fetchIdRef.current !== id) return;
       setData(result);
       setLoaded(true);
     });
-  }, [poi?._id, poi?.category, isAsteroid]);
+  }, [poi?._id, isAsteroid]);
 
   /* Escape key */
   useEffect(() => {
@@ -210,11 +145,11 @@ export function PoiDetailDrawer({ poi, onClose }: PoiDetailDrawerProps) {
   }, [poi, copyValue]);
 
   const loading = isAsteroid && !loaded;
-  const stats = data?.stats ?? null;
-  const recentGlobals = data?.recentGlobals ?? [];
-  const topMiners = data?.topMiners ?? [];
-  const hourly = data?.hourlyActivity ?? [];
-  const maxHourlyPED = Math.max(...hourly.map((h) => h.totalPED), 1);
+
+  const asteroidType = poi ? (CAT_TO_TYPE[poi.category] ?? null) : null;
+  const typeStats: AsteroidTypeStats | null = asteroidType && data
+    ? (data.asteroidTypes ?? []).find((t) => t.type === asteroidType) ?? null
+    : null;
 
   return (
     <AnimatePresence>
@@ -302,41 +237,12 @@ export function PoiDetailDrawer({ poi, onClose }: PoiDetailDrawerProps) {
               )}
             </Button>
 
-            {/* ── Globals: Activity Chart (directly under waypoint) ── */}
-            {isAsteroid && !loading && hourly.length > 0 && (
-              <div className={styles.activityWrap}>
-                <span className={styles.sectionLabel}>
-                  <Clock size={10} /> 24h Activity
-                </span>
-                <div className={styles.activityChart}>
-                  {hourly.map((h) => (
-                    <div
-                      key={h.bucketIndex}
-                      className={styles.activityBar}
-                      style={{
-                        height: `${Math.max((h.totalPED / maxHourlyPED) * 100, 2)}%`,
-                      }}
-                      title={`${new Date(h.timestamp).getUTCHours()}:00 UTC — ${h.globalCount} globals, ${formatPED(h.totalPED)} PED`}
-                    />
-                  ))}
-                </div>
-                <div className={styles.activityAxis}>
-                  {hourly
-                    .filter((_, i) => i % 6 === 0)
-                    .map((h) => (
-                      <span key={h.bucketIndex}>
-                        {new Date(h.timestamp).getUTCHours()}:00
-                      </span>
-                    ))}
-                  <span>Now</span>
-                </div>
-              </div>
-            )}
-
-            {/* ── Globals: 24h Overview (slimline row) ── */}
+            {/* ── Space Mining: 24h Stats ── */}
             {isAsteroid && (
               <div className={styles.section}>
-                <span className={styles.sectionLabel}>24h Overview</span>
+                <span className={styles.sectionLabel}>
+                  {asteroidType ? `${asteroidType}-type` : "Space Mining"} — 24h
+                </span>
 
                 {loading ? (
                   <div className={styles.overviewRow}>
@@ -345,73 +251,50 @@ export function PoiDetailDrawer({ poi, onClose }: PoiDetailDrawerProps) {
                     <Skeleton variant="stat" />
                     <Skeleton variant="stat" />
                   </div>
-                ) : stats ? (
+                ) : typeStats ? (
                   <div className={styles.overviewRow}>
                     <div className={styles.overviewStat}>
-                      <span className={styles.overviewValue}>{stats.totalGlobals}</span>
+                      <span className={styles.overviewValue}>{typeStats.count}</span>
                       <span className={styles.overviewLabel}>Globals</span>
                     </div>
                     <div className={styles.overviewStat}>
                       <span className={`${styles.overviewValue} ${styles.overviewAccent}`}>
-                        {formatPED(stats.totalPED)}
+                        {formatPED(typeStats.totalValue)}
                       </span>
                       <span className={styles.overviewLabel}>PED</span>
                     </div>
                     <div className={styles.overviewStat}>
-                      <span className={styles.overviewValue}>{stats.hofCount}</span>
-                      <span className={styles.overviewLabel}>HoFs</span>
+                      <span className={styles.overviewValue}>{formatPED(typeStats.avgValue)}</span>
+                      <span className={styles.overviewLabel}>Avg</span>
                     </div>
                     <div className={styles.overviewStat}>
-                      <span className={styles.overviewValue}>{stats.uniqueMiners}</span>
-                      <span className={styles.overviewLabel}>Miners</span>
+                      <span className={styles.overviewValue}>{typeStats.hofCount}</span>
+                      <span className={styles.overviewLabel}>HoFs</span>
                     </div>
                   </div>
+                ) : data ? (
+                  <p className={styles.noStats}>No {asteroidType}-type activity in last 24h</p>
                 ) : (
-                  <p className={styles.noStats}>No globals in the last 24h</p>
+                  <p className={styles.noStats}>Stats unavailable</p>
                 )}
               </div>
             )}
 
-            {/* ── Globals: Top Miners ── */}
-            {isAsteroid && !loading && topMiners.length > 0 && (
-              <div className={styles.section}>
-                <span className={styles.sectionLabel}>Top Miners</span>
-                <div className={styles.minerList}>
-                  {topMiners.slice(0, 5).map((m, i) => (
-                    <div key={i} className={styles.minerItem}>
-                      <span className={styles.minerRank}>{i + 1}</span>
-                      <span className={styles.minerName}>{m.avatar}</span>
-                      <span className={styles.minerCount}>
-                        {m.globalCount}g
-                      </span>
-                      <span className={styles.minerPed}>
-                        {formatPED(m.totalPED)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ── Globals: Last 5 ── */}
-            {isAsteroid && !loading && recentGlobals.length > 0 && (
+            {/* ── Type-specific recent globals ── */}
+            {isAsteroid && !loading && (typeStats?.recentGlobals?.length ?? 0) > 0 && (
               <div className={styles.section}>
                 <span className={styles.sectionLabel}>Recent Globals</span>
                 <div className={styles.feedList}>
-                  {recentGlobals.slice(0, 5).map((g, i) => (
+                  {typeStats!.recentGlobals.slice(0, 5).map((g: import("@/components/composed/MiningAnalytics").GlobalEntry, i: number) => (
                     <div key={i} className={styles.feedItem}>
-                      <span
-                        className={`${styles.feedValue} ${g.isHof ? styles.feedValueHof : ""}`}
-                      >
-                        {formatPED(g.value)}
+                      <span className={`${styles.feedValue} ${g.isHof ? styles.feedValueHof : ""}`}>
+                        {formatPED(g.globalValue)}
                       </span>
-                      <span className={styles.feedAvatar}>{g.avatar}</span>
+                      <span className={styles.feedAvatar}>{g.avatarName}</span>
                       <span className={styles.feedVariant}>
-                        {g.variant.replace(/^[A-Z]-type Asteroid /, "")}
+                        {g.depositName.replace(/^[A-Z]+-type Asteroid /, "")}
                       </span>
-                      <span className={styles.feedTime}>
-                        {timeAgo(g.dateTime)}
-                      </span>
+                      <span className={styles.feedTime}>{timeAgoDrawer(g.dateTime)}</span>
                     </div>
                   ))}
                 </div>

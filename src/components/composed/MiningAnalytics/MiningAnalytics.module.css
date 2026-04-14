@@ -440,6 +440,275 @@
   margin-bottom: 0;
 }
 
+/* ── Refreshing state ── */
+.refreshing {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* ── Trend cards ── */
+.trendRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr repeat(3, auto);
+  gap: var(--space-6);
+  align-items: center;
+  padding: var(--space-2) 0;
+}
+
+.trendCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  background: rgba(var(--white-rgb), 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.trendLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.trendMain {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.trendPct {
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  font-weight: 700;
+}
+
+.trendUp {
+  color: var(--color-success, #22c55e);
+}
+
+.trendDown {
+  color: var(--color-danger, #ef4444);
+}
+
+.trendNeutral {
+  color: var(--text-muted);
+}
+
+.trendSub {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* ── Asteroid type selector ── */
+.typeSelector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.typeBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: none;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.typeBtn:hover {
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+.typeBtnActive {
+  border-color: var(--border-strong);
+  color: var(--text-accent);
+  background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+.typeBtnCount {
+  font-size: 10px;
+  color: var(--text-muted);
+  background: rgba(var(--white-rgb), 0.06);
+  border-radius: var(--radius-xs, 2px);
+  padding: 1px 4px;
+}
+
+/* ── All-types summary cards ── */
+.typeSummaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+/* ── Type accent bar (top edge on type-view panel) ── */
+.typeAccentBar {
+  height: 3px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-4);
+  opacity: 0.8;
+}
+
+.typeSummaryCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  background: rgba(var(--white-rgb), 0.03);
+  border: 1px solid var(--border-subtle);
+  border-top: 2px solid var(--type-color, var(--border-subtle));
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--duration-fast);
+}
+
+.typeSummaryCard:hover {
+  border-color: var(--type-color, var(--border-default));
+  background: rgba(var(--white-rgb), 0.06);
+}
+
+.typeSummaryName {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--type-color, var(--text-accent));
+  letter-spacing: 0.04em;
+}
+
+.typeSummaryGlobals {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-primary);
+}
+
+.typeSummaryPed {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-accent);
+}
+
+.typeSummaryAvg {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.typeSummaryHof {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-primary);
+}
+
+/* ── Per-type detail ── */
+.typeDetail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ── Feed (recent globals) ── */
+.feedList {
+  display: flex;
+  flex-direction: column;
+}
+
+.feedItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-1);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--text-sm);
+}
+
+.feedItem:last-child {
+  border-bottom: none;
+}
+
+.feedValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-accent);
+  font-weight: 700;
+  min-width: 64px;
+}
+
+.feedValueHof {
+  color: var(--color-primary);
+}
+
+.feedName {
+  flex: 1;
+  color: var(--text-primary);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feedDeposit {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.feedTime {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ── Leaderboard header ── */
+.leaderboardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* ── Rank cell ── */
+.rankCell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.rankUp {
+  font-size: 10px;
+  color: var(--color-success, #22c55e);
+  font-family: var(--font-mono);
+}
+
+.rankDown {
+  font-size: 10px;
+  color: var(--color-danger, #ef4444);
+  font-family: var(--font-mono);
+}
+
+.rankNeutral {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
 /* ── Mobile ── */
 @media (max-width: 768px) {
   .dashboard {
@@ -499,5 +768,9 @@
   .feedHeader {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .trendRow {
+    grid-template-columns: 1fr 1fr;
   }
 }

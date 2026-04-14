@@ -5,22 +5,17 @@ import {
 } from "@/components/composed/MiningAnalytics";
 import styles from "./page.module.css";
 
-const DELTA_API = "https://www.thedeltaproject.net";
-const DEFAULT_PERIOD = "24h";
-const VALID_PERIODS = ["1h", "3h", "6h", "12h", "24h", "7d", "30d"];
-
 export const metadata: Metadata = {
   title: "Mining Analytics — The Howling Mine",
   description:
-    "Live space mining analytics dashboard — globals, leaderboards, asteroid breakdowns, and performance metrics powered by The Delta Project.",
+    "Live space mining analytics dashboard — globals, leaderboards, and performance metrics powered by EntropiaCentral.",
 };
 
-async function fetchMiningStats(
-  period: string,
-): Promise<SpaceMiningStats | null> {
+async function fetchSpaceMiningStats(): Promise<SpaceMiningStats | null> {
   try {
-    const res = await fetch(`${DELTA_API}/api/mining-stats/${period}`, {
-      next: { revalidate: period === "1h" ? 30 : 300 },
+    const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const res = await fetch(`${base}/api/space-mining-stats`, {
+      next: { revalidate: 300 },
     });
     if (!res.ok) return null;
     return res.json();
@@ -29,16 +24,8 @@ async function fetchMiningStats(
   }
 }
 
-export default async function StatsPage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  const sp = await searchParams;
-  const raw = typeof sp?.period === "string" ? sp.period : DEFAULT_PERIOD;
-  const period = VALID_PERIODS.includes(raw) ? raw : DEFAULT_PERIOD;
-
-  const data = await fetchMiningStats(period);
+export default async function StatsPage() {
+  const data = await fetchSpaceMiningStats();
 
   if (!data) {
     return (
@@ -55,7 +42,7 @@ export default async function StatsPage({
 
   return (
     <div className={styles.page}>
-      <MiningAnalytics initialData={data} initialPeriod={period} />
+      <MiningAnalytics initialData={data} />
     </div>
   );
 }
