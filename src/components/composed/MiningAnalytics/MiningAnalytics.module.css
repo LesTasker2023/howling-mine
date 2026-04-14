@@ -440,6 +440,21 @@
   margin-bottom: 0;
 }
 
+/* ── Loading state ── */
+.loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+}
+
+.loadingText {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+
 /* ── Refreshing state ── */
 .refreshing {
   opacity: 0.7;

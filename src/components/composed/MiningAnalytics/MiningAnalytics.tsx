@@ -112,18 +112,34 @@ function RankChange({ change }: { change: number }) {
 /* ── Props ── */
 
 export interface MiningAnalyticsProps {
-  initialData: SpaceMiningStats;
+  initialData?: SpaceMiningStats;
 }
 
 /* ── Component ── */
 
 export function MiningAnalytics({ initialData }: MiningAnalyticsProps) {
-  const [data, setData] = useState<SpaceMiningStats>(initialData);
-  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<SpaceMiningStats | null>(initialData ?? null);
+  const [loading, setLoading] = useState(!initialData);
   const { setSubTabs, activeSubTab, setActiveSubTab } = useTopBar();
+
+  /* Initial fetch (when no SSR data) + 5-min refresh */
+  useEffect(() => {
+    function load() {
+      setLoading(true);
+      fetch("/api/space-mining-stats")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((json) => { if (json) setData(json); })
+        .finally(() => setLoading(false));
+    }
+    if (!initialData) load();
+    const id = setInterval(load, 5 * 60 * 1000);
+    return () => clearInterval(id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* Push asteroid type sub-tabs into NavShell */
   useEffect(() => {
+    if (!data) return;
     const tabs = [
       { key: "all", label: "All" },
       ...(data.asteroidTypes ?? []).map((t) => ({
@@ -136,27 +152,15 @@ export function MiningAnalytics({ initialData }: MiningAnalyticsProps) {
     if (!activeSubTab) setActiveSubTab("all");
     return () => setSubTabs([]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.asteroidTypes, setSubTabs]);
-
-  /* Refresh in the background every 5 min */
-  useEffect(() => {
-    const id = setInterval(() => {
-      setLoading(true);
-      fetch("/api/space-mining-stats")
-        .then((r) => (r.ok ? r.json() : null))
-        .then((json) => { if (json) setData(json); })
-        .finally(() => setLoading(false));
-    }, 5 * 60 * 1000);
-    return () => clearInterval(id);
-  }, []);
+  }, [data?.asteroidTypes, setSubTabs]);
 
   const selectedType = activeSubTab && activeSubTab !== "all" ? activeSubTab : null;
 
   const activeTypeStats = useMemo(
-    () => selectedType
+    () => selectedType && data
       ? (data.asteroidTypes ?? []).find((t) => t.type === selectedType) ?? null
       : null,
-    [selectedType, data.asteroidTypes],
+    [selectedType, data],
   );
 
   const minerColumns: Column<SpaceMinerEntry>[] = [
@@ -188,6 +192,28 @@ export function MiningAnalytics({ initialData }: MiningAnalyticsProps) {
   ];
 
   const typeColor = selectedType ? (TYPE_COLORS[selectedType] ?? undefined) : undefined;
+
+  if (!data && loading) {
+    return (
+      <div className={styles.dashboard}>
+        <SteamPopulation />
+        <div className={styles.loadingState}>
+          <span className={styles.loadingText}>Loading space mining data…</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className={styles.dashboard}>
+        <SteamPopulation />
+        <div className={styles.loadingState}>
+          <span className={styles.loadingText}>Unable to load stats. Try refreshing.</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`${styles.dashboard} ${loading ? styles.refreshing : ""}`}>
