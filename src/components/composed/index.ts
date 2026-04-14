@@ -20,4 +20,4 @@ export type { MapPoi } from "./HowlingMineMap";
 
 // Analytics
 export { MiningAnalytics } from "./MiningAnalytics";
-export type { SpaceMiningStats, MiningAnalyticsProps } from "./MiningAnalytics";
+export type { SpaceMiningStats } from "./MiningAnalytics";
