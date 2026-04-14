@@ -6,6 +6,8 @@
      - /globals (paginated)   → per-asteroid-type breakdown for last 24h
    ═══════════════════════════════════════════════════════════════════════════ */
 
+export const runtime = "edge";
+
 import { NextResponse } from "next/server";
 
 const EC = "https://api.entropiacentral.com";
@@ -93,7 +95,7 @@ async function fetchLast24hGlobals(): Promise<GlobalEntry[]> {
   for (let page = 1; page <= MAX_PAGES; page++) {
     const res = await fetch(
       `${EC}/globals?pageNumber=${page}&pageSize=${PAGE_SIZE}&sortBy=dateTime&sortOrder=desc&type=Space%20Mining`,
-      { headers: EC_HEADERS, next: { revalidate: CACHE_MAX_AGE } },
+      { headers: EC_HEADERS },
     );
     if (!res.ok) break;
 
